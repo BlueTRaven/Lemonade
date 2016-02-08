@@ -18,7 +18,7 @@ namespace Lemonade
 
         public int defensePhys, defenseIce, defenseFire, defenseElec;
 
-        public ItemStack[] inventory;
+        public ItemStack[] inventory = new ItemStack[300];
         //public static ItemStack[] inventory = new ItemStack[300];
         
         public static ItemWeapon equppedWeapon;
@@ -47,8 +47,8 @@ namespace Lemonade
 
             defensePhys = 0; defenseIce = 0; defenseFire = 0; defenseElec = 0;
 
-            inventory = new ItemStack[300];
-            Array.Clear(inventory, 0, 300);
+            //inventory
+            //Array.Clear(inventory, 0, 299);
 
             initialized = true;
         }
@@ -208,17 +208,22 @@ namespace Lemonade
             return finalDamage;
         }
 
-        public ItemStack PickupItem(ItemEntity item)
+        public bool PickupItem(ItemEntity item)
         {
             for (int i = 0; i < inventory.GetLength(0); i++)
             {
                 if (inventory[i] == null)
                 {
                     inventory[i] = item.itemStack;
+                    return true;
+                }
+                else if (inventory[i].item.id == item.item.id)
+                {
+                    inventory[i].stackSize += item.itemStack.stackSize;
+                    return true;
                 }
             }
-
-            return item.itemStack;
+            return false;
         }
 
         public void CreateItem(int type)

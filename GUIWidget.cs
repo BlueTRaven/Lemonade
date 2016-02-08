@@ -13,10 +13,12 @@ namespace Lemonade
     {
         public enum State
         {
-            None,
-            Hot,
-            Active,
-            Done
+            None,   //No state
+            Hot,    //Being moused over
+            Active, //Being left clicked
+            Active2,//Being right clicked
+            Done,   //Finished left click
+            Done2   //Finished right click
         }
 
         public Tuple<string, int> id;   //Tuple containing the type "button", "inventoryItem", etc and an id to identify by.
@@ -52,14 +54,25 @@ namespace Lemonade
                 currentState = State.None;
             }
 
-            if (currentState == State.Hot && mState.LeftButton == ButtonState.Pressed)
+            if (currentState == State.Hot)
             {
-                currentState = State.Active;
+                if (mState.LeftButton == ButtonState.Pressed)
+                {
+                    currentState = State.Active;
+                }
+                if (mState.RightButton == ButtonState.Pressed)
+                {
+                    currentState = State.Active2;
+                }
             }
 
             if (previousState == State.Active && mState.LeftButton == ButtonState.Released)
             {
                 currentState = State.Done;
+            }
+            if (previousState == State.Active2 && mState.RightButton == ButtonState.Released)
+            {
+                currentState = State.Done2;
             }
 
             return currentState;
@@ -101,9 +114,9 @@ namespace Lemonade
                 PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[0]);
                 PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2)), colors[1]);
             }
-            if (currentState == State.Active )//|| currentState == State.Done)
+            if (currentState == State.Active || currentState == State.Active2)//|| currentState == State.Done)
                 PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[2]);
-            if (currentState == State.Done)
+            if (currentState == State.Done || currentState == State.Done2)
                 PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[2]);
         }
     }
@@ -111,9 +124,6 @@ namespace Lemonade
     public class GuiWidgetItemSlot : GuiWidget
     {
         public ItemStack itemInSlot;
-
-        SpriteFont font;
-        string text;
 
         bool drawToolTip = false;
 
@@ -147,9 +157,9 @@ namespace Lemonade
                 PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[0]);
                 PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2)), colors[1]);
             }
-            if (currentState == State.Active)//|| currentState == State.Done)
+            if (currentState == State.Active || currentState == State.Active2)
                 PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[2]);
-            if (currentState == State.Done)
+            if (currentState == State.Done || currentState == State.Done2)
                 PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[2]);
 
             if (itemInSlot != null && itemInSlot.item != null && itemInSlot.item.texture != null)

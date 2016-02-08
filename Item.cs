@@ -148,7 +148,7 @@ namespace Lemonade
 
                 textureName = "knife";
                 name = "Test Weapon";
-                description[0] = "A test weapon.";
+                description[0] = "A test weapon";
                 description[1] = "You shouldn't have this.";
             }
 

@@ -251,13 +251,13 @@ namespace Lemonade
                 {
                     foreach (ItemEntity iEnt in itemEntities)
                     {
-                        player.PickupItem(iEnt);
-                        iEnt.dead = true;
-                    }
-
-                    //foreach (HurtBox hurtbox in p.hurtboxes)
-                    {
-
+                        if (living.hitbox.Intersects(iEnt.hitbox))
+                        {
+                            if (player.PickupItem(iEnt))
+                            {
+                                iEnt.dead = true;
+                            }
+                        }
                     }
                     
                 }
@@ -408,7 +408,8 @@ namespace Lemonade
 
                 createEnemy(new Vector2(576, 576), 2, 0);
 
-                createItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 3), 1);
+                createItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
+                createItemEntity(new Vector2(576 + 128, 576 - 36), Vector2.Zero, new ItemStack(game.CreateItemWeapon(1), 58), 1);
 
                 ambientColor = new Color(25, 25, 50, 100);
 
