@@ -89,10 +89,7 @@ namespace Lemonade
 
                 for (int x = 0; x < 5; x++)
                 {
-                    for (int y = 0; y < 5; y++)
-                    {
-                        createInventorySlot(new Rectangle(x * 64, 256 + (y * 64), 64, 64), new Tuple<string, int>("invslot", x), button1Colors);
-                    }
+                    createInventorySlot(new Rectangle(x * 64, 256, 64, 64), new Tuple<string, int>("invslot", x), button1Colors);
                 }
             }
 
@@ -156,7 +153,7 @@ namespace Lemonade
                                     {
                                         gMouse.heldItem = widgetInvSlot.itemInSlot;
                                         widgetInvSlot.itemInSlot = null;
-                                        Player.inventory.RemoveAt(widget.id.Item2);
+                                        game.world.player.inventory[widget.id.Item2] = null;
                                     }
                                     else if(widgetInvSlot.itemInSlot.item.id == gMouse.heldItem.item.id)
                                     {
@@ -167,12 +164,9 @@ namespace Lemonade
                                 }
                                 else
                                 {
-                                    
-                                    {
-                                        widgetInvSlot.itemInSlot = gMouse.heldItem;
-                                        gMouse.heldItem = null;
-                                        Player.inventory.Insert(widgetInvSlot.id.Item2, widgetInvSlot.itemInSlot);
-                                    }
+                                    widgetInvSlot.itemInSlot = gMouse.heldItem;
+                                    gMouse.heldItem = null;
+                                    game.world.player.inventory[widget.id.Item2] = widgetInvSlot.itemInSlot;
                                 }
                             }
                         }
@@ -211,10 +205,7 @@ namespace Lemonade
                     {
                         GuiWidgetItemSlot widgetInvSlot = (GuiWidgetItemSlot) widget;
 
-                        if (Player.inventory[index].item != null)   //indexoutofbounds because lists... not quite sure what to do
-                        {
-                            widgetInvSlot.itemInSlot = Player.inventory[index];
-                        }
+                        widgetInvSlot.itemInSlot = game.world.player.inventory[widgetInvSlot.id.Item2];
                     }
                     ++index;
                 }
