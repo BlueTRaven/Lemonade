@@ -252,7 +252,7 @@ namespace Lemonade
             batch.Draw(texture, position, null, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
             //batch.Draw(texture, position, null, Color.White, 30f, center - position, 1f, SpriteEffects.None, 0f);
             //PrimiviteDrawing.DrawRectangle(null, batch, hitbox, Color.Red, -angleToMouse, center - position);
-            batch.DrawString(Fonts.munro, ("Layer:" + layer + "\nHealth: " + health), new Vector2(position.X, position.Y - 32), Color.Black);
+            batch.DrawString(Fonts.munro12, ("Layer:" + layer + "\nHealth: " + health), new Vector2(position.X, position.Y - 32), Color.Black);
 
             if (isHit)
             {
@@ -262,11 +262,6 @@ namespace Lemonade
             PrimiviteDrawing.DrawRectangle(null, batch, hitbox, 1, Color.Red);
 
             batch.End();
-
-            batch.Begin();
-            guiHUD.Draw(batch);
-            batch.End();
-
         }
     }
 }

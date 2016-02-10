@@ -14,7 +14,9 @@ namespace Lemonade
 {
     public static class Fonts
     {
-        public static SpriteFont munro;
+        public static SpriteFont munro12;
+        public static SpriteFont munro24;
+        public static SpriteFont munro24Italic;
         public static SpriteFont papyrus;
 
         /// <summary>
@@ -22,7 +24,9 @@ namespace Lemonade
         /// </summary>
         public static void LoadFonts(ContentManager content)
         {
-            munro = content.Load<SpriteFont>("fonts/munro-12");
+            munro12 = content.Load<SpriteFont>("fonts/munro-12");
+            munro24 = content.Load<SpriteFont>("fonts/munro-24");
+            munro24Italic = content.Load<SpriteFont>("fonts/munro-24-italic");
             papyrus = content.Load<SpriteFont>("fonts/papyrus-12");
         }
     }

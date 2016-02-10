@@ -32,6 +32,8 @@ namespace Lemonade
 
         protected Rectangle bounds;
 
+        public bool active = true;
+
         public Vector2 center { get { return new Vector2(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2); } set { bounds.X = (int)value.X - bounds.Width; bounds.Y = (int)value.Y - bounds.Height; } }
 
         public void update(MouseState mState)
@@ -80,10 +82,11 @@ namespace Lemonade
         }
     }
 
-    public class GuiWidgetString : GuiWidget
+    public class GuiWidgetDialogue : GuiWidget
     {
         SpriteFont font;
-        string text;
+        string[] text;
+        public int currentLine = 0;
 
         int textSpeed;  //How fast a letter appears in ticks, 60 = 1 sec
         int letterTimer;    //timer to count up that amount
@@ -92,28 +95,33 @@ namespace Lemonade
         public bool finished = false;
 
         Color[] colors;
-        public GuiWidgetString(Rectangle setBounds, Tuple<string, int> id, string setText, Color textColor, SpriteFont setFont, int textSpeed, Color[] colors)
+        public GuiWidgetDialogue(Rectangle setBounds, Tuple<string, int> id, string forKey, Color textColor, SpriteFont setFont, int textSpeed, Color[] colors)
         {
             this.id = id;
             bounds = setBounds;
-            text = setText;
             font = setFont;
 
             this.textSpeed = textSpeed;
 
             this.colors = colors;
+
+            text = Utilities.ReadFile("Content\\strings\\dialogue.txt", forKey).Split(':');
+            Console.WriteLine(text);
         }
 
         public void Update(MouseState mState)
         {
-            letterTimer++;
-
-            if (letterTimer >= textSpeed)
+            if (active)
             {
-                letterTimer = 0;
-                count++;
+                letterTimer++;
+
+                if (letterTimer >= textSpeed)
+                {
+                    letterTimer = 0;
+                    count++;
+                }
+                base.update(mState);
             }
-            base.update(mState);
         }
 
         public override void Draw(SpriteBatch batch)
@@ -121,7 +129,7 @@ namespace Lemonade
             PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[1]);
             PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2)), colors[0]);
 
-            string wrappedText = WrapText(font, text, bounds.Width);
+            string wrappedText = WrapText(font, text[currentLine], bounds.Width);
             char[] s = wrappedText.ToCharArray();
 
             string final = "";
@@ -145,12 +153,26 @@ namespace Lemonade
             batch.DrawString(font, final, new Vector2(bounds.X, bounds.Y), Color.Black);
         }
 
-        public void ChangeText(string newText, int newSpeed)
+        /// <summary>
+        /// Changes the text to the new line index and speed.
+        /// </summary>
+        /// <param name="newSpeed">Rate at which a character appears.</param>
+        /// <param name="newLine">line of "text" array to set to. if left at default, it will simply increase the text array index.</param>
+        /// <returns>Whether or not there is any more text in the array. if there isn't, it's done.</returns>
+        public bool ChangeText(int newSpeed, int newLine = -1)
         {
             finished = false;
 
-            text = newText;
+            count = 0;
+            if (newLine >= 0)
+                currentLine = newLine;
+            else if (currentLine + 1 < text.Length)
+            {
+                currentLine++;
+            }
+            else return true;
             textSpeed = newSpeed;
+            return false;
         }
 
         public static string WrapText(SpriteFont font, string text, float maxLineWidth)
@@ -213,7 +235,10 @@ namespace Lemonade
 
         public void Update(MouseState mState)
         {
-            base.update(mState);   
+            if (active)
+            {
+                base.update(mState);
+            }
         }
 
         public override void Draw(SpriteBatch batch)
@@ -256,7 +281,10 @@ namespace Lemonade
 
         public void Update(MouseState mState)
         {
-            base.update(mState);
+            if (active)
+            {
+                base.update(mState);
+            }
         }
 
         public override void Draw(SpriteBatch batch)
@@ -282,7 +310,7 @@ namespace Lemonade
                 batch.Draw(itemInSlot.item.texture, bounds, Color.White);
 
                 if (itemInSlot.stackSize > 1)
-                    batch.DrawString(Fonts.munro, itemInSlot.stackSize.ToString(), new Vector2(bounds.Right, bounds.Bottom), Color.White);
+                    batch.DrawString(Fonts.munro12, itemInSlot.stackSize.ToString(), new Vector2(bounds.Right, bounds.Bottom), Color.White);
             }
         }
 
@@ -292,11 +320,11 @@ namespace Lemonade
             {
                 if (currentState == State.Hot)
                 {
-                    batch.DrawString(Fonts.munro, itemInSlot.item.name, new Vector2(mousePos.X, mousePos.Y), Color.White);
+                    batch.DrawString(Fonts.munro12, itemInSlot.item.name, new Vector2(mousePos.X, mousePos.Y), Color.White);
                     for (int i = 0; i < itemInSlot.item.description.Count(); i++)
                     {
                         if (itemInSlot.item.description[i] != null)
-                            batch.DrawString(Fonts.munro, itemInSlot.item.description[i], new Vector2(mousePos.X, mousePos.Y + 12 * (i + 1)), Color.White);
+                            batch.DrawString(Fonts.munro12, itemInSlot.item.description[i], new Vector2(mousePos.X, mousePos.Y + 12 * (i + 1)), Color.White);
                     }
 
                 }

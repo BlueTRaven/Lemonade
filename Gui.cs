@@ -39,10 +39,10 @@ namespace Lemonade
 
         protected int type;
 
-        public GuiWidgetString createString(Rectangle position, Tuple<string, int> id, string text, Color color, SpriteFont font, int textSpeed, Color[] colors)
+        public GuiWidgetDialogue createDialogue(Rectangle position, Tuple<string, int> id, string text, Color color, SpriteFont font, int textSpeed, Color[] colors)
         {
-            GuiWidgetString widget;
-            widget = new GuiWidgetString(position, id, text, color, font, textSpeed, colors);
+            GuiWidgetDialogue widget;
+            widget = new GuiWidgetDialogue(position, id, text, color, font, textSpeed, colors);
 
             widgets.Add(widget);
             return widget;
@@ -116,7 +116,7 @@ namespace Lemonade
                 if (type == 0)
                 {
                     Color[] button1Colors = new Color[] { Color.Salmon, Color.DarkSalmon, Color.Orange };
-                    createButton(new Rectangle((int)center.X - 32, (int)center.Y - 16, 64, 32), new Tuple<string, int>("button", 0), "Test", Color.White, Fonts.munro, button1Colors);
+                    createButton(new Rectangle((int)center.X - 32, (int)center.Y - 16, 64, 32), new Tuple<string, int>("button", 0), "Test", Color.White, Fonts.munro12, button1Colors);
 
                     for (int x = 0; x < 16; x++)
                     {
@@ -126,7 +126,7 @@ namespace Lemonade
 
                 else if (type == 1)
                 {
-                    //createString(new Rectangle(0, 0, 128, 64), new Tuple<string, int>("string", 0), "Hello! this is some test text!", Color.White, Fonts.munro, 2, new Color[] { Color.White, Color.DarkGray });
+                    createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<string, int>("dialogue", 0), "<test2>", Color.White, Fonts.munro24, 2, new Color[] { Color.White, Color.DarkGray });
                 }
 
                 firstOpen = false;
@@ -134,15 +134,17 @@ namespace Lemonade
 
             if (active)
             {
-                GuiWidgetString widgetString = null;
+                List<GuiWidget> removeList = new List<GuiWidget>();
+                int index = 0;
+                GuiWidgetDialogue widgetDialogue = null;
                 GuiWidgetButton widgetButton = null;
                 GuiWidgetItemSlot widgetInvSlot = null;
                 foreach (GuiWidget widget in widgets)
                 {
-                    if (widget.id.Item1 == "string")
+                    if (widget.id.Item1 == "dialogue")
                     {
-                        widgetString = (GuiWidgetString)widget;
-                        widgetString.Update(gMouse.currentState);
+                        widgetDialogue = (GuiWidgetDialogue)widget;
+                        widgetDialogue.Update(gMouse.currentState);
                     }
 
                     if (widget.id.Item1 == "button")
@@ -159,7 +161,7 @@ namespace Lemonade
 
                     if (type == 0)
                     {
-                        if (widget.id.Item1 == "string" && widgetString != null)
+                        if (widget.id.Item1 == "string" && widgetDialogue != null)
                         {
                             //do nothing atm
                         }
@@ -232,15 +234,24 @@ namespace Lemonade
                     }
                     if (type == 1)
                     {
-                        if (widget.id.Item2 == 0)
+                        if (widget.id.Item1 == "dialogue")
                         {
-                            if (widget.currentState == GuiWidget.State.Done)
+                            if (widget.id.Item2 == 0)
                             {
-                                widgetString.ChangeText("woooooooooooh, thats weird huh", 30);
+                                if (widget.currentState == GuiWidget.State.Done)
+                                {
+                                    if (widgetDialogue.ChangeText(2))
+                                        widgetDialogue.active = false;
+                                }
                             }
                         }
                     }
+                    if (widget.active == false)
+                        removeList.Add(widget);
+                    ++index;
                 }
+                foreach (GuiWidget delete in removeList)
+                    widgets.Remove(delete);
             }
         }
 

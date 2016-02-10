@@ -108,16 +108,22 @@ namespace Lemonade
             if (!player.falling)
                 player.Control();
 
-            int index = 0;
+            List<Entity> removeList = new List<Entity>();
             foreach (EntityLiving el in entityLivings)
             {
                 el.Update();
 
                 if (el.dead)
-                    entityLivings.RemoveAt(index);
-                ++index;
+                    removeList.Add(el);
             }
 
+            /*foreach (Entity particle in particles)
+            {
+                particle.Update();
+
+                if (particle.dead)
+                    removeList.Add(particle);
+            }*/
             for (int p = 0; p < particles.Count; p++)
             {
                 particles[p].Update();
@@ -137,6 +143,9 @@ namespace Lemonade
             {
                 tilesDynamic[t].Update(this);
             }
+
+            foreach (EntityLiving remove in removeList)
+                entityLivings.Remove(remove);
 
             camera.MoveTo(player.center, new Vector2(0, 0), true);
 
@@ -473,11 +482,9 @@ namespace Lemonade
                 iEnt.Draw(batch);
             }
 
-/*            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
-            PrimiviteDrawing.DrawRectangle(null, batch, worldRect, ambientColor);
-            batch.End();*/
-
-            //player.Draw(batch);
+            batch.Begin();
+            player.guiHUD.Draw(batch);
+            batch.End();
         }
 
         public void drawBGLayers(SpriteBatch batch)

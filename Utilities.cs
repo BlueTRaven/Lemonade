@@ -1,9 +1,17 @@
 ﻿using System;
+using System.IO;
+using System.Text;
 using System.Globalization;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace Lemonade
 {
@@ -32,6 +40,25 @@ namespace Lemonade
             }
         }
 
-        
+        public static string ReadFile(string path, string tag)
+        {
+            var paneContent = new StringBuilder();
+            bool lineFound = false;
+            foreach (string line in File.ReadLines(path))
+            {
+                if (line.Contains(tag))
+                {
+                    lineFound = !lineFound;
+                }
+                else
+                {
+                    if (lineFound)
+                    {
+                        paneContent.Append(line);
+                    }
+                }
+            }
+            return paneContent.ToString();
+        }
     }
 }
