@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
@@ -33,7 +34,7 @@ namespace Lemonade
 
         public Vector2 center { get { return new Vector2(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2); } set { bounds.X = (int)value.X - bounds.Width; bounds.Y = (int)value.Y - bounds.Height; } }
 
-        public void Update(MouseState mState)
+        public void update(MouseState mState)
         {
             mousePos = mState.Position.ToVector2();
             currentState = GetState(mState);
@@ -79,6 +80,105 @@ namespace Lemonade
         }
     }
 
+    public class GuiWidgetString : GuiWidget
+    {
+        SpriteFont font;
+        string text;
+
+        int textSpeed;  //How fast a letter appears in ticks, 60 = 1 sec
+        int letterTimer;    //timer to count up that amount
+        int count;
+
+        Color[] colors;
+        public GuiWidgetString(Rectangle setBounds, Tuple<string, int> id, string setText, Color textColor, SpriteFont setFont, int textSpeed, Color[] colors)
+        {
+            this.id = id;
+            bounds = setBounds;
+            text = setText;
+            font = setFont;
+
+            this.textSpeed = textSpeed;
+
+            this.colors = colors;
+        }
+
+        public void Update(MouseState mState)
+        {
+            letterTimer++;
+
+            if (letterTimer >= textSpeed)
+            {
+                letterTimer = 0;
+                count++;
+            }
+            base.update(mState);
+        }
+
+        public override void Draw(SpriteBatch batch)
+        {
+            PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[1]);
+            PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2)), colors[0]);
+
+            string wrappedText = WrapText(font, text, bounds.Width);
+            char[] s = wrappedText.ToCharArray();
+            //string[] s = wrappedText.Split(new string[] {""}, 300, StringSplitOptions.None);
+
+            string final = "";
+            if (count <= s.Length)
+            {
+                for (int i = 0; i < s.Length; i++)
+                {
+                    if (i <= count)
+                    {
+                        final = final + s[i];
+                    }
+                }
+            }
+            else final = wrappedText;
+            batch.DrawString(font, final, new Vector2(bounds.X, bounds.Y), Color.White);
+        }
+
+        public static string WrapText(SpriteFont font, string text, float maxLineWidth)
+        {
+            string[] words = text.Split(' ');
+            StringBuilder sb = new StringBuilder();
+            float lineWidth = 0f;
+            float spaceWidth = font.MeasureString(" ").X;
+
+            foreach (string word in words)
+            {
+                Vector2 size = font.MeasureString(word);
+
+                if (lineWidth + size.X < maxLineWidth)
+                {
+                    sb.Append(word + " ");
+                    lineWidth += size.X + spaceWidth;
+                }
+                else
+                {
+                    if (size.X > maxLineWidth)
+                    {
+                        if (sb.ToString() == "")
+                        {
+                            sb.Append(WrapText(font, word.Insert(word.Length / 2, " ") + " ", maxLineWidth));
+                        }
+                        else
+                        {
+                            sb.Append("\n" + WrapText(font, word.Insert(word.Length / 2, " ") + " ", maxLineWidth));
+                        }
+                    }
+                    else
+                    {
+                        sb.Append("\n" + word + " ");
+                        lineWidth = size.X + spaceWidth;
+                    }
+                }
+            }
+
+            return sb.ToString();
+        }
+    }
+
     public class GuiWidgetButton : GuiWidget
     {
         SpriteFont font;
@@ -98,7 +198,7 @@ namespace Lemonade
 
         public void Update(MouseState mState)
         {
-            base.Update(mState);   
+            base.update(mState);   
         }
 
         public override void Draw(SpriteBatch batch)
@@ -141,7 +241,7 @@ namespace Lemonade
 
         public void Update(MouseState mState)
         {
-            base.Update(mState);
+            base.update(mState);
         }
 
         public override void Draw(SpriteBatch batch)

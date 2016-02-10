@@ -34,9 +34,19 @@ namespace Lemonade
 
         public abstract void Draw(SpriteBatch batch);
 
+        protected bool firstOpen = true;
         public bool active;
 
         protected int type;
+
+        public GuiWidgetString createString(Rectangle position, Tuple<string, int> id, string text, Color color, SpriteFont font, int textSpeed, Color[] colors)
+        {
+            GuiWidgetString widget;
+            widget = new GuiWidgetString(position, id, text, color, font, textSpeed, colors);
+
+            widgets.Add(widget);
+            return widget;
+        }
 
         public GuiWidgetButton createButton(Rectangle position, Tuple<string, int> id, string text, Color color, SpriteFont font, Color[] colors)
         {
@@ -81,26 +91,7 @@ namespace Lemonade
 
             this.type = type;
 
-            if (type == 0)
-            {
-                keyToOpen = Keys.H;
-                Color[] button1Colors = new Color[] { Color.Salmon, Color.DarkSalmon, Color.Orange };
-                createButton(new Rectangle((int)center.X - 32, (int)center.Y - 16, 64, 32), new Tuple<string, int>("button", 0), "Test", Color.White, Fonts.munro, button1Colors);
 
-
-                for (int x = 0; x < 16; x++)
-                {
-                    createInventorySlot(new Rectangle(x * (64 + 16), 256, 64, 64), new Tuple<string, int>("invslot", x), button1Colors);
-                }
-                for (int y = 16; y < 32; y++)
-                {
-                    createInventorySlot(new Rectangle(y * (64 + 16), 256 + 64, 64, 64), new Tuple<string, int>("invslot", y), button1Colors);
-                }
-                for (int z = 32; z < 48; z++)
-                {
-                    createInventorySlot(new Rectangle(z * (64 + 16), 256 + 64 + 64 + 16, 64, 64), new Tuple<string, int>("invslot", z), button1Colors);
-                }
-            }
 
             if (type == 1)
             {
@@ -122,24 +113,42 @@ namespace Lemonade
 
         public override void Update(GameMouse gMouse)
         {
-            /*if (game.keyPress(keyToOpen))
+            if (firstOpen)
             {
-                if (!active)
-                    Open();
-                else
-                    Close();
-            }*/
+                if (type == 0)
+                {
+                    Color[] button1Colors = new Color[] { Color.Salmon, Color.DarkSalmon, Color.Orange };
+                    createButton(new Rectangle((int)center.X - 32, (int)center.Y - 16, 64, 32), new Tuple<string, int>("button", 0), "Test", Color.White, Fonts.munro, button1Colors);
+
+                    for (int x = 0; x < 16; x++)
+                    {
+                        createInventorySlot(new Rectangle(x * (64 + 16), 256, 64, 64), new Tuple<string, int>("invslot", x), button1Colors);
+                    }
+
+                    createString(new Rectangle(0, 0, 128, 64), new Tuple<string, int>("string", 0), "Hello! this is some test text!", Color.White, Fonts.munro, 15, button1Colors);
+                }
+
+                firstOpen = false;
+            }
+
             if (active)
             {
                 foreach (GuiWidget widget in widgets)
                 {
-                    widget.Update(gMouse.currentState);
-                    if (widget.currentState != GuiWidget.State.None)
+                    //widget.Update(gMouse.currentState);
+                    //if (widget.currentState != GuiWidget.State.None)
                     {
                         if (type == 0)
                         {
+                            if (widget.id.Item1 == "string")
+                            {
+                                GuiWidgetString widgetString = (GuiWidgetString)widget;
+                                widgetString.Update(gMouse.currentState);
+                            }
                             if (widget.id.Item1 == "button")
                             {
+                                GuiWidgetButton widgetButton = (GuiWidgetButton)widget;
+                                widgetButton.Update(gMouse.currentState);
                                 if (widget.id.Item2 == 0)
                                 {
                                     if (widget.currentState == GuiWidget.State.Done)
@@ -152,6 +161,7 @@ namespace Lemonade
                             if (widget.id.Item1 == "invslot")
                             {
                                 GuiWidgetItemSlot widgetInvSlot = (GuiWidgetItemSlot)widget;
+                                widgetInvSlot.Update(gMouse.currentState);
                                 if (widget.currentState == GuiWidget.State.Hot)
                                 {
                                 }
