@@ -105,25 +105,16 @@ namespace Lemonade
         {
             worldCountSecond++;
 
+            if (!player.falling)
+                player.Control();
+
             int index = 0;
             foreach (EntityLiving el in entityLivings)
             {
-                if (el is Player)
-                {
-                    if (!player.falling)
-                        player.Control();
-                    player.Update();
-                }
+                el.Update();
 
-                if (el is Enemy)
-                {
-                    el.Update();
-
-                    if (el.dead)
-                    {
-                        entityLivings.RemoveAt(index);
-                    }
-                }
+                if (el.dead)
+                    entityLivings.RemoveAt(index);
                 ++index;
             }
 
@@ -204,7 +195,6 @@ namespace Lemonade
                                 {
                                     living.position.Y = living.hitbox.Y + overlap.Height;
                                 }
-                                
                             }
                             else
                             {
@@ -355,7 +345,7 @@ namespace Lemonade
         /// <param name="layer">layer on which to create the tile. 0-8</param>
         /// <returns>instance of the created tile.</returns>
         public Tile createTileStatic(Rectangle brush, string textureName, int layer, bool setWall = false, Directions setFacing = Directions.North)
-        {
+        {   //Todo add index
             TileStatic t = new TileStatic(brush, textureName, layer, this);
             t.Initialize(content);
             t.wall = setWall;
@@ -383,7 +373,8 @@ namespace Lemonade
 
         public void LoadWorld(int id)
         {
-            Console.WriteLine("Loading world id " + id);
+            Logger.Log("Loading world id " + id, true);
+
             //Clear ALL enemies/projectiles/tiles/etc
             entityLivings.Clear();
             tilesStatic.Clear();

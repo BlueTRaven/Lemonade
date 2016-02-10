@@ -35,8 +35,8 @@ namespace Lemonade
 
         public override void Initialize(ContentManager content)
         {
-            Console.WriteLine(layer);
-            Console.WriteLine(facing);
+            Logger.Log(String.Format("Created tile.\nIndex: {0}\nLayer: {1}\nFacing Direction: {2}", index, layer, facing), true);
+
             solid = false;//This is grass bgtile
             texture = content.Load<Texture2D>("textures/tiles/" + textureName);
             blend = content.Load<Texture2D>("textures/blend");

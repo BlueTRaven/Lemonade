@@ -27,6 +27,8 @@ namespace Lemonade
         public static ItemArmorLegs equppedLeggings;
         public static ItemArmorArms equippedArms;
 
+        public GuiFull guiHUD;
+
         public Player(Vector2 setPosition, int setLayer)
         {
             position = setPosition;
@@ -47,8 +49,7 @@ namespace Lemonade
 
             defensePhys = 0; defenseIce = 0; defenseFire = 0; defenseElec = 0;
 
-            //inventory
-            //Array.Clear(inventory, 0, 299);
+            guiHUD = new GuiFull(world.game, new Rectangle(0, 0, world.game.displayWidth, world.game.displayHeight), 1, null, true);
 
             initialized = true;
         }
@@ -151,6 +152,8 @@ namespace Lemonade
                 velocity *= friction;
 
             capVelocity();
+
+            guiHUD.Update(world.game.mouse);
         }
 
         public override void DealDamage(EntityLiving dealTo)
@@ -257,6 +260,11 @@ namespace Lemonade
             }
 
             PrimiviteDrawing.DrawRectangle(null, batch, hitbox, 1, Color.Red);
+
+            batch.End();
+
+            batch.Begin();
+            guiHUD.Draw(batch);
             batch.End();
 
         }

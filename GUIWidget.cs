@@ -89,6 +89,8 @@ namespace Lemonade
         int letterTimer;    //timer to count up that amount
         int count;
 
+        public bool finished = false;
+
         Color[] colors;
         public GuiWidgetString(Rectangle setBounds, Tuple<string, int> id, string setText, Color textColor, SpriteFont setFont, int textSpeed, Color[] colors)
         {
@@ -121,10 +123,10 @@ namespace Lemonade
 
             string wrappedText = WrapText(font, text, bounds.Width);
             char[] s = wrappedText.ToCharArray();
-            //string[] s = wrappedText.Split(new string[] {""}, 300, StringSplitOptions.None);
 
             string final = "";
-            if (count <= s.Length)
+
+            if (count <= s.Length && !finished)
             {
                 for (int i = 0; i < s.Length; i++)
                 {
@@ -134,8 +136,21 @@ namespace Lemonade
                     }
                 }
             }
-            else final = wrappedText;
-            batch.DrawString(font, final, new Vector2(bounds.X, bounds.Y), Color.White);
+            else
+            { 
+                final = wrappedText;
+                finished = true;
+                count = 0;
+            }
+            batch.DrawString(font, final, new Vector2(bounds.X, bounds.Y), Color.Black);
+        }
+
+        public void ChangeText(string newText, int newSpeed)
+        {
+            finished = false;
+
+            text = newText;
+            textSpeed = newSpeed;
         }
 
         public static string WrapText(SpriteFont font, string text, float maxLineWidth)

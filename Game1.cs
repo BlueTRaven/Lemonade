@@ -90,7 +90,9 @@ namespace Lemonade
         {
             int DesiredFrameRate = 60;
 
-            pauseMenu = new GuiFull(this, new Rectangle(0, 0, displayWidth, displayHeight), 0, Color.Black);
+            Logger.CreateNewLogFile();
+
+            pauseMenu = new GuiFull(this, new Rectangle(0, 0, displayWidth, displayHeight), 0, Color.Black, false);
             world = new World();
             mouse = new GameMouse();
 

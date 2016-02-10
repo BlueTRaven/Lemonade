@@ -82,21 +82,19 @@ namespace Lemonade
 
     public class GuiFull : Gui
     {
-        public GuiFull(Game1 game, Rectangle screenSize, int type, Color color)
+        public GuiFull(Game1 game, Rectangle screenSize, int type, Color? color, bool defaultActive)
         {
             this.game = game;
             bounds = screenSize;
 
-            backgroundColor = color;
+            if (color != null)
+                backgroundColor = (Color)color;
 
             this.type = type;
 
-
-
-            if (type == 1)
-            {
-                Color[] button1Colors = new Color[] { Color.Red, Color.Red, Color.DarkRed };
-            }
+            if (defaultActive)
+                active = true;
+            else active = false;
         }
 
         public GuiFull(Game1 game, Rectangle screenSize, int type, Texture2D bgTex)
@@ -124,8 +122,11 @@ namespace Lemonade
                     {
                         createInventorySlot(new Rectangle(x * (64 + 16), 256, 64, 64), new Tuple<string, int>("invslot", x), button1Colors);
                     }
+                }
 
-                    createString(new Rectangle(0, 0, 128, 64), new Tuple<string, int>("string", 0), "Hello! this is some test text!", Color.White, Fonts.munro, 15, button1Colors);
+                else if (type == 1)
+                {
+                    //createString(new Rectangle(0, 0, 128, 64), new Tuple<string, int>("string", 0), "Hello! this is some test text!", Color.White, Fonts.munro, 2, new Color[] { Color.White, Color.DarkGray });
                 }
 
                 firstOpen = false;
@@ -133,95 +134,109 @@ namespace Lemonade
 
             if (active)
             {
+                GuiWidgetString widgetString = null;
+                GuiWidgetButton widgetButton = null;
+                GuiWidgetItemSlot widgetInvSlot = null;
                 foreach (GuiWidget widget in widgets)
                 {
-                    //widget.Update(gMouse.currentState);
-                    //if (widget.currentState != GuiWidget.State.None)
+                    if (widget.id.Item1 == "string")
                     {
-                        if (type == 0)
+                        widgetString = (GuiWidgetString)widget;
+                        widgetString.Update(gMouse.currentState);
+                    }
+
+                    if (widget.id.Item1 == "button")
+                    {
+                        widgetButton = (GuiWidgetButton)widget;
+                        widgetButton.Update(gMouse.currentState);
+                    }
+
+                    if (widget.id.Item1 == "invslot")
+                    {
+                        widgetInvSlot = (GuiWidgetItemSlot)widget;
+                        widgetInvSlot.Update(gMouse.currentState);
+                    }
+
+                    if (type == 0)
+                    {
+                        if (widget.id.Item1 == "string" && widgetString != null)
                         {
-                            if (widget.id.Item1 == "string")
+                            //do nothing atm
+                        }
+                        if (widget.id.Item1 == "button" && widgetButton != null)
+                        {
+                            if (widget.id.Item2 == 0)
                             {
-                                GuiWidgetString widgetString = (GuiWidgetString)widget;
-                                widgetString.Update(gMouse.currentState);
-                            }
-                            if (widget.id.Item1 == "button")
-                            {
-                                GuiWidgetButton widgetButton = (GuiWidgetButton)widget;
-                                widgetButton.Update(gMouse.currentState);
-                                if (widget.id.Item2 == 0)
+                                if (widget.currentState == GuiWidget.State.Done)
                                 {
-                                    if (widget.currentState == GuiWidget.State.Done)
-                                    {
-                                        Close();
-                                    }
-                                }
-                            }
-
-                            if (widget.id.Item1 == "invslot")
-                            {
-                                GuiWidgetItemSlot widgetInvSlot = (GuiWidgetItemSlot)widget;
-                                widgetInvSlot.Update(gMouse.currentState);
-                                if (widget.currentState == GuiWidget.State.Hot)
-                                {
-                                }
-
-                                if (widget.currentState == GuiWidget.State.Done)//&& widget.previousState == GuiWidget.State.Hot)
-                                {
-                                    if (widgetInvSlot.itemInSlot != null)       //Has an item in slot
-                                    {
-                                        if (gMouse.heldItem == null)            //Has no item in mouse slot
-                                        {
-                                            gMouse.heldItem = widgetInvSlot.itemInSlot; //Set the item in mouse slot to inventory slot
-                                            widgetInvSlot.itemInSlot = null;            //Set inventory slot nothing (really only visual, not sure if this is really neccessary)
-                                            game.world.player.inventory[widget.id.Item2] = null;    //Also sets the player's inventory slot to null.
-                                        }
-                                        else if (widgetInvSlot.itemInSlot.item.id == gMouse.heldItem.item.id)    //Else, if the item in slot's id is the same as the item in the mouse slot's id
-                                        {
-                                            widgetInvSlot.itemInSlot.stackSize += gMouse.heldItem.stackSize;    //Increases the item in slot's stack count by the stacksize of the mouse's held item
-                                            gMouse.heldItem = null; //Sets the held item to nothing
-                                        }
-                                    }
-                                    else  //Otherwise, if there is no item in the slot
-                                    {
-                                        widgetInvSlot.itemInSlot = gMouse.heldItem; //Sets the item in slot to that of the mouse's held item
-                                        gMouse.heldItem = null;                     //Sets mouse held item to nothing
-                                        game.world.player.inventory[widget.id.Item2] = widgetInvSlot.itemInSlot;    //And sets the inventory slot to the item
-                                    }
-                                }
-
-                                if (widget.currentState == GuiWidget.State.Done2)
-                                {
-                                    if (widgetInvSlot.itemInSlot != null)       //Has an item in slot
-                                    {
-                                        if (gMouse.heldItem == null)    //held item is null, so can pick up one item
-                                        {
-                                            if (widgetInvSlot.itemInSlot.stackSize - 1 != 0)      //if the stacksize - 1 is not equal to 1
-                                            {
-                                                widgetInvSlot.itemInSlot.stackSize -= 1;    //Decreases the item in slot's stack count by one
-                                                gMouse.heldItem = widgetInvSlot.itemInSlot; //Sets the held item to the same as the item in the slot, so it's picked up.
-                                                gMouse.heldItem.stackSize = 1;
-                                            }
-                                            else if (widgetInvSlot.itemInSlot.stackSize - 1 <= 0)    //Otherwise if the stacksize is less than or equal to 0, set the item to null
-                                            {
-                                                widgetInvSlot.itemInSlot.stackSize += 1;    //Increases the item in slot stack size by one
-                                                gMouse.heldItem = null;                     //and sets the item to null, as it now has a stacksize of null.
-                                            }
-                                        }
-                                        else
-                                        {
-
-                                        }
-                                    }
+                                    Close();
                                 }
                             }
                         }
 
-                        if (type == 1)
+                        if (widget.id.Item1 == "invslot" && widgetInvSlot != null)
                         {
-                            //if (widget.id == 1)
+                            if (widget.currentState == GuiWidget.State.Hot)
                             {
+                            }
 
+                            if (widget.currentState == GuiWidget.State.Done)//&& widget.previousState == GuiWidget.State.Hot)
+                            {
+                                if (widgetInvSlot.itemInSlot != null)       //Has an item in slot
+                                {
+                                    if (gMouse.heldItem == null)            //Has no item in mouse slot
+                                    {
+                                        gMouse.heldItem = widgetInvSlot.itemInSlot; //Set the item in mouse slot to inventory slot
+                                        widgetInvSlot.itemInSlot = null;            //Set inventory slot nothing (really only visual, not sure if this is really neccessary)
+                                        game.world.player.inventory[widget.id.Item2] = null;    //Also sets the player's inventory slot to null.
+                                    }
+                                    else if (widgetInvSlot.itemInSlot.item.id == gMouse.heldItem.item.id)    //Else, if the item in slot's id is the same as the item in the mouse slot's id
+                                    {
+                                        widgetInvSlot.itemInSlot.stackSize += gMouse.heldItem.stackSize;    //Increases the item in slot's stack count by the stacksize of the mouse's held item
+                                        gMouse.heldItem = null; //Sets the held item to nothing
+                                    }
+                                }
+                                else  //Otherwise, if there is no item in the slot
+                                {
+                                    widgetInvSlot.itemInSlot = gMouse.heldItem; //Sets the item in slot to that of the mouse's held item
+                                    gMouse.heldItem = null;                     //Sets mouse held item to nothing
+                                    game.world.player.inventory[widget.id.Item2] = widgetInvSlot.itemInSlot;    //And sets the inventory slot to the item
+                                }
+                            }
+
+                            if (widget.currentState == GuiWidget.State.Done2)
+                            {
+                                if (widgetInvSlot.itemInSlot != null)       //Has an item in slot
+                                {
+                                    if (gMouse.heldItem == null)    //held item is null, so can pick up one item
+                                    {
+                                        if (widgetInvSlot.itemInSlot.stackSize - 1 != 0)      //if the stacksize - 1 is not equal to 1
+                                        {
+                                            widgetInvSlot.itemInSlot.stackSize -= 1;    //Decreases the item in slot's stack count by one
+                                            gMouse.heldItem = widgetInvSlot.itemInSlot; //Sets the held item to the same as the item in the slot, so it's picked up.
+                                            gMouse.heldItem.stackSize = 1;
+                                        }
+                                        else if (widgetInvSlot.itemInSlot.stackSize - 1 <= 0)    //Otherwise if the stacksize is less than or equal to 0, set the item to null
+                                        {
+                                            widgetInvSlot.itemInSlot.stackSize += 1;    //Increases the item in slot stack size by one
+                                            gMouse.heldItem = null;                     //and sets the item to null, as it now has a stacksize of null.
+                                        }
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (type == 1)
+                    {
+                        if (widget.id.Item2 == 0)
+                        {
+                            if (widget.currentState == GuiWidget.State.Done)
+                            {
+                                widgetString.ChangeText("woooooooooooh, thats weird huh", 30);
                             }
                         }
                     }
@@ -273,7 +288,7 @@ namespace Lemonade
             {
                 if (backgroundColor != null)
                 {
-                    PrimiviteDrawing.DrawRectangle(null, batch, bounds, Color.Black);
+                    PrimiviteDrawing.DrawRectangle(null, batch, bounds, backgroundColor);
                 }
                 if (background != null)
                 {

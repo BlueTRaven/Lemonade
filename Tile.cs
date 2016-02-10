@@ -33,6 +33,7 @@ namespace Lemonade
 
         [DataMember]
         public int id, layer;
+        public int index = 0;
         public bool solid, draw, wall;
         public float mass, inv_mass, restitution;
 

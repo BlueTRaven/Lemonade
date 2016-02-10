@@ -42,12 +42,12 @@ namespace Lemonade
                 _zoom = value;
                 if (_zoom < zoomLowerLimit)
                 {
-                    Console.WriteLine("Tried to set invalid camera zoom level - too low");
+                    Logger.Log("Tried to set invalid camera zoom level - too low", true);
                     _zoom = zoomLowerLimit;
                 }
                 if (_zoom > zoomUpperLimit)
                 {
-                    Console.WriteLine("Tried to set invalid camera zoom level - too high");
+                    Logger.Log("Tried to set invalid camera zoom level - too high", true);
                     _zoom = zoomUpperLimit;
                 }
             }
