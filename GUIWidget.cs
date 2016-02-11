@@ -30,7 +30,8 @@ namespace Lemonade
 
         protected int outlineWidth =0;
 
-        protected Rectangle bounds;
+        public Rectangle bounds;
+        protected Rectangle interiorBounds;
 
         public bool active = true;
 
@@ -99,6 +100,10 @@ namespace Lemonade
         {
             this.id = id;
             bounds = setBounds;
+            
+            outlineWidth = 4;
+            interiorBounds = new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2));
+
             font = setFont;
 
             this.textSpeed = textSpeed;
@@ -106,7 +111,6 @@ namespace Lemonade
             this.colors = colors;
 
             text = Utilities.ReadFile("Content\\strings\\dialogue.txt", forKey).Split(':');
-            Console.WriteLine(text);
         }
 
         public void Update(MouseState mState)
@@ -127,9 +131,9 @@ namespace Lemonade
         public override void Draw(SpriteBatch batch)
         {
             PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[1]);
-            PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2)), colors[0]);
+            PrimiviteDrawing.DrawRectangle(null, batch, interiorBounds, colors[0]);
 
-            string wrappedText = WrapText(font, text[currentLine], bounds.Width);
+            string wrappedText = Utilities.WrapText(font, text[currentLine], interiorBounds.Width);
             char[] s = wrappedText.ToCharArray();
 
             string final = "";
@@ -150,7 +154,7 @@ namespace Lemonade
                 finished = true;
                 count = 0;
             }
-            batch.DrawString(font, final, new Vector2(bounds.X, bounds.Y), Color.Black);
+            batch.DrawString(font, final, new Vector2(interiorBounds.X, interiorBounds.Y), Color.Black);
         }
 
         /// <summary>
@@ -174,45 +178,82 @@ namespace Lemonade
             textSpeed = newSpeed;
             return false;
         }
+    }
 
-        public static string WrapText(SpriteFont font, string text, float maxLineWidth)
+    public class GuiWidgetButtonString : GuiWidget
+    {
+        public enum Alignment 
+        { 
+            Center, 
+            Left, 
+            Right, 
+            Top, 
+            Bottom 
+        }
+        Alignment alignment;
+        SpriteFont font;
+        string text;
+
+        Color[] colors;
+
+        public GuiWidgetButtonString(Rectangle setBounds, Tuple<string, int> id, string setText, Alignment align, Color textColor, SpriteFont setFont, Color[] colors)
         {
-            string[] words = text.Split(' ');
-            StringBuilder sb = new StringBuilder();
-            float lineWidth = 0f;
-            float spaceWidth = font.MeasureString(" ").X;
+            this.id = id;
+            bounds = setBounds;
+            font = setFont;
+            text = setText;//Utilities.WrapText(font, setText, bounds.Width);
 
-            foreach (string word in words)
+            alignment = align;
+
+            this.colors = colors;
+        }
+
+        public void Update(MouseState mState)
+        {
+            if (active)
             {
-                Vector2 size = font.MeasureString(word);
+                base.update(mState);
+            }
+        }
+            
+        public override void Draw(SpriteBatch batch)
+        {
+            Vector2 size = font.MeasureString(text);
+            Vector2 pos = bounds.Center.ToVector2();
+            Vector2 origin = size * 0.5f;
 
-                if (lineWidth + size.X < maxLineWidth)
-                {
-                    sb.Append(word + " ");
-                    lineWidth += size.X + spaceWidth;
-                }
-                else
-                {
-                    if (size.X > maxLineWidth)
-                    {
-                        if (sb.ToString() == "")
-                        {
-                            sb.Append(WrapText(font, word.Insert(word.Length / 2, " ") + " ", maxLineWidth));
-                        }
-                        else
-                        {
-                            sb.Append("\n" + WrapText(font, word.Insert(word.Length / 2, " ") + " ", maxLineWidth));
-                        }
-                    }
-                    else
-                    {
-                        sb.Append("\n" + word + " ");
-                        lineWidth = size.X + spaceWidth;
-                    }
-                }
+            Color color = colors[0];
+            if (currentState == State.None)
+            {
+                color = colors[0];
+            }
+            if (currentState == State.Hot)
+            {
+                color = colors[1];
+            }
+            if (currentState == State.Active || currentState == State.Done)
+            {
+                color = colors[2];
             }
 
-            return sb.ToString();
+            if (alignment == Alignment.Left)
+            {
+                origin.X += bounds.Width / 2 - size.X / 2;
+            }
+            if (alignment == Alignment.Right)
+            {
+                origin.X -= bounds.Width / 2 - size.X / 2;
+            }
+            if (alignment == Alignment.Top)
+            {
+                origin.Y += bounds.Height / 2 - size.Y / 2;
+            }
+            if (alignment == Alignment.Bottom)
+            {
+                origin.Y -= bounds.Height / 2 - size.Y / 2;
+            }
+
+            batch.DrawString(font, text, pos, color, 0, origin, 1, SpriteEffects.None, 0);
         }
     }
 

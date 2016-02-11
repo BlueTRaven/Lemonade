@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Lemonade.Guis;
 
 namespace Lemonade
 {
@@ -27,7 +28,7 @@ namespace Lemonade
         public static ItemArmorLegs equppedLeggings;
         public static ItemArmorArms equippedArms;
 
-        public GuiFull guiHUD;
+        public GuiHud guiHUD;
 
         public Player(Vector2 setPosition, int setLayer)
         {
@@ -49,7 +50,7 @@ namespace Lemonade
 
             defensePhys = 0; defenseIce = 0; defenseFire = 0; defenseElec = 0;
 
-            guiHUD = new GuiFull(world.game, new Rectangle(0, 0, world.game.displayWidth, world.game.displayHeight), 1, null, true);
+            guiHUD = new GuiHud(world.game);
 
             initialized = true;
         }

@@ -48,6 +48,15 @@ namespace Lemonade
             return widget;
         }
 
+        public GuiWidgetButtonString createButtonString(Rectangle position, Tuple<string, int> id, string text, GuiWidgetButtonString.Alignment align, Color color, SpriteFont font, Color[] colors)
+        {
+            GuiWidgetButtonString widget;
+            widget = new GuiWidgetButtonString(position, id, text, align, color, font, colors);
+
+            widgets.Add(widget);
+            return widget;
+        }
+
         public GuiWidgetButton createButton(Rectangle position, Tuple<string, int> id, string text, Color color, SpriteFont font, Color[] colors)
         {
             GuiWidgetButton widget;
@@ -82,6 +91,7 @@ namespace Lemonade
 
     public class GuiFull : Gui
     {
+        public GuiWidgetDialogue dialogueBox;
         public GuiFull(Game1 game, Rectangle screenSize, int type, Color? color, bool defaultActive)
         {
             this.game = game;
@@ -116,7 +126,6 @@ namespace Lemonade
                 if (type == 0)
                 {
                     Color[] button1Colors = new Color[] { Color.Salmon, Color.DarkSalmon, Color.Orange };
-                    createButton(new Rectangle((int)center.X - 32, (int)center.Y - 16, 64, 32), new Tuple<string, int>("button", 0), "Test", Color.White, Fonts.munro12, button1Colors);
 
                     for (int x = 0; x < 16; x++)
                     {
@@ -126,7 +135,6 @@ namespace Lemonade
 
                 else if (type == 1)
                 {
-                    createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<string, int>("dialogue", 0), "<test2>", Color.White, Fonts.munro24, 2, new Color[] { Color.White, Color.DarkGray });
                 }
 
                 firstOpen = false;
@@ -135,7 +143,6 @@ namespace Lemonade
             if (active)
             {
                 List<GuiWidget> removeList = new List<GuiWidget>();
-                int index = 0;
                 GuiWidgetDialogue widgetDialogue = null;
                 GuiWidgetButton widgetButton = null;
                 GuiWidgetItemSlot widgetInvSlot = null;
@@ -234,24 +241,10 @@ namespace Lemonade
                     }
                     if (type == 1)
                     {
-                        if (widget.id.Item1 == "dialogue")
-                        {
-                            if (widget.id.Item2 == 0)
-                            {
-                                if (widget.currentState == GuiWidget.State.Done)
-                                {
-                                    if (widgetDialogue.ChangeText(2))
-                                        widgetDialogue.active = false;
-                                }
-                            }
-                        }
+                        
                     }
-                    if (widget.active == false)
-                        removeList.Add(widget);
-                    ++index;
                 }
-                foreach (GuiWidget delete in removeList)
-                    widgets.Remove(delete);
+
             }
         }
 
@@ -260,7 +253,7 @@ namespace Lemonade
             active = true;
             if (type == 0)
             {
-                Game1.paused = true;
+                //Game1.paused = true;
 
                 //RemoveWidgetType("invslot");
                 //RemoveWidgetType("equipslot");
@@ -289,7 +282,7 @@ namespace Lemonade
             active = false;
             if (type == 0)
             {
-                Game1.paused = false;
+               // Game1.paused = false;
             }
         }
 

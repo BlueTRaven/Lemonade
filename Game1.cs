@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using Lemonade;
+using Lemonade.Guis;
 
 namespace Lemonade
 {
@@ -56,10 +57,10 @@ namespace Lemonade
         int TicksAggregate = 0;
         int SecondSinceStart = 0;
 
-        public static bool paused = false;
+        public bool paused = false;
         int timeSincePaused;
 
-        GuiFull pauseMenu;
+        GuiPause pauseMenu;
 
         Color fadeColor;
 
@@ -92,9 +93,9 @@ namespace Lemonade
 
             Logger.CreateNewLogFile();
 
-            pauseMenu = new GuiFull(this, new Rectangle(0, 0, displayWidth, displayHeight), 0, Color.Black, false);
             world = new World();
             mouse = new GameMouse();
+            pauseMenu = new GuiPause(this);
 
             TargetElapsedTime = new TimeSpan(TimeSpan.TicksPerSecond / DesiredFrameRate);
 
