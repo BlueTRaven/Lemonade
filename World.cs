@@ -530,7 +530,7 @@ namespace Lemonade
         {
             player.Initialize(this, camera);
 
-            layerTextures[0] = content.Load<Texture2D>("textures/bgTest");
+            layerTextures[0] = Assets.textures["BG_sky1"];//content.Load<Texture2D>("textures/bgTest");
             //layerTextures[1] = content.Load<Texture2D>("textures/bgSky");
         }
 

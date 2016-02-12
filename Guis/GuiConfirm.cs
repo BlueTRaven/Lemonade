@@ -93,10 +93,10 @@ namespace Lemonade.Guis
 
         public void CreateWidgets()
         {
-            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y, 128, 16), new Tuple<string, int>("butstring", 0), texts[0], GuiWidgetButtonString.Alignment.Center, Color.White, Fonts.munro24, new Color[] { Color.White, Color.White, Color.White });
+            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y, 128, 16), new Tuple<string, int>("butstring", 0), texts[0], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro24"], new Color[] { Color.White, Color.White, Color.White });
 
-            createButtonString(new Rectangle((int)center.X - 192, (int)center.Y + 16, 48, 16), new Tuple<string, int>("butstring", 1), texts[1], GuiWidgetButtonString.Alignment.Center, Color.White, Fonts.munro12, new Color[] { Color.White, Color.DarkGray, Color.Gray });
-            createButtonString(new Rectangle((int)center.X + 192, (int)center.Y + 16, 48, 16), new Tuple<string, int>("butstring", 2), texts[2], GuiWidgetButtonString.Alignment.Center, Color.White, Fonts.munro12, new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X - 192, (int)center.Y + 16, 48, 16), new Tuple<string, int>("butstring", 1), texts[1], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro12"], new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X + 192, (int)center.Y + 16, 48, 16), new Tuple<string, int>("butstring", 2), texts[2], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro12"], new Color[] { Color.White, Color.DarkGray, Color.Gray });
         }
 
         public override void Draw(SpriteBatch batch)

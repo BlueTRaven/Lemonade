@@ -44,7 +44,9 @@ namespace Lemonade
 
             world = setWorld;
 
-            texture = world.game.Content.Load<Texture2D>("textures/player");
+            texture = Assets.textures["player"];
+            //texture = world.game.
+            //Texture2D>("textures/player");
 
             maxHealth = 100;
             health = maxHealth;
@@ -263,7 +265,7 @@ namespace Lemonade
             batch.Draw(texture, position, null, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
             //batch.Draw(texture, position, null, Color.White, 30f, center - position, 1f, SpriteEffects.None, 0f);
             //PrimiviteDrawing.DrawRectangle(null, batch, hitbox, Color.Red, -angleToMouse, center - position);
-            batch.DrawString(Fonts.munro12, ("Layer:" + layer + "\nHealth: " + health), new Vector2(position.X, position.Y - 32), Color.Black);
+            batch.DrawString(Assets.fonts["munro12"], ("Layer:" + layer + "\nHealth: " + health), new Vector2(position.X, position.Y - 32), Color.Black);
 
             if (isHit)
             {

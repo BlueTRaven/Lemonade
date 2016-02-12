@@ -122,7 +122,7 @@ namespace Lemonade
             int windowWidth = GraphicsDevice.Viewport.Width;
             int windowHeight = GraphicsDevice.Viewport.Height;
 
-            Fonts.LoadFonts(Content);
+            Assets.Load(Content);
 
             world.Initialize(this, Content, new Rectangle(0, 0, 2560, 1440), new Rectangle(0, 0, displayWidth, displayHeight), graphics.GraphicsDevice);
             mouse.Initialize(Content);
@@ -250,7 +250,7 @@ namespace Lemonade
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
             if (Fps > 0)
             {
-                spriteBatch.DrawString(Fonts.munro12, string.Format("Current FPS: {0}\r\nWorld time: Second: {1} Minute: {2} Hour: {3} World alpha: {4}\r\nPlayer position: X: {5} Y: {6}", Fps.ToString("000"), world.worldCountSecond, world.worldCountMinute, world.worldCountHour, world.ambientColor.A, world.player.position.X, world.player.position.Y), new Vector2(10, 10), Color.White);
+                spriteBatch.DrawString(Assets.fonts["munro12"], string.Format("Current FPS: {0}\r\nWorld time: Second: {1} Minute: {2} Hour: {3} World alpha: {4}\r\nPlayer position: X: {5} Y: {6}", Fps.ToString("000"), world.worldCountSecond, world.worldCountMinute, world.worldCountHour, world.ambientColor.A, world.player.position.X, world.player.position.Y), new Vector2(10, 10), Color.White);
             }
             
             /*

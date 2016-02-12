@@ -25,7 +25,7 @@ namespace Lemonade
 
             if (aiType == 0 || aiType == 1)
             {
-                texture = world.game.Content.Load<Texture2D>("textures/enemy1");
+                texture = Assets.textures["enemy1"];
                 damage = 12;
                 maxSpeed = 3;
             }

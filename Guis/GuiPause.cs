@@ -93,8 +93,8 @@ namespace Lemonade.Guis
 
         public void CreateWidgets()
         {
-            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y - 8, 128, 16), new Tuple<string, int>("butstring", 0), "Resume game", GuiWidgetButtonString.Alignment.Center, Color.White, Fonts.munro12, new Color[] { Color.White, Color.DarkGray, Color.Gray });
-            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y + 16, 128, 16), new Tuple<string, int>("butstring", 1), "Exit game", GuiWidgetButtonString.Alignment.Center, Color.White, Fonts.munro12, new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y - 8, 128, 16), new Tuple<string, int>("butstring", 0), "Resume game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro12"], new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y + 16, 128, 16), new Tuple<string, int>("butstring", 1), "Exit game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro12"], new Color[] { Color.White, Color.DarkGray, Color.Gray });
         }
 
         public override void Draw(SpriteBatch batch)

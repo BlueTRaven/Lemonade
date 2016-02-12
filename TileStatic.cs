@@ -38,8 +38,8 @@ namespace Lemonade
             Logger.Log(String.Format("Created tile.\nIndex: {0}\nLayer: {1}\nFacing Direction: {2}", index, layer, facing), true);
 
             solid = false;//This is grass bgtile
-            texture = content.Load<Texture2D>("textures/tiles/" + textureName);
-            blend = content.Load<Texture2D>("textures/blend");
+            texture = Assets.textures[textureName];//content.Load<Texture2D>("textures/tiles/" + textureName);
+            //blend = content.Load<Texture2D>("textures/blend");
         }
 
         public override void Update(World world) { return; }   //Static tiles never update
@@ -115,7 +115,7 @@ namespace Lemonade
             batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
             PrimiviteDrawing.DrawRectangle(null, batch, rect, 1, Color.Red);
             PrimiviteDrawing.DrawLineSegment(null, batch, new Vector2(rect.X, rect.Y), new Vector2(rect.X + rect.Width, rect.Y + rect.Height), Color.Blue, 1);
-            batch.DrawString(Fonts.munro12, "layer:" + layer, new Vector2(position.X + 32, position.Y + 32), Color.Black);
+            batch.DrawString(Assets.fonts["munro12"], "layer:" + layer, new Vector2(position.X + 32, position.Y + 32), Color.Black);
             batch.End();
         }
     }

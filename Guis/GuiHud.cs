@@ -74,7 +74,7 @@ namespace Lemonade.Guis
 
         public void CreateWidgets()
         {
-            createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<string, int>("dialogue", 0), "<test>", Color.White, Fonts.munro24, 2, new Color[] { Color.White, Color.DarkGray });
+            createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<string, int>("dialogue", 0), "<test>", Color.White, Assets.fonts["munro24"], 2, new Color[] { Color.White, Color.DarkGray });
         }
 
         public override void Draw(SpriteBatch batch)
