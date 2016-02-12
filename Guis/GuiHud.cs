@@ -26,45 +26,48 @@ namespace Lemonade.Guis
                     firstOpen = false;
                 }
 
-                List<GuiWidget> removeList = new List<GuiWidget>();
-                GuiWidgetDialogue widgetDialogue = null;
-                GuiWidgetButton widgetButton = null;
-
-                foreach (GuiWidget widget in widgets)
+                if (game.priorityGui == this)
                 {
-                    if (widget.id.Item1 == "dialogue")
-                    {
-                        widgetDialogue = (GuiWidgetDialogue)widget;
-                        widgetDialogue.Update(gMouse.currentState);
-                    }
+                    List<GuiWidget> removeList = new List<GuiWidget>();
+                    GuiWidgetDialogue widgetDialogue = null;
+                    GuiWidgetButton widgetButton = null;
 
-                    if (widget.id.Item1 == "button")
+                    foreach (GuiWidget widget in widgets)
                     {
-                        widgetButton = (GuiWidgetButton)widget;
-                        widgetButton.Update(gMouse.currentState);
-                    }
-
-                    if (widget.id.Item1 == "dialogue")
-                    {
-                        if (widget.id.Item2 == 0)
+                        if (widget.id.Item1 == "dialogue")
                         {
-                            if (widget.currentState == GuiWidget.State.Done)
+                            widgetDialogue = (GuiWidgetDialogue)widget;
+                            widgetDialogue.Update(gMouse.currentState);
+                        }
+
+                        if (widget.id.Item1 == "button")
+                        {
+                            widgetButton = (GuiWidgetButton)widget;
+                            widgetButton.Update(gMouse.currentState);
+                        }
+
+                        if (widget.id.Item1 == "dialogue")
+                        {
+                            if (widget.id.Item2 == 0)
                             {
-                                if (widgetDialogue.ChangeText(2))
-                                    widgetDialogue.active = false;
+                                if (widget.currentState == GuiWidget.State.Done)
+                                {
+                                    if (widgetDialogue.ChangeText(2))
+                                        widgetDialogue.active = false;
+                                }
                             }
+                        }
+
+                        if (widget.active == false)
+                        {
+                            removeList.Add(widget);
                         }
                     }
 
-                    if (widget.active == false)
+                    foreach (GuiWidget delete in removeList)
                     {
-                        removeList.Add(widget); 
+                        widgets.Remove(delete);
                     }
-                }
-
-                foreach (GuiWidget delete in removeList)
-                { 
-                    widgets.Remove(delete); 
                 }
             }
         }

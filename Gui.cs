@@ -15,12 +15,9 @@ namespace Lemonade
     /// </summary>
     public abstract class Gui
     {
-        public enum WidgetType
-        {
-            Button
-        }
-        protected Keys keyToOpen;
         protected Game1 game;
+
+        protected Gui oldPriorityGui;
 
         protected Rectangle bounds;
         protected Vector2 center { get { return bounds.Center.ToVector2(); } }
@@ -36,6 +33,7 @@ namespace Lemonade
 
         protected bool firstOpen = true;
         public bool active;
+        protected bool recieveInput = false;
 
         protected int type;
 

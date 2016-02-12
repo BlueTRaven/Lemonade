@@ -52,7 +52,7 @@ namespace Lemonade
 
             guiHUD = new GuiHud(world.game);
 
-            initialized = true;
+            world.game.priorityGui = guiHUD;
         }
         
         [DataMember]

@@ -41,6 +41,8 @@ namespace Lemonade
          * LESS IMPORTANT
          *#safe deletion of entities
          */
+        Stopwatch timeSinceStart;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public World world;
@@ -62,6 +64,9 @@ namespace Lemonade
 
         GuiPause pauseMenu;
 
+        //public Gui oldPriorityGui;
+        public Gui priorityGui;// { get; set { oldPriorityGui = priorityGui; priorityGui = value; } }
+
         Color fadeColor;
 
         Texture2D crosshairTex;
@@ -79,6 +84,9 @@ namespace Lemonade
             graphics.PreferredBackBufferWidth = displayWidth;
             graphics.PreferredBackBufferHeight = displayHeight;
             graphics.ApplyChanges();
+
+            timeSinceStart = Stopwatch.StartNew();
+            //timeSinceStart.Start();
         }
 
         /// <summary>
@@ -159,7 +167,7 @@ namespace Lemonade
             {
                 if (!paused)
                     pauseMenu.Open();
-                else
+                else if (priorityGui == pauseMenu)
                     pauseMenu.Close();
             }
 
@@ -167,6 +175,11 @@ namespace Lemonade
             oldKBState = Keyboard.GetState();
 
             base.Update(gameTime);
+        }
+
+        protected override void OnExiting(object sender, EventArgs args)
+        {
+            Logger.Log("Exiting game...\nRan for " + timeSinceStart.Elapsed + ".\n" + timeSinceStart.ElapsedMilliseconds + " milliseconds, " + timeSinceStart.ElapsedTicks + " ticks", true);
         }
 
         /// <summary>

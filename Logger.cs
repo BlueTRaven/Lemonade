@@ -20,11 +20,13 @@ namespace Lemonade
 
         public static void CreateNewLogFile()
         {
+            string oldFileNameExtention = string.Format("{0:yyyy-MM-dd_hh-mm-ss-tt}", DateTime.Now);
+
             Directory.CreateDirectory("logs\\");
             File.Create("logs\\log.txt").Close();
             if (File.Exists(path))
             {
-                File.Copy("logs\\log.txt", "logs\\logOld.txt", true);
+                //File.Copy("logs\\log.txt", "logs\\log " + oldFileNameExtention + ".txt", true);
             }
         }
         public static void Log(string text, bool print)

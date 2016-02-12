@@ -52,11 +52,11 @@ namespace Lemonade
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(texture, new Vector2(currentState.Position.X - texture.Width / 2, currentState.Position.Y - texture.Height / 2), Color.White);
+            batch.Draw(texture, center, Color.White);
 
             if (currentState.LeftButton == ButtonState.Pressed)
             {
-                PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle((int)currentState.Position.X, (int)currentState.Position.Y, texture.Bounds.Width, texture.Bounds.Height), Color.Red * 0.5f);
+                PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle(center.ToPoint(), new Point(texture.Bounds.Width, texture.Bounds.Height)), Color.Red * 0.5f);
             }
 
             if (heldItem != null)
