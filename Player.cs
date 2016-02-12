@@ -29,6 +29,7 @@ namespace Lemonade
         public static ItemArmorArms equippedArms;
 
         public GuiHud guiHUD;
+        public GuiInventory guiInventory;
 
         public Player(Vector2 setPosition, int setLayer)
         {
@@ -51,6 +52,7 @@ namespace Lemonade
             defensePhys = 0; defenseIce = 0; defenseFire = 0; defenseElec = 0;
 
             guiHUD = new GuiHud(world.game);
+            guiInventory = new GuiInventory(world.game);
 
             world.game.priorityGui = guiHUD;
         }
@@ -83,6 +85,13 @@ namespace Lemonade
             if (keyD)
             {
                 velocity.X += speed;
+            }
+
+            if (world.game.keyPress(Keys.I))
+            {
+                if (guiInventory.active)
+                    guiInventory.Close();
+                else guiInventory.Open();
             }
 
             if (world.game.keyPress(Keys.L))
@@ -155,6 +164,7 @@ namespace Lemonade
             capVelocity();
 
             guiHUD.Update(world.game.mouse);
+            guiInventory.Update(world.game.mouse);
         }
 
         public override void DealDamage(EntityLiving dealTo)

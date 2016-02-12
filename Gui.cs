@@ -67,7 +67,7 @@ namespace Lemonade
         public GuiWidgetItemSlot createInventorySlot(Rectangle setBounds, Tuple<string, int> id, Color[] colors)
         {
             GuiWidgetItemSlot widget;
-            widget = new GuiWidgetItemSlot(setBounds, id, colors, game);
+            widget = new GuiWidgetItemSlot(setBounds, id, colors, game.mouse, game.world.player);
 
             widgets.Add(widget);
             return widget;
@@ -123,12 +123,7 @@ namespace Lemonade
             {
                 if (type == 0)
                 {
-                    Color[] button1Colors = new Color[] { Color.Salmon, Color.DarkSalmon, Color.Orange };
 
-                    for (int x = 0; x < 16; x++)
-                    {
-                        createInventorySlot(new Rectangle(x * (64 + 16), 256, 64, 64), new Tuple<string, int>("invslot", x), button1Colors);
-                    }
                 }
 
                 else if (type == 1)
@@ -149,19 +144,19 @@ namespace Lemonade
                     if (widget.id.Item1 == "dialogue")
                     {
                         widgetDialogue = (GuiWidgetDialogue)widget;
-                        widgetDialogue.Update(gMouse.currentState);
+                        //widgetDialogue.Update(gMouse.currentState);
                     }
 
                     if (widget.id.Item1 == "button")
                     {
                         widgetButton = (GuiWidgetButton)widget;
-                        widgetButton.Update(gMouse.currentState);
+                        //widgetButton.Update(gMouse.currentState);
                     }
 
                     if (widget.id.Item1 == "invslot")
                     {
                         widgetInvSlot = (GuiWidgetItemSlot)widget;
-                        widgetInvSlot.Update(gMouse.currentState);
+                        //widgetInvSlot.Update(gMouse.currentState);
                     }
 
                     if (type == 0)
@@ -181,7 +176,7 @@ namespace Lemonade
                             }
                         }
 
-                        if (widget.id.Item1 == "invslot" && widgetInvSlot != null)
+                        /*if (widget.id.Item1 == "invslot" && widgetInvSlot != null)
                         {
                             if (widget.currentState == GuiWidget.State.Hot)
                             {
@@ -235,7 +230,7 @@ namespace Lemonade
                                     }
                                 }
                             }
-                        }
+                        }*/
                     }
                     if (type == 1)
                     {
@@ -268,7 +263,7 @@ namespace Lemonade
                     {
                         GuiWidgetItemSlot widgetInvSlot = (GuiWidgetItemSlot) widget;
 
-                        widgetInvSlot.itemInSlot = game.world.player.inventory[widgetInvSlot.id.Item2];
+                        //widgetInvSlot.itemInSlot = game.world.player.inventory[widgetInvSlot.id.Item2];
                     }
                     ++index;
                 }

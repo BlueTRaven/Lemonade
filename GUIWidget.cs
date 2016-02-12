@@ -37,19 +37,19 @@ namespace Lemonade
 
         public Vector2 center { get { return new Vector2(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2); } set { bounds.X = (int)value.X - bounds.Width; bounds.Y = (int)value.Y - bounds.Height; } }
 
-        public void update(MouseState mState)
+        public void update(GameMouse gMouse)
         {
-            mousePos = mState.Position.ToVector2();
-            currentState = GetState(mState);
+            //mousePos = mState.Position.ToVector2();
+            currentState = GetState(gMouse);
 
             previousState = currentState;
         }
 
         public abstract void Draw(SpriteBatch batch);
 
-        public State GetState(MouseState mState)
+        public State GetState(GameMouse gMouse)
         {
-            if (bounds.Contains(mState.Position))
+            if (bounds.Contains(gMouse.position))
             {
                 currentState = State.Hot;
             }
@@ -60,21 +60,21 @@ namespace Lemonade
 
             if (currentState == State.Hot)
             {
-                if (mState.LeftButton == ButtonState.Pressed)
+                if (gMouse.currentState.LeftButton == ButtonState.Pressed)
                 {
                     currentState = State.Active;
                 }
-                if (mState.RightButton == ButtonState.Pressed)
+                if (gMouse.currentState.RightButton == ButtonState.Pressed)
                 {
                     currentState = State.Active2;
                 }
             }
 
-            if (previousState == State.Active && mState.LeftButton == ButtonState.Released)
+            if (previousState == State.Active && gMouse.currentState.LeftButton == ButtonState.Released)
             {
                 currentState = State.Done;
             }
-            if (previousState == State.Active2 && mState.RightButton == ButtonState.Released)
+            if (previousState == State.Active2 && gMouse.currentState.RightButton == ButtonState.Released)
             {
                 currentState = State.Done2;
             }
@@ -113,7 +113,7 @@ namespace Lemonade
             text = Utilities.ReadFile("Content\\strings\\dialogue.txt", forKey).Split(':');
         }
 
-        public void Update(MouseState mState)
+        public void Update(GameMouse gMouse)
         {
             if (active)
             {
@@ -124,7 +124,7 @@ namespace Lemonade
                     letterTimer = 0;
                     count++;
                 }
-                base.update(mState);
+                base.update(gMouse);
             }
         }
 
@@ -208,11 +208,11 @@ namespace Lemonade
             this.colors = colors;
         }
 
-        public void Update(MouseState mState)
+        public void Update(GameMouse gMouse)
         {
             if (active)
             {
-                base.update(mState);
+                base.update(gMouse);
             }
         }
             
@@ -274,11 +274,11 @@ namespace Lemonade
             this.colors = colors;
         }
 
-        public void Update(MouseState mState)
+        public void Update(GameMouse gMouse)
         {
             if (active)
             {
-                base.update(mState);
+                base.update(gMouse);
             }
         }
 
@@ -304,28 +304,79 @@ namespace Lemonade
 
     public class GuiWidgetItemSlot : GuiWidget
     {
-        public ItemStack itemInSlot;
-
+        private ItemStack item;
         bool drawToolTip = false;
 
         Color[] colors;
 
-        public GuiWidgetItemSlot(Rectangle setBounds, Tuple<string, int> id, Color[] colors, Game1 game)
+        GameMouse gMouse;
+        Player player;
+
+        public GuiWidgetItemSlot(Rectangle setBounds, Tuple<string, int> id, Color[] colors, GameMouse gMouse, Player player)
         {
             this.id = id;
             bounds = setBounds;
 
             this.colors = colors;
 
-            //itemInSlot = item;
+            this.gMouse = gMouse;
+            this.player = player;
         }
 
-        public void Update(MouseState mState)
+        public void Update(GameMouse gMouse)
         {
             if (active)
             {
-                base.update(mState);
+                item = player.inventory[this.id.Item2];
+
+                if (currentState == State.Done)
+                {
+                    if (gMouse.heldItem != null)
+                    {
+                        if (item == null)
+                        {
+                            AddItemToEmptySlot();
+                        }
+                        else if (item.item.GetType() == gMouse.heldItem.item.GetType() && item.item.id == gMouse.heldItem.item.id)
+                        {
+                            AddItemToFilledSlot();
+                        }
+                    }
+                    else
+                    {
+                        if (item != null)
+                        {
+                            if (item == gMouse.heldItem)
+                                RemoveItemToFilledMouse();
+                            else RemoveItemToEmptyMouse();
+                        }
+                    }
+                }
+                base.update(gMouse);
             }
+        }
+
+        public void AddItemToEmptySlot()
+        {
+            player.inventory[this.id.Item2] = gMouse.heldItem;
+            gMouse.heldItem = null;
+        }
+
+        public void AddItemToFilledSlot()
+        {
+            player.inventory[this.id.Item2].stackSize += gMouse.heldItem.stackSize;
+            gMouse.heldItem = null;
+        }
+
+        public void RemoveItemToEmptyMouse()
+        {
+            gMouse.heldItem = player.inventory[this.id.Item2];
+            player.inventory[this.id.Item2] = null;
+        }
+        public void RemoveItemToFilledMouse()
+        {
+            gMouse.heldItem.stackSize += player.inventory[this.id.Item2].stackSize;
+            player.inventory[this.id.Item2] = null;
         }
 
         public override void Draw(SpriteBatch batch)
@@ -346,26 +397,27 @@ namespace Lemonade
             if (currentState == State.Done || currentState == State.Done2)
                 PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[2]);
 
-            if (itemInSlot != null && itemInSlot.item != null && itemInSlot.item.texture != null)
-            {
-                batch.Draw(itemInSlot.item.texture, bounds, Color.White);
 
-                if (itemInSlot.stackSize > 1)
-                    batch.DrawString(Fonts.munro12, itemInSlot.stackSize.ToString(), new Vector2(bounds.Right, bounds.Bottom), Color.White);
+            if (item != null && item.item != null && item.item.texture != null)
+            {
+                batch.Draw(item.item.texture, bounds, Color.White);
+
+                if (item.stackSize > 1)
+                    batch.DrawString(Fonts.munro12, item.stackSize.ToString(), new Vector2(bounds.Right, bounds.Bottom), Color.White);
             }
         }
 
         public void DrawToolTip(SpriteBatch batch)
         {
-            if (itemInSlot != null && itemInSlot.item.texture != null)
+            if (item != null && item.item.texture != null)
             {
                 if (currentState == State.Hot)
                 {
-                    batch.DrawString(Fonts.munro12, itemInSlot.item.name, new Vector2(mousePos.X, mousePos.Y), Color.White);
-                    for (int i = 0; i < itemInSlot.item.description.Count(); i++)
+                    batch.DrawString(Fonts.munro12, item.item.name, gMouse.position, Color.White);
+                    for (int i = 0; i < item.item.description.Count(); i++)
                     {
-                        if (itemInSlot.item.description[i] != null)
-                            batch.DrawString(Fonts.munro12, itemInSlot.item.description[i], new Vector2(mousePos.X, mousePos.Y + 12 * (i + 1)), Color.White);
+                        if (item.item.description[i] != null)
+                            batch.DrawString(Fonts.munro12, item.item.description[i], new Vector2(gMouse.position.X, gMouse.position.Y + 12 * (i + 1)), Color.White);
                     }
 
                 }

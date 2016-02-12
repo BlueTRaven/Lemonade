@@ -37,13 +37,13 @@ namespace Lemonade.Guis
                         if (widget.id.Item1 == "dialogue")
                         {
                             widgetDialogue = (GuiWidgetDialogue)widget;
-                            widgetDialogue.Update(gMouse.currentState);
+                            widgetDialogue.Update(gMouse);
                         }
 
                         if (widget.id.Item1 == "button")
                         {
                             widgetButton = (GuiWidgetButton)widget;
-                            widgetButton.Update(gMouse.currentState);
+                            widgetButton.Update(gMouse);
                         }
 
                         if (widget.id.Item1 == "dialogue")

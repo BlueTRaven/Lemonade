@@ -18,7 +18,8 @@ namespace Lemonade
     {
         ContentManager content;
         public Rectangle worldRect;
-        public Rectangle cameraRect;
+        public Vector2 cameraPos;
+        public Rectangle cameraRect;// { get { return new Rectangle((int)camera.Pos.X, (int)camera.Pos.Y, cameraRect.Width, cameraRect.Height); } set { cameraRect = value; } }
         Rectangle drawRect;
 
         Texture2D[] layerTextures;
@@ -45,7 +46,7 @@ namespace Lemonade
 
         public Color ambientColor;
 
-        private Camera2D camera;
+        public Camera2D camera;
         public Game1 game;
     
         public void Initialize(Game1 setGame, ContentManager setContent, Rectangle setWorldRect, Rectangle setCameraRect, GraphicsDevice graphics)
@@ -65,7 +66,7 @@ namespace Lemonade
             drawLayer = new bool[8];
             tileLayer = new bool[8];
 
-            player = createPlayer(Vector2.Zero, 1);
+            //player = createPlayer(Vector2.Zero, 1);
 
             worldIndex = 0;
 
@@ -217,7 +218,7 @@ namespace Lemonade
                                 }
                             }
                         }
-                        collidedTiles.Add(tile);
+                        collidedTiles.Add(tile);    
                     }
                 }
 
@@ -282,11 +283,14 @@ namespace Lemonade
 
         public Player createPlayer(Vector2 position, int layer)
         {
-            Player p = new Player(position, 1);
-            p.Initialize(this, camera);
+            Player p = new Player(Vector2.Zero, 1);
             camera = new Camera2D(new Viewport(cameraRect), worldRect);
-            entityLivings.Insert(0, p);
+            p.Initialize(this, camera);
+            //Rectangle finalCamera = new Rectangle((int)position.X - cameraRect.Width / 2, (int)position.Y - cameraRect.Height / 2, cameraRect.Width, cameraRect.Height);
 
+            entityLivings.Insert(0, p);
+            //camera.Move(position);
+            p.position = position;
             return p;
         }
 
@@ -391,7 +395,7 @@ namespace Lemonade
 
             if (id == 0)
             {
-                player = createPlayer(new Vector2(0, 0), 1);                
+                player = createPlayer(new Vector2(1000, 1000), 1);                
                 //createEnemy(new Vector2(500, 300), 0);
                 //createEnemy(new Vector2(300, 500), 1);
 
@@ -482,8 +486,9 @@ namespace Lemonade
                 iEnt.Draw(batch);
             }
 
-            batch.Begin();
+            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, null);
             player.guiHUD.Draw(batch);
+            player.guiInventory.Draw(batch);
             batch.End();
         }
 

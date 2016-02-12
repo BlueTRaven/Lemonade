@@ -13,14 +13,15 @@ namespace Lemonade
 
         public MouseState currentState, previousState;
 
-        public Vector2 center { get { return new Vector2(currentState.Position.X + texture.Width / 2, currentState.Position.Y + texture.Height / 2); }
+        public Vector2 position;
+        public Vector2 center { get { return new Vector2(position.X + texture.Width / 2, position.Y + texture.Height / 2); }
             set { center = new Vector2(value.X - texture.Width / 2, value.Y - texture.Height / 2); } }
 
         public ItemStack heldItem;
-
-        public GameMouse()
+        Game1 game;
+        public GameMouse(Game1 game)
         {
-
+            this.game = game;
         }
 
         public void Initialize(ContentManager content)
@@ -31,18 +32,14 @@ namespace Lemonade
         public void Update()
         {
             previousState = currentState;
-            //Do things between here
+
+            position = currentState.Position.ToVector2() - new Vector2(game.world.cameraRect.X, game.world.cameraRect.Y);
             currentState = Mouse.GetState();
         }
 
         public bool LeftClick()
         {
             return (currentState.LeftButton == ButtonState.Pressed && previousState.LeftButton == ButtonState.Released);
-            /*if (currentState.LeftButton == ButtonState.Pressed && previousState.LeftButton == ButtonState.Released)
-            {
-                return true;
-            }
-            return false;*/
         }
 
         public bool RightClick()
@@ -63,7 +60,7 @@ namespace Lemonade
             {
                 if (heldItem.item.texture != null)
                 {
-                    batch.Draw(heldItem.item.texture, new Vector2(currentState.Position.X - texture.Width / 2, currentState.Position.Y - texture.Height / 2), null, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+                    batch.Draw(heldItem.item.texture, center, null, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
                 }
             }
         }

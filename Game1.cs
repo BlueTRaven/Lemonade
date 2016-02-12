@@ -102,7 +102,7 @@ namespace Lemonade
             Logger.CreateNewLogFile();
 
             world = new World();
-            mouse = new GameMouse();
+            mouse = new GameMouse(this);
             pauseMenu = new GuiPause(this);
 
             TargetElapsedTime = new TimeSpan(TimeSpan.TicksPerSecond / DesiredFrameRate);
@@ -259,7 +259,6 @@ namespace Lemonade
                 PrimiviteDrawing.DrawRectangle(null, spriteBatch, spriteBatch.GraphicsDevice.Viewport.Bounds, fadeColor);
             } */
             pauseMenu.Draw(spriteBatch);
-
             mouse.Draw(spriteBatch);
             //PrimiviteDrawing.DrawLineSegment(null, spriteBatch, Vector2.Zero, world.cameraRect.Center.ToVector2(), Color.Orange, 1);
 

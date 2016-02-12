@@ -42,7 +42,7 @@ namespace Lemonade.Guis
                         if (widget.id.Item1 == "butstring")
                         {
                             widgetButtonString = (GuiWidgetButtonString)widget;
-                            widgetButtonString.Update(gMouse.currentState);
+                            widgetButtonString.Update(gMouse);
 
                             if (widget.id.Item2 == 1)
                             {

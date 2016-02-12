@@ -48,7 +48,7 @@ namespace Lemonade
         {
             if (draw)
             {
-                batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
+                batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null);
                 batch.Draw(texture, new Vector2(rect.X, rect.Y), new Rectangle(0, 0, rect.Width, rect.Height), Color.White);
                 float layerAlpha = 1f / 10f * (float)layer;
                 PrimiviteDrawing.DrawRectangle(null, batch, rect, new Color(0, 0, 0, layerAlpha));

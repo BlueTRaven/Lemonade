@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -34,6 +34,7 @@ namespace Lemonade
 
         public Matrix inverseTransform { get { return Matrix.Invert(GetTransformation()); } }
 
+        public Vector2 center { get { return new Vector2(_pos.X + _viewportWidth / 2, _pos.Y + _viewportHeight / 2); } }
         public float Zoom
         {
             get { return _zoom; }
@@ -92,16 +93,16 @@ namespace Lemonade
 
         public void MoveTo(Vector2 toLocation, Vector2 speed, bool instant = false)
         {
-            Vector2 dir = toLocation - Pos;
+            Vector2 dir = toLocation - _pos;
             if (dir != Vector2.Zero)
                 dir.Normalize();
 
-            Pos += dir * speed;
+            _pos += dir * speed;
 
             if (instant)
-                Pos = toLocation;
+                _pos = toLocation;
 
-            //ClampCameraToWorldBounds();
+            ClampCameraToWorldBounds();
         }
 
         private void ClampCameraToWorldBounds()
