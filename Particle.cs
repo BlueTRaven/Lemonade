@@ -51,7 +51,7 @@ namespace Lemonade
 
         public override void Initialize(World setWorld, Camera2D setCamera)
         {
-            world = setWorld;
+            //world = setWorld;
             camera = setCamera;
 
             Name = "Particle";

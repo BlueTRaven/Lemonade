@@ -1,9 +1,11 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
+using Lemonade.gui.guiwidget;
 
 namespace Lemonade
 {
@@ -13,79 +15,7 @@ namespace Lemonade
     /// gui static (takes up a portion of the screen. Inventory, map, etc will be this type)
     /// gui draggable (takes up a portion of the screen, and can be relocated from the top.)
     /// </summary>
-    public abstract class Gui
-    {
-        protected Game1 game;
 
-        protected Gui oldPriorityGui;
-
-        protected Rectangle bounds;
-        protected Vector2 center { get { return bounds.Center.ToVector2(); } }
-
-        protected Texture2D background;
-        protected Color backgroundColor;
-
-        public List<GuiWidget> widgets = new List<GuiWidget>();
-
-        public abstract void Update(GameMouse gMouse);
-
-        public abstract void Draw(SpriteBatch batch);
-
-        protected bool firstOpen = true;
-        public bool active;
-        protected bool recieveInput = false;
-
-        protected int type;
-
-        public GuiWidgetDialogue createDialogue(Rectangle position, Tuple<string, int> id, string text, Color color, SpriteFont font, int textSpeed, Color[] colors)
-        {
-            GuiWidgetDialogue widget;
-            widget = new GuiWidgetDialogue(position, id, text, color, font, textSpeed, colors);
-
-            widgets.Add(widget);
-            return widget;
-        }
-
-        public GuiWidgetButtonString createButtonString(Rectangle position, Tuple<string, int> id, string text, GuiWidgetButtonString.Alignment align, Color color, SpriteFont font, Color[] colors)
-        {
-            GuiWidgetButtonString widget;
-            widget = new GuiWidgetButtonString(position, id, text, align, color, font, colors);
-
-            widgets.Add(widget);
-            return widget;
-        }
-
-        public GuiWidgetButton createButton(Rectangle position, Tuple<string, int> id, string text, Color color, SpriteFont font, Color[] colors)
-        {
-            GuiWidgetButton widget;
-            widget = new GuiWidgetButton(position, id, text, color, font, colors);
-
-            widgets.Add(widget);
-            return widget;
-        }
-
-        public GuiWidgetItemSlot createInventorySlot(Rectangle setBounds, Tuple<string, int> id, Color[] colors)
-        {
-            GuiWidgetItemSlot widget;
-            widget = new GuiWidgetItemSlot(setBounds, id, colors, game.mouse, game.world.player);
-
-            widgets.Add(widget);
-            return widget;
-        }
-
-        public void RemoveWidgetType(string name)
-        {
-            int i = 0;
-            widgets.ForEach(x =>
-            {
-                if (x.id.Item1 == name)
-                {
-                    widgets.RemoveAt(i);
-                }
-                ++i;
-            });
-        }
-    }
 
     public class GuiFull : Gui
     {
@@ -135,13 +65,13 @@ namespace Lemonade
 
             if (active)
             {
-                List<GuiWidget> removeList = new List<GuiWidget>();
+                /*List<GuiWidget> removeList = new List<GuiWidget>();
                 GuiWidgetDialogue widgetDialogue = null;
                 GuiWidgetButton widgetButton = null;
                 GuiWidgetItemSlot widgetInvSlot = null;
                 foreach (GuiWidget widget in widgets)
                 {
-                    if (widget.id.Item1 == "dialogue")
+                    if (widget.id.Item1 == WidgetType.Dialogue)
                     {
                         widgetDialogue = (GuiWidgetDialogue)widget;
                         //widgetDialogue.Update(gMouse.currentState);
@@ -176,7 +106,7 @@ namespace Lemonade
                             }
                         }
 
-                        /*if (widget.id.Item1 == "invslot" && widgetInvSlot != null)
+                        if (widget.id.Item1 == "invslot" && widgetInvSlot != null)
                         {
                             if (widget.currentState == GuiWidget.State.Hot)
                             {
@@ -230,7 +160,7 @@ namespace Lemonade
                                     }
                                 }
                             }
-                        }*/
+                        }
                     }
                     if (type == 1)
                     {
@@ -259,7 +189,7 @@ namespace Lemonade
                 int index = 0;
                 foreach (GuiWidget widget in widgets)
                 {
-                    if (widget.id.Item1 == "invslot")
+                    //if (widget.id.Item1 == "invslot")
                     {
                         GuiWidgetItemSlot widgetInvSlot = (GuiWidgetItemSlot) widget;
 
@@ -330,5 +260,5 @@ namespace Lemonade
     /*public class GuiDraggable : Gui
     {
 
-    }*/
-}
+    }
+}*/

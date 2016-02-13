@@ -17,6 +17,8 @@ namespace Lemonade
 {
     public static class Utilities
     {
+        public static readonly string playerSave = "player.json";
+
         private static readonly CultureInfo DecimalParsingInfo = CultureInfo.InvariantCulture;
         private static readonly Random _rnd = new Random();
 

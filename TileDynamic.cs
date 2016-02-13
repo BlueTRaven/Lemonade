@@ -19,7 +19,7 @@ namespace Lemonade
             solid = false;
             draw = true;
 
-            world = setWorld;
+            //world = setWorld;
         }
 
         public override void Initialize(ContentManager content)

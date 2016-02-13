@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 using Lemonade;
-using Lemonade.Guis;
+using Lemonade.gui;
 
 namespace Lemonade
 {
@@ -41,12 +41,20 @@ namespace Lemonade
          * LESS IMPORTANT
          *#safe deletion of entities
          */
+
+        public static Game1 Instance
+        {
+            get;
+            internal set;
+        }
+
         Stopwatch timeSinceStart;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         public World world;
 
+        public static Vector2 playerPosition;
         //public static ContentManager Content;
 
         public KeyboardState currentKBState, oldKBState;
@@ -157,6 +165,7 @@ namespace Lemonade
             {
                 //pauseMenu.active = false;
                 world.Update();
+                playerPosition = world.player.position;
             }
             else
             {
@@ -250,7 +259,7 @@ namespace Lemonade
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp);
             if (Fps > 0)
             {
-                spriteBatch.DrawString(Assets.fonts["munro12"], string.Format("Current FPS: {0}\r\nWorld time: Second: {1} Minute: {2} Hour: {3} World alpha: {4}\r\nPlayer position: X: {5} Y: {6}", Fps.ToString("000"), world.worldCountSecond, world.worldCountMinute, world.worldCountHour, world.ambientColor.A, world.player.position.X, world.player.position.Y), new Vector2(10, 10), Color.White);
+                spriteBatch.DrawString(Assets.GetFont("munro12"), string.Format("Current FPS: {0}\r\nWorld time: Second: {1} Minute: {2} Hour: {3} World alpha: {4}\r\nPlayer position: X: {5} Y: {6}", Fps.ToString("000"), world.worldCountSecond, world.worldCountMinute, world.worldCountHour, world.ambientColor.A, world.player.position.X, world.player.position.Y), new Vector2(10, 10), Color.White);
             }
             
             /*

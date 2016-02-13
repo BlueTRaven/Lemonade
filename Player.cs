@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Lemonade.Guis;
+using Lemonade.gui;
 
 namespace Lemonade
 {
@@ -15,7 +15,7 @@ namespace Lemonade
         bool isFriction = true;    //Should the player slow down
         float friction = 0.85f;     //Speed at which the player slows down. 
 
-        public int health, maxHealth, damage;
+        public int damage;
 
         public int defensePhys, defenseIce, defenseFire, defenseElec;
 
@@ -44,7 +44,7 @@ namespace Lemonade
 
             world = setWorld;
 
-            texture = Assets.textures["player"];
+            texture = Assets.GetTexture("entity_player");
             //texture = world.game.
             //Texture2D>("textures/player");
 
@@ -179,51 +179,6 @@ namespace Lemonade
             takeDamage(dealtBy);
         }
 
-        public void takeDamage(EntityLiving dealtBy, string damageType = "physical")
-        {
-            if (!isHit)
-            {
-                if (health - calculateDefenseDamage(dealtBy.damage, damageType) <= 0)
-                {
-                    health = 0;
-                    dead = true;
-                }
-                else
-                {
-                    health -= calculateDefenseDamage(dealtBy.damage, damageType);
-                }
-            }
-            SetHit(dealtBy);
-        }
-
-        public int calculateDefenseDamage(int amount, string damageType)
-        {
-            int finalDamage;
-
-            if (damageType == "physical")
-            {   //damage decreased by half of phys defense.
-                finalDamage = amount - (defensePhys / 2);
-            }
-            else if (damageType == "ice")
-            {
-                //damage decreased by 1/3 of ice defense
-                finalDamage = amount - (defenseIce / 3);
-            }
-            else if (damageType == "fire")
-            {   //full defense subtracted
-                finalDamage = amount - defenseFire;
-            }
-            else if (damageType == "electric")
-            {   //damage decreased by 2/3 of electric defense
-                finalDamage = amount - ((defenseElec / 3) * 2);
-            }
-            else
-            {   //ether damage ignores defense
-                finalDamage = amount;
-            }
-            return finalDamage;
-        }
-
         public bool PickupItem(ItemEntity item)
         {
             for (int i = 0; i < inventory.GetLength(0); i++)
@@ -265,7 +220,7 @@ namespace Lemonade
             batch.Draw(texture, position, null, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
             //batch.Draw(texture, position, null, Color.White, 30f, center - position, 1f, SpriteEffects.None, 0f);
             //PrimiviteDrawing.DrawRectangle(null, batch, hitbox, Color.Red, -angleToMouse, center - position);
-            batch.DrawString(Assets.fonts["munro12"], ("Layer:" + layer + "\nHealth: " + health), new Vector2(position.X, position.Y - 32), Color.Black);
+            batch.DrawString(Assets.GetFont("munro12"), ("Layer:" + layer + "\nHealth: " + health), new Vector2(position.X, position.Y - 32), Color.Black);
 
             if (isHit)
             {

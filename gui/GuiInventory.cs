@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Lemonade.Guis
+using Lemonade.gui.guiwidget;
+
+namespace Lemonade.gui
 {
     public class GuiInventory : Gui
     {
@@ -28,23 +30,25 @@ namespace Lemonade.Guis
 
                 if (game.priorityGui == this)
                 {
-                    List<GuiWidget> removeList = new List<GuiWidget>();
                     GuiWidgetButtonString widgetButtonString = null;
                     GuiWidgetItemSlot widgetInvSlot = null;
 
-                    foreach (GuiWidget widget in widgets)
+                    for (int i = widgets.Count - 1; i >= 0; i--)
                     {
-                        if (widget.id.Item1 == "butstring")
+                        if (widgets[i].id.Item1 == WidgetType.ButtonString)
                         {
-                            widgetButtonString = (GuiWidgetButtonString)widget;
+                            widgetButtonString = (GuiWidgetButtonString)widgets[i];
                             widgetButtonString.Update(gMouse);
                         }
 
-                        if (widget.id.Item1 == "invslot")
+                        if (widgets[i].id.Item1 == WidgetType.ItemSlot)
                         {
-                            widgetInvSlot = (GuiWidgetItemSlot)widget;
+                            widgetInvSlot = (GuiWidgetItemSlot)widgets[i];
                             widgetInvSlot.Update(gMouse);
                         }
+
+                        if (!widgets[i].active)
+                            widgets.RemoveAt(i);
                     }
                 }
             }
@@ -70,7 +74,7 @@ namespace Lemonade.Guis
 
             for (int x = 0; x < 16; x++)
             {
-                createInventorySlot(new Rectangle(8 + x * (64 + 16), 256, 64, 64), new Tuple<string, int>("invslot", x), button1Colors);
+                createInventorySlot(new Rectangle(8 + x * (64 + 16), 256, 64, 64), new Tuple<WidgetType, int>(WidgetType.ItemSlot, x), button1Colors);
             }
         }
 
@@ -84,7 +88,7 @@ namespace Lemonade.Guis
                 foreach (GuiWidget widget in widgets)
                 {
                     widget.Draw(batch);
-                    if(widget.id.Item1 == "invslot")
+                    if (widget.id.Item1 == WidgetType.ItemSlot)
                     {
                         widgetInvSlot = (GuiWidgetItemSlot)widget;
 
@@ -93,7 +97,7 @@ namespace Lemonade.Guis
                 }
                 foreach (GuiWidget widget in widgets)
                 {
-                    if (widget.id.Item1 == "invslot")
+                    if (widget.id.Item1 == WidgetType.ItemSlot)
                     {
                         widgetInvSlot = (GuiWidgetItemSlot)widget;
 

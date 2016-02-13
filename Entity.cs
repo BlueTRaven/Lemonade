@@ -138,6 +138,51 @@ namespace Lemonade
         {
             world.createItemEntity(center, velocity, dropItem, layer);
         }
+
+        public void takeDamage(EntityLiving dealtBy, Element damageType = Element.PHYSICAL)
+        {
+            if (!isHit)
+            {
+                if (health - calculateDefenseDamage(dealtBy.damage, damageType) <= 0)
+                {
+                    health = 0;
+                    dead = true;
+                }
+                else
+                {
+                    health -= calculateDefenseDamage(dealtBy.damage, damageType);
+                }
+            }
+            SetHit(dealtBy);
+        }
+
+        public int calculateDefenseDamage(int amount, Element damageType)
+        {
+            int finalDamage;
+
+            if (damageType == Element.PHYSICAL)
+            {   //damage decreased by half of phys defense.
+                finalDamage = amount - (defensePhys / 2);
+            }
+            else if (damageType == Element.ICE)
+            {
+                //damage decreased by 1/3 of ice defense
+                finalDamage = amount - (defenseIce / 3);
+            }
+            else if (damageType == Element.FIRE)
+            {   //full defense subtracted
+                finalDamage = amount - defenseFire;
+            }
+            else if (damageType == Element.ELECTRIC)
+            {   //damage decreased by 2/3 of electric defense
+                finalDamage = amount - ((defenseElec / 3) * 2);
+            }
+            else
+            {   //ether damage ignores defense
+                finalDamage = amount;
+            }
+            return finalDamage;
+        }
     }
 
     public abstract class EntityBoss : EntityLiving

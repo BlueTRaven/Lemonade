@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Lemonade.Guis
+using Lemonade.gui.guiwidget;
+
+namespace Lemonade.gui
 {
     public class GuiHud : Gui
     {
@@ -22,35 +24,25 @@ namespace Lemonade.Guis
             {
                 if (firstOpen)
                 {   //Create widgets and such
-                    CreateWidgets();
+                    //CreateWidgets();
                     firstOpen = false;
                 }
 
                 if (game.priorityGui == this)
                 {
-                    List<GuiWidget> removeList = new List<GuiWidget>();
                     GuiWidgetDialogue widgetDialogue = null;
                     GuiWidgetButton widgetButton = null;
 
-                    foreach (GuiWidget widget in widgets)
+                    for (int i = widgets.Count - 1; i >= 0; i--)
                     {
-                        if (widget.id.Item1 == "dialogue")
+                        if (widgets[i].id.Item1 == WidgetType.Dialogue)
                         {
-                            widgetDialogue = (GuiWidgetDialogue)widget;
+                            widgetDialogue = (GuiWidgetDialogue)widgets[i];
                             widgetDialogue.Update(gMouse);
-                        }
 
-                        if (widget.id.Item1 == "button")
-                        {
-                            widgetButton = (GuiWidgetButton)widget;
-                            widgetButton.Update(gMouse);
-                        }
-
-                        if (widget.id.Item1 == "dialogue")
-                        {
-                            if (widget.id.Item2 == 0)
+                            if (widgets[i].id.Item2 == 0)
                             {
-                                if (widget.currentState == GuiWidget.State.Done)
+                                if (widgets[i].currentState == GuiWidget.State.Done)
                                 {
                                     if (widgetDialogue.ChangeText(2))
                                         widgetDialogue.active = false;
@@ -58,15 +50,19 @@ namespace Lemonade.Guis
                             }
                         }
 
-                        if (widget.active == false)
+                        if (widgets[i].id.Item1 == WidgetType.Button)
                         {
-                            removeList.Add(widget);
+                            widgetButton = (GuiWidgetButton)widgets[i];
+                            widgetButton.Update(gMouse);
                         }
-                    }
 
-                    foreach (GuiWidget delete in removeList)
-                    {
-                        widgets.Remove(delete);
+                        if (widgets[i].id.Item1 == WidgetType.Dialogue)
+                        {
+
+                        }
+
+                        if (!widgets[i].active)
+                            widgets.RemoveAt(i);
                     }
                 }
             }
@@ -74,7 +70,7 @@ namespace Lemonade.Guis
 
         public void CreateWidgets()
         {
-            createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<string, int>("dialogue", 0), "<test>", Color.White, Assets.fonts["munro24"], 2, new Color[] { Color.White, Color.DarkGray });
+            createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<WidgetType, int>(WidgetType.Dialogue, 0), "<test>", Color.White, Assets.GetFont("munro24"), 2, new Color[] { Color.White, Color.DarkGray });
         }
 
         public override void Draw(SpriteBatch batch)

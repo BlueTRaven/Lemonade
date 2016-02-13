@@ -7,6 +7,15 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Lemonade
 {
+    public enum Element  //Damage element the weapon will deal.
+    {
+        PHYSICAL,
+        FIRE,
+        ICE,
+        ELECTRIC,
+        ETHER
+    }
+
     public class ItemStack
     {
         public Item item;
@@ -116,14 +125,7 @@ namespace Lemonade
         {
             TEST
         }
-        public enum Element  //Damage element the weapon will deal.
-        {
-            PHYSICAL,
-            FIRE,
-            ICE,
-            ELECTRIC,
-            ETHER
-        }
+
         public enum WeaponType   //Determines attack pattern.
         {
             KNIFE,

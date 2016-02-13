@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Lemonade.Guis
+using Lemonade.gui.guiwidget;
+
+namespace Lemonade.gui
 {
     class GuiPause : Gui
     {
@@ -31,41 +33,33 @@ namespace Lemonade.Guis
 
                 if (game.priorityGui == this)
                 {
-                    List<GuiWidget> removeList = new List<GuiWidget>();
                     GuiWidgetButtonString widgetButtonString = null;
 
-                    foreach (GuiWidget widget in widgets)
+                    for (int i = widgets.Count - 1; i >= 0; i--)
                     {
-                        if (widget.id.Item1 == "butstring")
+                        if (widgets[i].id.Item1 == WidgetType.ButtonString)
                         {
-                            widgetButtonString = (GuiWidgetButtonString)widget;
+                            widgetButtonString = (GuiWidgetButtonString)widgets[i];
                             widgetButtonString.Update(gMouse);
 
-                            if (widget.id.Item2 == 0)
+                            if (widgets[i].id.Item2 == 0)
                             {
-                                if (widget.currentState == GuiWidget.State.Done)
+                                if (widgets[i].currentState == GuiWidget.State.Done)
                                 {
                                     Close();
                                 }
                             }
-                            if (widget.id.Item2 == 1)
+                            if (widgets[i].id.Item2 == 1)
                             {
-                                if (widget.currentState == GuiWidget.State.Done)
+                                if (widgets[i].currentState == GuiWidget.State.Done)
                                 {
                                     reallyExit.Open();
                                 }
                             }
                         }
 
-                        if (widget.active == false)
-                        {
-                            removeList.Add(widget);
-                        }
-                    }
-
-                    foreach (GuiWidget delete in removeList)
-                    {
-                        widgets.Remove(delete);
+                        if (!widgets[i].active)
+                            widgets.RemoveAt(i);
                     }
                 }
                 reallyExit.Update(gMouse);
@@ -93,8 +87,8 @@ namespace Lemonade.Guis
 
         public void CreateWidgets()
         {
-            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y - 8, 128, 16), new Tuple<string, int>("butstring", 0), "Resume game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro12"], new Color[] { Color.White, Color.DarkGray, Color.Gray });
-            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y + 16, 128, 16), new Tuple<string, int>("butstring", 1), "Exit game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro12"], new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y - 8, 128, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 0), "Resume game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro12"), new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y + 16, 128, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 1), "Exit game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro12"), new Color[] { Color.White, Color.DarkGray, Color.Gray });
         }
 
         public override void Draw(SpriteBatch batch)

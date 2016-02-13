@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Lemonade.Guis
+using Lemonade.gui.guiwidget;
+
+namespace Lemonade.gui
 {
     class GuiConfirm : Gui
     {
@@ -34,27 +36,26 @@ namespace Lemonade.Guis
 
                 if (game.priorityGui == this)
                 {
-                    List<GuiWidget> removeList = new List<GuiWidget>();
                     GuiWidgetButtonString widgetButtonString = null;
 
-                    foreach (GuiWidget widget in widgets)
+                    for (int i = widgets.Count - 1; i >= 0; i--)
                     {
-                        if (widget.id.Item1 == "butstring")
+                        if (widgets[i].id.Item1 == WidgetType.ButtonString)
                         {
-                            widgetButtonString = (GuiWidgetButtonString)widget;
+                            widgetButtonString = (GuiWidgetButtonString)widgets[i];
                             widgetButtonString.Update(gMouse);
 
-                            if (widget.id.Item2 == 1)
+                            if (widgets[i].id.Item2 == 1)
                             {
-                                if (widget.currentState == GuiWidget.State.Done)
+                                if (widgets[i].currentState == GuiWidget.State.Done)
                                 {
                                     clicked[0] = true;
                                 }
                             }
 
-                            if (widget.id.Item2 == 2)
+                            if (widgets[i].id.Item2 == 2)
                             {
-                                if (widget.currentState == GuiWidget.State.Done)
+                                if (widgets[i].currentState == GuiWidget.State.Done)
                                 {
                                     clicked[1] = true;
                                     Close();
@@ -62,15 +63,8 @@ namespace Lemonade.Guis
                             }
                         }
 
-                        if (widget.active == false)
-                        {
-                            removeList.Add(widget);
-                        }
-                    }
-
-                    foreach (GuiWidget delete in removeList)
-                    {
-                        widgets.Remove(delete);
+                        if (!widgets[i].active)
+                            widgets.RemoveAt(i);
                     }
                 }
             }
@@ -93,10 +87,10 @@ namespace Lemonade.Guis
 
         public void CreateWidgets()
         {
-            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y, 128, 16), new Tuple<string, int>("butstring", 0), texts[0], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro24"], new Color[] { Color.White, Color.White, Color.White });
+            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y, 128, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 0), texts[0], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro24"), new Color[] { Color.White, Color.White, Color.White });
 
-            createButtonString(new Rectangle((int)center.X - 192, (int)center.Y + 16, 48, 16), new Tuple<string, int>("butstring", 1), texts[1], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro12"], new Color[] { Color.White, Color.DarkGray, Color.Gray });
-            createButtonString(new Rectangle((int)center.X + 192, (int)center.Y + 16, 48, 16), new Tuple<string, int>("butstring", 2), texts[2], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.fonts["munro12"], new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X - 192, (int)center.Y + 16, 48, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 1), texts[1], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro12"), new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X + 192, (int)center.Y + 16, 48, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 2), texts[2], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro12"), new Color[] { Color.White, Color.DarkGray, Color.Gray });
         }
 
         public override void Draw(SpriteBatch batch)

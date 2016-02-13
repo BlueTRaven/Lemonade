@@ -19,7 +19,7 @@ namespace Lemonade
         ContentManager content;
         public Rectangle worldRect;
         public Vector2 cameraPos;
-        public Rectangle cameraRect;// { get { return new Rectangle((int)camera.Pos.X, (int)camera.Pos.Y, cameraRect.Width, cameraRect.Height); } set { cameraRect = value; } }
+        public Rectangle cameraRect;// { get { return new Rectangle((int)camera.Pos.X, (int)camera.Pos.Y, cameraRect.Width, cameraRect.Height); } }
         Rectangle drawRect;
 
         Texture2D[] layerTextures;
@@ -109,23 +109,15 @@ namespace Lemonade
             if (!player.falling)
                 player.Control();
 
-            List<Entity> removeList = new List<Entity>();
-            foreach (EntityLiving el in entityLivings)
+            for (int i = entityLivings.Count - 1; i >= 0; i--)
             {
-                el.Update();
+                entityLivings[i].Update();
 
-                if (el.dead)
-                    removeList.Add(el);
+                if (entityLivings[i].dead)
+                    entityLivings.RemoveAt(i);
             }
 
-            /*foreach (Entity particle in particles)
-            {
-                particle.Update();
-
-                if (particle.dead)
-                    removeList.Add(particle);
-            }*/
-            for (int p = 0; p < particles.Count; p++)
+            for (int p = particles.Count - 1; p >= 0; p--)
             {
                 particles[p].Update();
 
@@ -133,22 +125,20 @@ namespace Lemonade
                     particles.RemoveAt(p);
             }
 
-            for (int ie = 0; ie < itemEntities.Count; ie++)
+            for (int ie = itemEntities.Count - 1; ie >= 0; ie--)
             {
                 itemEntities[ie].Update();
                 if (itemEntities[ie].dead)
                     itemEntities.RemoveAt(ie);
             }
 
-            for (int t = 0; t < tilesDynamic.Count; t++)
+            for (int t = tilesDynamic.Count - 1; t >= 0; t--)
             {
                 tilesDynamic[t].Update(this);
             }
 
-            foreach (EntityLiving remove in removeList)
-                entityLivings.Remove(remove);
-
             camera.MoveTo(player.center, new Vector2(0, 0), true);
+            //cameraRect = new Rectangle((int)camera.Pos.X, (int)camera.Pos.Y, cameraRect.Width, cameraRect.Height);
 
             CheckCollision();
 
@@ -178,9 +168,8 @@ namespace Lemonade
 
         public void CheckCollision()
         {
-            List<Tile> collidedTiles = new List<Tile>();
+            //List<Tile> collidedTiles = new List<Tile>();      //Disabled layer falling for the moment...
 
-            int index = 0;
             //Check collisions with enemies
             //Handles damage dealing with player
             foreach (EntityLiving living in entityLivings)
@@ -218,11 +207,11 @@ namespace Lemonade
                                 }
                             }
                         }
-                        collidedTiles.Add(tile);    
+                        //collidedTiles.Add(tile);    
                     }
                 }
 
-                List<Tile> Sorted = collidedTiles.OrderByDescending(o =>
+                /*List<Tile> Sorted = collidedTiles.OrderByDescending(o =>
                 {   //Sort by intersection area (larger = higher) - MAY BE REDUNDANT. REMOVE?
                     Rectangle overlap = Rectangle.Intersect(o.rect, living.hitbox);
                     return overlap.Width * overlap.Height;
@@ -244,7 +233,7 @@ namespace Lemonade
                         living.fallingTime = 7;
                         living.layer--;
                     }
-                }
+                }*/
 
                 //---- handle entity collisions ----//
                 if (living is Player)
@@ -277,7 +266,6 @@ namespace Lemonade
                         }
                     }
                 }
-                ++index;
             }
         }
 
@@ -404,16 +392,16 @@ namespace Lemonade
                 createTileStatic(new Rectangle(0, 512, 512, 64), "tile_grass1", 4, true, Directions.North);
                 createTileStatic(new Rectangle(512, 512, 64, 64), "tile_grass1", 4, true, Directions.NorthWest);
 
-                for (int i = 8; i >= 0; i--)
+                //for (int i = 0; i < 300; i++)
                 {
-                    createTileStatic(new Rectangle(576 + (i * 64), 64, 64, 64), "tile_grass1", i);
+                    //createItemEntity(new Vector2(576, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
+                    //createTileStatic(new Rectangle(576, 576, 64, 64), "tile_test", 4);
+                    
                 }
-                createTileStatic(new Rectangle(256, 256, 64, 64), "tile_test", 4);
-
-                createEnemy(new Vector2(576, 576), 2, 0);
-
                 createItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
                 createItemEntity(new Vector2(576 + 128, 576 - 36), Vector2.Zero, new ItemStack(game.CreateItemWeapon(1), 58), 1);
+
+                createEnemy(new Vector2(576, 0), 2, 0);
 
                 ambientColor = new Color(25, 25, 50, 100);
 
@@ -455,12 +443,15 @@ namespace Lemonade
                 DrawTileRenderTarget(graphics, batch);
 
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
+            //PrimiviteDrawing.DrawRectangle(null, batch, finalRect, 1, Color.Red);
             batch.Draw((Texture2D)tileRenderTarget, Vector2.Zero, null, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
             batch.End();
 
+            Rectangle finalRect = new Rectangle((int)camera.Pos.X - cameraRect.Width / 2, (int)camera.Pos.Y - cameraRect.Height / 2, 1280, 720);
             foreach (TileDynamic tile in tilesDynamic)
             {
-                tile.Draw(batch, camera);
+                if (tile.rect.Intersects(finalRect))
+                    tile.Draw(batch, camera);
             }
 
             foreach (TileStatic tile in tilesStatic)
@@ -473,17 +464,20 @@ namespace Lemonade
 
             foreach (EntityLiving living in entityLivings)
             {
-                living.Draw(batch);
+                if (living.hitbox.Intersects(finalRect))
+                    living.Draw(batch);
             }
 
             foreach (Particle particle in particles)
             {
-                particle.Draw(batch);
+                if (particle.hitbox.Intersects(finalRect))
+                    particle.Draw(batch);
             }
 
             foreach (ItemEntity iEnt in itemEntities)
             {
-                iEnt.Draw(batch);
+                if (iEnt.hitbox.Intersects(finalRect))
+                    iEnt.Draw(batch);
             }
 
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, null);
@@ -530,8 +524,7 @@ namespace Lemonade
         {
             player.Initialize(this, camera);
 
-            layerTextures[0] = Assets.textures["BG_sky1"];//content.Load<Texture2D>("textures/bgTest");
-            //layerTextures[1] = content.Load<Texture2D>("textures/bgSky");
+            layerTextures[0] = Assets.GetTexture("BG_sky1");
         }
 
         /// <summary>
