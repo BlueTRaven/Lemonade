@@ -25,7 +25,7 @@ namespace Lemonade
 
             if (aiType == 0 || aiType == 1)
             {
-                texture = Assets.GetTexture("entity_enemy1");
+                texture = Assets.GetTexture(Assets.entity_enemy1);
                 damage = 12;
                 maxSpeed = 3;
             }

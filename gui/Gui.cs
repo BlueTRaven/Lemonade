@@ -33,7 +33,17 @@ namespace Lemonade.gui
 
         protected int type;
 
-        public GuiWidgetDialogue createDialogue(Rectangle position, Tuple<WidgetType, int> id, string text, Color color, SpriteFont font, int textSpeed, Color[] colors)
+        /// <summary>
+        /// Creates a dialogue box.
+        /// </summary>
+        /// <param name="position">Bounds of the created dialogue box.</param>
+        /// <param name="text">The key of the dialogue widget. see Content/strings/dialogue.txt for a list of keys.</param>
+        /// <param name="color">the color of the text.</param>
+        /// <param name="font">The font to use</param>
+        /// <param name="textSpeed"></param>
+        /// <param name="colors"></param>
+        /// <returns></returns>
+        public GuiWidgetDialogue createDialogue(Rectangle position, Tuple<WidgetType, int> id, Color color, SpriteFont font, Color[] colors, int textSpeed = 2, string text = "<default>")
         {
             GuiWidgetDialogue widget;
             widget = new GuiWidgetDialogue(position, id, text, color, font, textSpeed, colors);
@@ -69,6 +79,10 @@ namespace Lemonade.gui
             return widget;
         }
 
+        /// <summary>
+        /// Removes all widgets of a type.
+        /// </summary>
+        /// <param name="type">The type to remove.</param>
         public void RemoveWidgetType(WidgetType type)
         {
             int i = 0;

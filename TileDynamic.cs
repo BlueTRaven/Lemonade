@@ -27,7 +27,7 @@ namespace Lemonade
             if (id == 0)
             {
                 solid = false;  //World loader tile
-                texture = content.Load<Texture2D>("textures/tiles/tile_test");
+                texture = Assets.GetTexture(Assets.tile_test);
             }
         }
 

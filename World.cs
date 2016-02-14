@@ -114,7 +114,7 @@ namespace Lemonade
                 entityLivings[i].Update();
 
                 if (entityLivings[i].dead)
-                    entityLivings.RemoveAt(i);
+                    entityLivings.RemoveAt(i--);
             }
 
             for (int p = particles.Count - 1; p >= 0; p--)
@@ -122,14 +122,14 @@ namespace Lemonade
                 particles[p].Update();
 
                 if (particles[p].dead)
-                    particles.RemoveAt(p);
+                    particles.RemoveAt(p--);
             }
 
             for (int ie = itemEntities.Count - 1; ie >= 0; ie--)
             {
                 itemEntities[ie].Update();
                 if (itemEntities[ie].dead)
-                    itemEntities.RemoveAt(ie);
+                    itemEntities.RemoveAt(ie--);
             }
 
             for (int t = tilesDynamic.Count - 1; t >= 0; t--)
@@ -387,10 +387,10 @@ namespace Lemonade
                 //createEnemy(new Vector2(500, 300), 0);
                 //createEnemy(new Vector2(300, 500), 1);
 
-                createTileStatic(new Rectangle(0, 0, 512, 512), "tile_grass1", 0);
-                createTileStatic(new Rectangle(512, 0, 64, 512), "tile_grass1", 4, true, Directions.West);
-                createTileStatic(new Rectangle(0, 512, 512, 64), "tile_grass1", 4, true, Directions.North);
-                createTileStatic(new Rectangle(512, 512, 64, 64), "tile_grass1", 4, true, Directions.NorthWest);
+                createTileStatic(new Rectangle(0, 0, 512, 512), Assets.tile_grass1, 0);
+                createTileStatic(new Rectangle(512, 0, 64, 512), Assets.tile_grass1, 4, true, Directions.West);
+                createTileStatic(new Rectangle(0, 512, 512, 64), Assets.tile_grass1, 4, true, Directions.North);
+                createTileStatic(new Rectangle(512, 512, 64, 64), Assets.tile_grass1, 4, true, Directions.NorthWest);
 
                 //for (int i = 0; i < 300; i++)
                 {
@@ -524,7 +524,7 @@ namespace Lemonade
         {
             player.Initialize(this, camera);
 
-            layerTextures[0] = Assets.GetTexture("BG_sky1");
+            layerTextures[0] = Assets.GetTexture(Assets.bg_sky1);
         }
 
         /// <summary>

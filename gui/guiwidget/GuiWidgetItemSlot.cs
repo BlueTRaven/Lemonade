@@ -109,7 +109,7 @@ namespace Lemonade.gui.guiwidget
                 batch.Draw(item.item.texture, bounds, Color.White);
 
                 if (item.stackSize > 1)
-                    batch.DrawString(Assets.GetFont("munro12"), item.stackSize.ToString(), new Vector2(bounds.Right, bounds.Bottom), Color.White);
+                    batch.DrawString(Assets.GetFont(Assets.munro12), item.stackSize.ToString(), new Vector2(bounds.Right, bounds.Bottom), Color.White);
             }
         }
 
@@ -119,11 +119,11 @@ namespace Lemonade.gui.guiwidget
             {
                 if (currentState == State.Hot)
                 {
-                    batch.DrawString(Assets.GetFont("munro12"), item.item.name, gMouse.position, Color.White);
+                    batch.DrawString(Assets.GetFont(Assets.munro12), item.item.name, gMouse.position, Color.White);
                     for (int i = 0; i < item.item.description.Count(); i++)
                     {
                         if (item.item.description[i] != null)
-                            batch.DrawString(Assets.GetFont("munro12"), item.item.description[i], new Vector2(gMouse.position.X, gMouse.position.Y + 12 * (i + 1)), Color.White);
+                            batch.DrawString(Assets.GetFont(Assets.munro12), item.item.description[i], new Vector2(gMouse.position.X, gMouse.position.Y + 12 * (i + 1)), Color.White);
                     }
 
                 }

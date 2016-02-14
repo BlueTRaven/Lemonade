@@ -64,7 +64,7 @@ namespace Lemonade.gui
                         }
 
                         if (!widgets[i].active)
-                            widgets.RemoveAt(i);
+                            widgets.RemoveAt(i--);
                     }
                 }
             }
@@ -87,10 +87,10 @@ namespace Lemonade.gui
 
         public void CreateWidgets()
         {
-            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y, 128, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 0), texts[0], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro24"), new Color[] { Color.White, Color.White, Color.White });
+            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y, 128, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 0), texts[0], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont(Assets.munro24), new Color[] { Color.White, Color.White, Color.White });
 
-            createButtonString(new Rectangle((int)center.X - 192, (int)center.Y + 16, 48, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 1), texts[1], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro12"), new Color[] { Color.White, Color.DarkGray, Color.Gray });
-            createButtonString(new Rectangle((int)center.X + 192, (int)center.Y + 16, 48, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 2), texts[2], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro12"), new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X - 192, (int)center.Y + 16, 48, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 1), texts[1], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont(Assets.munro12), new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X + 192, (int)center.Y + 16, 48, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 2), texts[2], GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont(Assets.munro12), new Color[] { Color.White, Color.DarkGray, Color.Gray });
         }
 
         public override void Draw(SpriteBatch batch)

@@ -115,7 +115,7 @@ namespace Lemonade
             batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
             PrimiviteDrawing.DrawRectangle(null, batch, rect, 1, Color.Red);
             PrimiviteDrawing.DrawLineSegment(null, batch, new Vector2(rect.X, rect.Y), new Vector2(rect.X + rect.Width, rect.Y + rect.Height), Color.Blue, 1);
-            batch.DrawString(Assets.GetFont("munro12"), "layer:" + layer, new Vector2(position.X + 32, position.Y + 32), Color.Black);
+            batch.DrawString(Assets.GetFont(Assets.munro12), "layer:" + layer, new Vector2(position.X + 32, position.Y + 32), Color.Black);
             batch.End();
         }
     }

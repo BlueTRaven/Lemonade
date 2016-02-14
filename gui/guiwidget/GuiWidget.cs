@@ -10,10 +10,10 @@ namespace Lemonade.gui.guiwidget
 {
     public enum WidgetType
     {
-        Dialogue,
-        Button,
-        ButtonString,
-        ItemSlot
+        Dialogue,       //Dialogue box, shows text. Click on it to go to next page. The text inside is decided by the used 'key'. See Content/strings/dialogue.txt.
+        Button,         //Button. Simple box, can have text inside. does things when clicked.
+        ButtonString,   //Same thing as button, only does not draw the outline, only the text.
+        ItemSlot        //Item slot. Used primarily for inventory.
     }
 
     public abstract class GuiWidget
@@ -28,7 +28,7 @@ namespace Lemonade.gui.guiwidget
             Done2   //Finished right click
         }
 
-        public Tuple<WidgetType, int> id;   //Tuple containing the type "button", "inventoryItem", etc and an id to identify by.
+        public Tuple<WidgetType, int> id;   //Tuple containing the WidgetType and an id to identify by.
 
         public Vector2 mousePos;
         public State currentState;
@@ -55,37 +55,38 @@ namespace Lemonade.gui.guiwidget
 
         public State GetState(GameMouse gMouse)
         {
+            State finalState;
             if (bounds.Contains(gMouse.position))
             {
-                currentState = State.Hot;
+                finalState = State.Hot;
             }
             else
             {
-                currentState = State.None;
+                finalState = State.None;
             }
 
-            if (currentState == State.Hot)
+            if (finalState == State.Hot)
             {
                 if (gMouse.currentState.LeftButton == ButtonState.Pressed)
                 {
-                    currentState = State.Active;
+                    finalState = State.Active;
                 }
                 if (gMouse.currentState.RightButton == ButtonState.Pressed)
                 {
-                    currentState = State.Active2;
+                    finalState = State.Active2;
                 }
             }
 
             if (previousState == State.Active && gMouse.currentState.LeftButton == ButtonState.Released)
             {
-                currentState = State.Done;
+                finalState = State.Done;
             }
             if (previousState == State.Active2 && gMouse.currentState.RightButton == ButtonState.Released)
             {
-                currentState = State.Done2;
+                finalState = State.Done2;
             }
 
-            return currentState;
+            return finalState;
         }
     }
 }

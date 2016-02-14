@@ -59,7 +59,7 @@ namespace Lemonade.gui
                         }
 
                         if (!widgets[i].active)
-                            widgets.RemoveAt(i);
+                            widgets.RemoveAt(i--);
                     }
                 }
                 reallyExit.Update(gMouse);
@@ -87,8 +87,8 @@ namespace Lemonade.gui
 
         public void CreateWidgets()
         {
-            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y - 8, 128, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 0), "Resume game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro12"), new Color[] { Color.White, Color.DarkGray, Color.Gray });
-            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y + 16, 128, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 1), "Exit game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont("munro12"), new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y - 8, 128, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 0), "Resume game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont(Assets.munro12), new Color[] { Color.White, Color.DarkGray, Color.Gray });
+            createButtonString(new Rectangle((int)center.X - 64, (int)center.Y + 16, 128, 16), new Tuple<WidgetType, int>(WidgetType.ButtonString, 1), "Exit game", GuiWidgetButtonString.Alignment.Center, Color.White, Assets.GetFont(Assets.munro12), new Color[] { Color.White, Color.DarkGray, Color.Gray });
         }
 
         public override void Draw(SpriteBatch batch)

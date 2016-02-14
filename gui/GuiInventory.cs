@@ -48,7 +48,7 @@ namespace Lemonade.gui
                         }
 
                         if (!widgets[i].active)
-                            widgets.RemoveAt(i);
+                            widgets.RemoveAt(i--);
                     }
                 }
             }

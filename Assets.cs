@@ -12,18 +12,25 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Lemonade
 {   //not sure if I should use enums...
-    public enum TextureName
-    {
-
-    }
-
-    public enum FontName
-    {
-
-    }
-
     public static class Assets
     {
+        public static readonly string entity_player = "entity_player";
+        public static readonly string entity_enemy1 = "entity_enemy1";
+
+        public static readonly string tile_grass1 = "tile_grass1";
+        public static readonly string tile_test = "tile_test";
+
+        public static readonly string bg_sky1 = "bg_sky1";
+        public static readonly string bg_debuggrid = "bg_debuggrid";
+
+        public static readonly string item_knifeRust = "item_knifeRust";
+        public static readonly string item_knife = "item_knife";
+
+        public static readonly string munro12 = "munro12";
+        public static readonly string munro24 = "munro24";
+        public static readonly string munro24italic = "munro24italic";
+        public static readonly string papyrus12 = "papyrus12";
+
         public static Dictionary<string, Texture2D> textures = new Dictionary<string,Texture2D>();
         public static Dictionary<string, SpriteFont> fonts = new Dictionary<string, SpriteFont>();
 
@@ -68,8 +75,8 @@ namespace Lemonade
             textures.Add("tile_test", content.Load<Texture2D>("textures/tiles/tile_test"));
 
             //-- BG textures --//
-            textures.Add("BG_sky1", content.Load<Texture2D>("textures/bgSky"));
-            textures.Add("BG_debuggrid", content.Load<Texture2D>("textures/bgTest"));
+            textures.Add("bg_sky1", content.Load<Texture2D>("textures/bgSky"));
+            textures.Add("bg_debuggrid", content.Load<Texture2D>("textures/bgTest"));
 
             //-- Fonts --//
             fonts.Add("munro12", content.Load<SpriteFont>("fonts/munro-12"));

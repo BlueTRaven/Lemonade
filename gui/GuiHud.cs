@@ -11,6 +11,7 @@ namespace Lemonade.gui
 {
     public class GuiHud : Gui
     {
+        public bool dialogueOpen = false;
         public GuiHud(Game1 game)
         {
             this.game = game;
@@ -62,7 +63,7 @@ namespace Lemonade.gui
                         }
 
                         if (!widgets[i].active)
-                            widgets.RemoveAt(i);
+                            widgets.RemoveAt(i--);
                     }
                 }
             }
@@ -70,7 +71,23 @@ namespace Lemonade.gui
 
         public void CreateWidgets()
         {
-            createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<WidgetType, int>(WidgetType.Dialogue, 0), "<test>", Color.White, Assets.GetFont("munro24"), 2, new Color[] { Color.White, Color.DarkGray });
+            createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<WidgetType, int>(WidgetType.Dialogue, 0), Color.White, Assets.GetFont(Assets.munro24), new Color[] { Color.White, Color.DarkGray }, 2, "<test>");
+        }
+
+        public void OpenDialogue(string key, SpriteFont font)
+        {
+            bool hasDialogue = false;
+            foreach(GuiWidget widget in widgets)
+            {
+                if (widget is GuiWidgetDialogue)
+                {
+                    hasDialogue = true;
+                    break;
+                }
+            }
+
+            if (!hasDialogue)
+                createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<WidgetType, int>(WidgetType.Dialogue, 0), Color.White, font, new Color[] { Color.White, Color.DarkGray }, 2, key);
         }
 
         public override void Draw(SpriteBatch batch)

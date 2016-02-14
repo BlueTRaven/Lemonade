@@ -11,7 +11,12 @@ namespace Lemonade.gui.guiwidget
     public class GuiWidgetDialogue : GuiWidget
     {
         SpriteFont font;
+        
         string[] text;
+        string wrappedText;
+        char[] wrappedChars;
+        string finalText;
+
         public int currentLine = 0;
 
         int textSpeed;  //How fast a letter appears in ticks, 60 = 1 sec
@@ -36,6 +41,9 @@ namespace Lemonade.gui.guiwidget
             this.colors = colors;
 
             text = Utilities.ReadFile("Content\\strings\\dialogue.txt", forKey).Split(':');
+
+            wrappedText = Utilities.WrapText(font, text[0], interiorBounds.Width);
+            wrappedChars = wrappedText.ToCharArray();
         }
 
         public void Update(GameMouse gMouse)
@@ -58,28 +66,28 @@ namespace Lemonade.gui.guiwidget
             PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[1]);
             PrimiviteDrawing.DrawRectangle(null, batch, interiorBounds, colors[0]);
 
-            string wrappedText = Utilities.WrapText(font, text[currentLine], interiorBounds.Width);
-            char[] s = wrappedText.ToCharArray();
+            //string wrappedText = Utilities.WrapText(font, text[currentLine], interiorBounds.Width);
+            //char[] s = wrappedText.ToCharArray();
 
-            string final = null;
+            finalText = null;
 
-            if (count <= s.Length && !finished)
+            if (count <= wrappedChars.Length && !finished)
             {
-                for (int i = 0; i < s.Length; i++)
+                for (int i = 0; i < wrappedChars.Length; i++)
                 {
                     if (i <= count)
                     {
-                        final = final + s[i];
+                        finalText = finalText + wrappedChars[i];
                     }
                 }
             }
             else
             {
-                final = wrappedText;
+                finalText = wrappedText;
                 finished = true;
                 count = 0;
             }
-            batch.DrawString(font, final, new Vector2(interiorBounds.X, interiorBounds.Y), Color.Black);
+            batch.DrawString(font, finalText, new Vector2(interiorBounds.X, interiorBounds.Y), Color.Black);
         }
 
         /// <summary>
@@ -97,6 +105,8 @@ namespace Lemonade.gui.guiwidget
                 currentLine = newLine;
             else if (currentLine + 1 < text.Length)
             {
+                wrappedText = Utilities.WrapText(font, text[currentLine + 1], interiorBounds.Width);
+                wrappedChars = wrappedText.ToCharArray();
                 currentLine++;
             }
             else return true;
