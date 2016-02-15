@@ -7,17 +7,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Lemonade.gui;
 
-namespace Lemonade
+namespace Lemonade.entity
 {
     [DataContract]
     public class Player : EntityLiving
     {
         bool isFriction = true;    //Should the player slow down
         float friction = 0.85f;     //Speed at which the player slows down. 
-
-        public int damage;
-
-        public int defensePhys, defenseIce, defenseFire, defenseElec;
 
         public ItemStack[] inventory = new ItemStack[300];
         //public static ItemStack[] inventory = new ItemStack[300];
@@ -53,10 +49,10 @@ namespace Lemonade
 
             defensePhys = 0; defenseIce = 0; defenseFire = 0; defenseElec = 0;
 
-            guiHUD = new GuiHud(world.game);
-            guiInventory = new GuiInventory(world.game);
+            guiHUD = new GuiHud(this);
+            guiInventory = new GuiInventory(this);
 
-            world.game.priorityGui = guiHUD;
+            Game1.priorityGui = guiHUD;
         }
         
         [DataMember]
@@ -89,37 +85,37 @@ namespace Lemonade
                 velocity.X += speed;
             }
 
-            if (world.game.keyPress(Keys.I))
+            if (Game1.keyPress(Keys.I))
             {
                 if (guiInventory.active)
                     guiInventory.Close();
                 else guiInventory.Open();
             }
 
-            if (world.game.keyPress(Keys.L))
+            if (Game1.keyPress(Keys.L))
             {
                 world.Save();
             }
-            if (world.game.keyPress(Keys.K))
+            if (Game1.keyPress(Keys.K))
             {
                 world.LoadWorldFromFile("map1_test.json");
             }
-            if (world.game.keyPress(Keys.F))//Keyboard.GetState().IsKeyDown(Keys.F))
+            if (Game1.keyPress(Keys.F))//Keyboard.GetState().IsKeyDown(Keys.F))
             {
                 world.createItemEntity(center, Vector2.Zero, new ItemStack(world.game.CreateItemWeapon(1), 1), 1);
             }
-            if (world.game.keyPress(Keys.G))
+            if (Game1.keyPress(Keys.G))
             {
                 guiHUD.OpenDialogue("<default>", Assets.GetFont(Assets.munro24));
             }
-            if (world.game.keyPress(Keys.OemTilde))
+            if (Game1.keyPress(Keys.OemTilde))
             {
                 world.drawTileDEBUG = !world.drawTileDEBUG;
             }
 
-            if (world.game.mouse.LeftClick())
+            if (Game1.mouse.LeftClick())
             {
-                Vector2 dPos = (world.game.mouse.center - center);
+                Vector2 dPos = (Game1.mouse.center - center);
 
                 float angleToMouse = (float)Math.Atan2(dPos.X, dPos.Y);
 
@@ -138,10 +134,8 @@ namespace Lemonade
 
         public override void Update()
         {
-            //Console.WriteLine(inventory.Count);
             fallingTime--;
             hitTimer--;
-            //Console.WriteLine(fallingTime);
             if (hitTimer <= 0)
                 isHit = false;
             if (fallingTime <= 0)
@@ -166,8 +160,8 @@ namespace Lemonade
 
             capVelocity();
 
-            guiHUD.Update(world.game.mouse);
-            guiInventory.Update(world.game.mouse);
+            guiHUD.Update();
+            guiInventory.Update();
         }
 
         public override void DealDamage(EntityLiving dealTo)
@@ -178,6 +172,7 @@ namespace Lemonade
         public override void DealtDamage(EntityLiving dealtBy)
         {
             takeDamage(dealtBy);
+            guiHUD.UpdateHealthBar();
         }
 
         public bool PickupItem(ItemEntity item)

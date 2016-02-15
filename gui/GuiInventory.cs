@@ -5,20 +5,22 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Lemonade.entity;
 using Lemonade.gui.guiwidget;
 
 namespace Lemonade.gui
 {
     public class GuiInventory : Gui
     {
-        public GuiInventory(Game1 game)
+        Player player;
+        public GuiInventory(Player player)
         {
-            this.game = game;
+            this.player = player;
             this.bounds = new Rectangle(0, 0, 1280, 720);
             this.active = false;
         }
 
-        public override void Update(GameMouse gMouse)
+        public override void Update()
         {
             if (active)
             {
@@ -28,7 +30,7 @@ namespace Lemonade.gui
                     firstOpen = false;
                 }
 
-                if (game.priorityGui == this)
+                if (Game1.priorityGui == this)
                 {
                     GuiWidgetButtonString widgetButtonString = null;
                     GuiWidgetItemSlot widgetInvSlot = null;
@@ -38,13 +40,13 @@ namespace Lemonade.gui
                         if (widgets[i].id.Item1 == WidgetType.ButtonString)
                         {
                             widgetButtonString = (GuiWidgetButtonString)widgets[i];
-                            widgetButtonString.Update(gMouse);
+                            widgetButtonString.Update();
                         }
 
                         if (widgets[i].id.Item1 == WidgetType.ItemSlot)
                         {
                             widgetInvSlot = (GuiWidgetItemSlot)widgets[i];
-                            widgetInvSlot.Update(gMouse);
+                            widgetInvSlot.Update();
                         }
 
                         if (!widgets[i].active)
@@ -56,14 +58,14 @@ namespace Lemonade.gui
 
         public void Open()
         {
-            oldPriorityGui = game.priorityGui;
-            game.priorityGui = this;
+            oldPriorityGui = Game1.priorityGui;
+            Game1.priorityGui = this;
             active = true;
         }
 
         public void Close()
         {
-            game.priorityGui = oldPriorityGui;
+            Game1.priorityGui = oldPriorityGui;
             active = false;
         }
 
@@ -74,7 +76,7 @@ namespace Lemonade.gui
 
             for (int x = 0; x < 16; x++)
             {
-                createInventorySlot(new Rectangle(8 + x * (64 + 16), 256, 64, 64), new Tuple<WidgetType, int>(WidgetType.ItemSlot, x), button1Colors);
+                createInventorySlot(new Rectangle(8 + x * (64 + 16), 256, 64, 64), new Tuple<WidgetType, int>(WidgetType.ItemSlot, x), button1Colors, player);
             }
         }
 

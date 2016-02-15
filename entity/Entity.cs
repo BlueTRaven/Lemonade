@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
-namespace Lemonade
+namespace Lemonade.entity
 {
     [DataContract]
     public abstract class Entity

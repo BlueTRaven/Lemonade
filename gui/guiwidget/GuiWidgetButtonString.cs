@@ -10,14 +10,6 @@ namespace Lemonade.gui.guiwidget
 {
     public class GuiWidgetButtonString : GuiWidget
     {
-        public enum Alignment
-        {
-            Center,
-            Left,
-            Right,
-            Top,
-            Bottom
-        }
         Alignment alignment;
         SpriteFont font;
         string text;
@@ -36,11 +28,11 @@ namespace Lemonade.gui.guiwidget
             this.colors = colors;
         }
 
-        public void Update(GameMouse gMouse)
+        public void Update()
         {
             if (active)
             {
-                base.update(gMouse);
+                base.update();
             }
         }
 

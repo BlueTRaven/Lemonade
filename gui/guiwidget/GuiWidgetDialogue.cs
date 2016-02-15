@@ -32,7 +32,7 @@ namespace Lemonade.gui.guiwidget
             bounds = setBounds;
 
             outlineWidth = 4;
-            interiorBounds = new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2));
+            //interiorBounds = new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2));
 
             font = setFont;
 
@@ -46,7 +46,7 @@ namespace Lemonade.gui.guiwidget
             wrappedChars = wrappedText.ToCharArray();
         }
 
-        public void Update(GameMouse gMouse)
+        public void Update()
         {
             if (active)
             {
@@ -57,7 +57,7 @@ namespace Lemonade.gui.guiwidget
                     letterTimer = 0;
                     count++;
                 }
-                base.update(gMouse);
+                base.update();
             }
         }
 

@@ -14,15 +14,19 @@ namespace Lemonade
 {   //not sure if I should use enums...
     public static class Assets
     {
+        public static readonly string entityPrefix = "entity_";
         public static readonly string entity_player = "entity_player";
         public static readonly string entity_enemy1 = "entity_enemy1";
 
+        public static readonly string tilePrefix = "tile_";
         public static readonly string tile_grass1 = "tile_grass1";
         public static readonly string tile_test = "tile_test";
 
+        public static readonly string bgPrefix = "bg_";
         public static readonly string bg_sky1 = "bg_sky1";
         public static readonly string bg_debuggrid = "bg_debuggrid";
 
+        public static readonly string itemPrefix = "item_";
         public static readonly string item_knifeRust = "item_knifeRust";
         public static readonly string item_knife = "item_knife";
 
@@ -42,7 +46,7 @@ namespace Lemonade
             }
             catch(KeyNotFoundException e)
             {
-                Logger.Log("Couldn't find or load texture file '" + name + "'!\n" + e.ToString(), true);
+                Logger.Log("Couldn't find and/or load texture file '" + name + "'!\n" + e.ToString(), true);
                 return null;
             }
         }
@@ -55,7 +59,7 @@ namespace Lemonade
             }
             catch(KeyNotFoundException e)
             {
-                Logger.Log("Couldn't find or load spritefont file '" + name + "'!\n" + e.ToString(), true);
+                Logger.Log("Couldn't find and/or load spritefont file '" + name + "'!\n" + e.ToString(), true);
                 return null;
             }
         }

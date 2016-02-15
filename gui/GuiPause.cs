@@ -11,6 +11,7 @@ namespace Lemonade.gui
 {
     class GuiPause : Gui
     {
+        Game1 game;
         private GuiConfirm reallyExit;
         public GuiPause(Game1 game)
         {
@@ -18,10 +19,10 @@ namespace Lemonade.gui
             this.bounds = new Rectangle(0, 0, 1280, 720);
             this.active = false;
 
-            reallyExit = new GuiConfirm(game, new Rectangle((int)center.X - 256, (int)center.Y - 256, 512, 512), new string[] { "Are you sure you want to exit?", "Yes", "No"});
+            reallyExit = new GuiConfirm(new Rectangle((int)center.X - 256, (int)center.Y - 256, 512, 512), new string[] { "Are you sure you want to exit?", "Yes", "No"});
         }
 
-        public override void Update(GameMouse gMouse)
+        public override void Update()
         {
             if (active)
             {
@@ -31,7 +32,7 @@ namespace Lemonade.gui
                     firstOpen = false;
                 }
 
-                if (game.priorityGui == this)
+                if (Game1.priorityGui == this)
                 {
                     GuiWidgetButtonString widgetButtonString = null;
 
@@ -40,7 +41,7 @@ namespace Lemonade.gui
                         if (widgets[i].id.Item1 == WidgetType.ButtonString)
                         {
                             widgetButtonString = (GuiWidgetButtonString)widgets[i];
-                            widgetButtonString.Update(gMouse);
+                            widgetButtonString.Update();
 
                             if (widgets[i].id.Item2 == 0)
                             {
@@ -62,7 +63,7 @@ namespace Lemonade.gui
                             widgets.RemoveAt(i--);
                     }
                 }
-                reallyExit.Update(gMouse);
+                reallyExit.Update();
                 if (reallyExit.clicked[0])
                 {
                     game.Exit();
@@ -72,15 +73,15 @@ namespace Lemonade.gui
 
         public void Open()
         {
-            oldPriorityGui = game.priorityGui;
-            game.priorityGui = this;
+            oldPriorityGui = Game1.priorityGui;
+            Game1.priorityGui = this;
             active = true;
             game.paused = true;
         }
 
         public void Close()
         {
-            game.priorityGui = oldPriorityGui;
+            Game1.priorityGui = oldPriorityGui;
             active = false;
             game.paused = false;
         }

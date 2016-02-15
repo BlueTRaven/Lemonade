@@ -28,35 +28,49 @@ namespace Lemonade.gui.guiwidget
             Done2   //Finished right click
         }
 
+        public enum Alignment
+        {
+            Center,
+            Left,
+            Right,
+            Top,
+            Bottom
+        }
+
         public Tuple<WidgetType, int> id;   //Tuple containing the WidgetType and an id to identify by.
 
         public Vector2 mousePos;
         public State currentState;
         public State previousState;
 
-        protected int outlineWidth = 0;
+        public Alignment align;
+
+        public int outlineWidth = 0;
 
         public Rectangle bounds;
-        protected Rectangle interiorBounds;
+        public Rectangle interiorBounds;
+
+        //public Rectangle InteriorBounds { get { return  } set { interiorBounds = value; } }
 
         public bool active = true;
+        public bool draw = true;
 
         public Vector2 center { get { return new Vector2(bounds.X + bounds.Width / 2, bounds.Y + bounds.Height / 2); } set { bounds.X = (int)value.X - bounds.Width; bounds.Y = (int)value.Y - bounds.Height; } }
 
-        public void update(GameMouse gMouse)
+        public void update()
         {
             //mousePos = mState.Position.ToVector2();
-            currentState = GetState(gMouse);
+            currentState = GetState();
 
             previousState = currentState;
         }
 
         public abstract void Draw(SpriteBatch batch);
 
-        public State GetState(GameMouse gMouse)
+        public State GetState()
         {
             State finalState;
-            if (bounds.Contains(gMouse.position))
+            if (bounds.Contains(Game1.mouse.position))
             {
                 finalState = State.Hot;
             }
@@ -67,21 +81,21 @@ namespace Lemonade.gui.guiwidget
 
             if (finalState == State.Hot)
             {
-                if (gMouse.currentState.LeftButton == ButtonState.Pressed)
+                if (Game1.mouse.currentState.LeftButton == ButtonState.Pressed)
                 {
                     finalState = State.Active;
                 }
-                if (gMouse.currentState.RightButton == ButtonState.Pressed)
+                if (Game1.mouse.currentState.RightButton == ButtonState.Pressed)
                 {
                     finalState = State.Active2;
                 }
             }
 
-            if (previousState == State.Active && gMouse.currentState.LeftButton == ButtonState.Released)
+            if (previousState == State.Active && Game1.mouse.currentState.LeftButton == ButtonState.Released)
             {
                 finalState = State.Done;
             }
-            if (previousState == State.Active2 && gMouse.currentState.RightButton == ButtonState.Released)
+            if (previousState == State.Active2 && Game1.mouse.currentState.RightButton == ButtonState.Released)
             {
                 finalState = State.Done2;
             }

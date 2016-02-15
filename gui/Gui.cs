@@ -5,13 +5,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Lemonade.entity;
 using Lemonade.gui.guiwidget;
 
 namespace Lemonade.gui
 {
     public abstract class Gui
     {
-        protected Game1 game;
+        //protected Game1 game;
 
         protected Gui oldPriorityGui;
 
@@ -23,7 +24,7 @@ namespace Lemonade.gui
 
         public List<GuiWidget> widgets = new List<GuiWidget>();
 
-        public abstract void Update(GameMouse gMouse);
+        public abstract void Update();
 
         public abstract void Draw(SpriteBatch batch);
 
@@ -61,19 +62,19 @@ namespace Lemonade.gui
             return widget;
         }
 
-        public GuiWidgetButton createButton(Rectangle position, Tuple<WidgetType, int> id, string text, Color color, SpriteFont font, Color[] colors)
+        public GuiWidgetButton createButton(Rectangle position, Tuple<WidgetType, int> id, string text, GuiWidget.Alignment alignment, Color color, SpriteFont font, Color[] colors)
         {
             GuiWidgetButton widget;
-            widget = new GuiWidgetButton(position, id, text, color, font, colors);
+            widget = new GuiWidgetButton(position, id, text, alignment, color, font, colors);
 
             widgets.Add(widget);
             return widget;
         }
 
-        public GuiWidgetItemSlot createInventorySlot(Rectangle setBounds, Tuple<WidgetType, int> id, Color[] colors)
+        public GuiWidgetItemSlot createInventorySlot(Rectangle setBounds, Tuple<WidgetType, int> id, Color[] colors, Player player)
         {
             GuiWidgetItemSlot widget;
-            widget = new GuiWidgetItemSlot(setBounds, id, colors, game.mouse, game.world.player);
+            widget = new GuiWidgetItemSlot(setBounds, id, colors, player);
 
             widgets.Add(widget);
             return widget;

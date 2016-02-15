@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Lemonade.entity;
+
 namespace Lemonade.gui.guiwidget
 {
     public class GuiWidgetItemSlot : GuiWidget
@@ -15,21 +17,19 @@ namespace Lemonade.gui.guiwidget
 
         Color[] colors;
 
-        GameMouse gMouse;
         Player player;
 
-        public GuiWidgetItemSlot(Rectangle setBounds, Tuple<WidgetType, int> id, Color[] colors, GameMouse gMouse, Player player)
+        public GuiWidgetItemSlot(Rectangle setBounds, Tuple<WidgetType, int> id, Color[] colors, Player player)
         {
             this.id = id;
             bounds = setBounds;
 
             this.colors = colors;
 
-            this.gMouse = gMouse;
             this.player = player;
         }
 
-        public void Update(GameMouse gMouse)
+        public void Update()
         {
             if (active)
             {
@@ -37,13 +37,13 @@ namespace Lemonade.gui.guiwidget
 
                 if (currentState == State.Done)
                 {
-                    if (gMouse.heldItem != null)
+                    if (Game1.mouse.heldItem != null)
                     {
                         if (item == null)
                         {
                             AddItemToEmptySlot();
                         }
-                        else if (item.item.GetType() == gMouse.heldItem.item.GetType() && item.item.id == gMouse.heldItem.item.id)
+                        else if (item.item.GetType() == Game1.mouse.heldItem.item.GetType() && item.item.id == Game1.mouse.heldItem.item.id)
                         {
                             AddItemToFilledSlot();
                         }
@@ -52,36 +52,36 @@ namespace Lemonade.gui.guiwidget
                     {
                         if (item != null)
                         {
-                            if (item == gMouse.heldItem)
+                            if (item == Game1.mouse.heldItem)
                                 RemoveItemToFilledMouse();
                             else RemoveItemToEmptyMouse();
                         }
                     }
                 }
-                base.update(gMouse);
+                base.update();
             }
         }
 
         public void AddItemToEmptySlot()
         {
-            player.inventory[this.id.Item2] = gMouse.heldItem;
-            gMouse.heldItem = null;
+            player.inventory[this.id.Item2] = Game1.mouse.heldItem;
+            Game1.mouse.heldItem = null;
         }
 
         public void AddItemToFilledSlot()
         {
-            player.inventory[this.id.Item2].stackSize += gMouse.heldItem.stackSize;
-            gMouse.heldItem = null;
+            player.inventory[this.id.Item2].stackSize += Game1.mouse.heldItem.stackSize;
+            Game1.mouse.heldItem = null;
         }
 
         public void RemoveItemToEmptyMouse()
         {
-            gMouse.heldItem = player.inventory[this.id.Item2];
+            Game1.mouse.heldItem = player.inventory[this.id.Item2];
             player.inventory[this.id.Item2] = null;
         }
         public void RemoveItemToFilledMouse()
         {
-            gMouse.heldItem.stackSize += player.inventory[this.id.Item2].stackSize;
+            Game1.mouse.heldItem.stackSize += player.inventory[this.id.Item2].stackSize;
             player.inventory[this.id.Item2] = null;
         }
 
@@ -119,11 +119,11 @@ namespace Lemonade.gui.guiwidget
             {
                 if (currentState == State.Hot)
                 {
-                    batch.DrawString(Assets.GetFont(Assets.munro12), item.item.name, gMouse.position, Color.White);
+                    batch.DrawString(Assets.GetFont(Assets.munro12), item.item.name, Game1.mouse.position, Color.White);
                     for (int i = 0; i < item.item.description.Count(); i++)
                     {
                         if (item.item.description[i] != null)
-                            batch.DrawString(Assets.GetFont(Assets.munro12), item.item.description[i], new Vector2(gMouse.position.X, gMouse.position.Y + 12 * (i + 1)), Color.White);
+                            batch.DrawString(Assets.GetFont(Assets.munro12), item.item.description[i], new Vector2(Game1.mouse.position.X, Game1.mouse.position.Y + 12 * (i + 1)), Color.White);
                     }
 
                 }

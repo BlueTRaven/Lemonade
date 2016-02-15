@@ -16,15 +16,14 @@ namespace Lemonade.gui
         //Widget clicked. 0 = <id 1> clicked, 1 = <id 2> clicked;
         public bool[] clicked = new bool[] { false, false };
         /// <param name="texts">0 = Top text, 1 = "Yes" text, 2 = "No" text</param>
-        public GuiConfirm(Game1 game, Rectangle size, string[] texts)
+        public GuiConfirm(Rectangle size, string[] texts)
         {
-            this.game = game;
             this.bounds = size;
             this.active = false;
             this.texts = texts;
         }
 
-        public override void Update(GameMouse gMouse)
+        public override void Update()
         {
             if (active)
             {
@@ -34,7 +33,7 @@ namespace Lemonade.gui
                     firstOpen = false;
                 }
 
-                if (game.priorityGui == this)
+                if (Game1.priorityGui == this)
                 {
                     GuiWidgetButtonString widgetButtonString = null;
 
@@ -43,7 +42,7 @@ namespace Lemonade.gui
                         if (widgets[i].id.Item1 == WidgetType.ButtonString)
                         {
                             widgetButtonString = (GuiWidgetButtonString)widgets[i];
-                            widgetButtonString.Update(gMouse);
+                            widgetButtonString.Update();
 
                             if (widgets[i].id.Item2 == 1)
                             {
@@ -72,14 +71,14 @@ namespace Lemonade.gui
 
         public void Open()
         {
-            oldPriorityGui = game.priorityGui;
-            game.priorityGui = this;
+            oldPriorityGui = Game1.priorityGui;
+            Game1.priorityGui = this;
             active = true;
         }
 
         public void Close()
         {
-            game.priorityGui = oldPriorityGui;
+            Game1.priorityGui = oldPriorityGui;
             active = false;
             clicked[0] = false;
             clicked[1] = false;

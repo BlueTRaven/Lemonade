@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Lemonade.gui
+namespace Lemonade.entity
 {
     /// <summary>
     /// Used for any entity that will not attack the player; Quest givers, characters, etc...

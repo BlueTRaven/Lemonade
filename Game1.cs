@@ -42,12 +42,6 @@ namespace Lemonade
          *#safe deletion of entities
          */
 
-        public static Game1 Instance
-        {
-            get;
-            internal set;
-        }
-
         Stopwatch timeSinceStart;
 
         GraphicsDeviceManager graphics;
@@ -57,9 +51,9 @@ namespace Lemonade
         public static Vector2 playerPosition;
         //public static ContentManager Content;
 
-        public KeyboardState currentKBState, oldKBState;
-        public GameMouse mouse;
-        public MouseState currentMouseState;
+        public static KeyboardState currentKBState, oldKBState;
+        public static GameMouse mouse;
+        //public MouseState currentMouseState;
         float Fps = 0f;
         private const int NumberSamples = 50; //Update fps timer based on this number of samples
         int[] Samples = new int[NumberSamples];
@@ -72,8 +66,8 @@ namespace Lemonade
 
         GuiPause pauseMenu;
 
-        //public Gui oldPriorityGui;
-        public Gui priorityGui;// { get; set { oldPriorityGui = priorityGui; priorityGui = value; } }
+        public static GuiHud defaultPriorityGui;
+        public static Gui priorityGui;
 
         Color fadeColor;
 
@@ -81,6 +75,8 @@ namespace Lemonade
 
         public int displayWidth, displayHeight;
         double frameRate = 0.0;
+
+        //public static Vector2 cameraPos { get { return worl} }
 
         public Game1()
         {
@@ -94,7 +90,6 @@ namespace Lemonade
             graphics.ApplyChanges();
 
             timeSinceStart = Stopwatch.StartNew();
-            //timeSinceStart.Start();
         }
 
         /// <summary>
@@ -180,7 +175,7 @@ namespace Lemonade
                     pauseMenu.Close();
             }
 
-            pauseMenu.Update(mouse);
+            pauseMenu.Update();
             oldKBState = Keyboard.GetState();
 
             base.Update(gameTime);
@@ -216,7 +211,7 @@ namespace Lemonade
         /// </summary>
         /// <param name="key">key to check</param>
         /// <returns>True if this is the first frame when the key is pressed.</returns>
-        public bool keyPress(Keys key)
+        public static bool keyPress(Keys key)
         {
             return (currentKBState.IsKeyDown(key) && oldKBState.IsKeyUp(key));
         }
@@ -276,7 +271,7 @@ namespace Lemonade
             base.Draw(gameTime);
         }
 
-        public ItemStack createItemStack(Item item, int stackSize)
+        public static ItemStack createItemStack(Item item, int stackSize)
         {
             ItemStack stack = new ItemStack(item, stackSize);
             return stack;
@@ -285,7 +280,7 @@ namespace Lemonade
         public ItemWeapon CreateItemWeapon(int id)
         {
             ItemWeapon iWep = new ItemWeapon(id);
-            iWep.Initialize(this);
+            iWep.Initialize();
             return iWep;
         }
     }

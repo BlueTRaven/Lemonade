@@ -41,7 +41,7 @@ namespace Lemonade
         public string name;
         public string[] description = new string[8];   //Describes the item. new line = array
 
-        public abstract void Initialize(Game1 game);
+        public abstract void Initialize();
         //public abstract void CreateItem(int id);
     }
     #endregion
@@ -51,7 +51,7 @@ namespace Lemonade
     {
         public int defensePhys, defenseIce, defenseFire, defenseElec;
 
-        public override void Initialize(Game1 game)
+        public override void Initialize()
         {
 
         }
@@ -66,7 +66,7 @@ namespace Lemonade
 
         }
 
-        public override void Initialize(Game1 game)
+        public override void Initialize()
         {
 
         }
@@ -81,7 +81,7 @@ namespace Lemonade
 
         }
 
-        public override void Initialize(Game1 game)
+        public override void Initialize()
         {
 
         }
@@ -96,7 +96,7 @@ namespace Lemonade
 
         }
 
-        public override void Initialize(Game1 game)
+        public override void Initialize()
         {
 
         }
@@ -111,7 +111,7 @@ namespace Lemonade
 
         }
 
-        public override void Initialize(Game1 game)
+        public override void Initialize()
         {
 
         }
@@ -164,16 +164,9 @@ namespace Lemonade
             }
         }
 
-        public override void Initialize(Game1 game)
+        public override void Initialize()
         {
-            if (this.id == 0)
-            {
-                texture = game.Content.Load<Texture2D>("textures/" + textureName);
-            }
-            if (this.id == 1)
-            {
-                texture = game.Content.Load<Texture2D>("textures/" + textureName);
-            }
+            texture = Assets.GetTexture(Assets.itemPrefix + textureName);
         }
 
 
@@ -188,7 +181,7 @@ namespace Lemonade
 
         }
 
-        public override void Initialize(Game1 game)
+        public override void Initialize()
         {
             this.game = game;
         }

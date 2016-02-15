@@ -42,6 +42,16 @@ namespace Lemonade
             }
         }
 
+        /// <summary>
+        /// Gets the origin points of the rectangle.
+        /// </summary>
+        /// <param name="rect">The rectangle to get the values from.</param>
+        /// <returns>A tuple containing the top left and bottom right points of the rectangle.</returns>
+        public static Tuple<Vector2, Vector2> GetOriginRectangle(Rectangle rect)
+        {
+            return new Tuple<Vector2, Vector2>(new Vector2(rect.X, rect.Y), new Vector2(rect.X + rect.Width, rect.Y + rect.Height));
+        }
+
         public static string ReadFile(string path, string tag)
         {
             var paneContent = new StringBuilder();
