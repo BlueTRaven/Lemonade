@@ -13,6 +13,7 @@ namespace Lemonade
         private float _zoom;
         private Matrix _transform;
         private Vector2 _pos;
+        private Vector2 _offset;
         private float _rotation;
         private int _viewportWidth;
         private int _viewportHeight;
@@ -65,7 +66,8 @@ namespace Lemonade
             get { return _pos; }
             set
             {
-                float leftBarrier = (float)_viewportWidth *
+                _pos = value;
+                /*float leftBarrier = (float)_viewportWidth *
                        .5f / _zoom;
                 float rightBarrier = _worldWidth -
                        (float)_viewportWidth * .5f / _zoom;
@@ -81,7 +83,34 @@ namespace Lemonade
                 if (_pos.Y > topBarrier)
                     _pos.Y = topBarrier;
                 if (_pos.Y < bottomBarrier)
-                    _pos.Y = bottomBarrier;
+                    _pos.Y = bottomBarrier;*/
+            }
+        }
+
+        public Vector2 Offset
+        {
+            get { return _offset; }
+            set
+            {
+                Pos += value;
+                ClampCameraToWorldBounds();
+                /*float leftBarrier = (float)_viewportWidth *
+                       .5f / _zoom;
+                float rightBarrier = _worldWidth -
+                       (float)_viewportWidth * .5f / _zoom;
+                float topBarrier = _worldHeight -
+                           (float)_viewportHeight * .5f / _zoom;
+                float bottomBarrier = (float)_viewportHeight *
+                   .5f / _zoom;
+                _offset = value;
+                if (_offset.X < leftBarrier)
+                    _offset.X = leftBarrier;
+                if (_offset.X > rightBarrier)
+                    _offset.X = rightBarrier;
+                if (_offset.Y > topBarrier)
+                    _offset.Y = topBarrier;
+                if (_offset.Y < bottomBarrier)
+                    _offset.Y = bottomBarrier;*/
             }
         }
 
@@ -121,13 +150,16 @@ namespace Lemonade
 
         public Matrix GetTransformation()
         {
+            //Vector2 finalPos = -Pos - Offset;
             _transform =
-               Matrix.CreateTranslation(new Vector3(-_pos.X, -_pos.Y, 0)) *
+               //Matrix.CreateTranslation(new Vector3(finalPos.X, finalPos.Y, 0)) *
+               Matrix.CreateTranslation(new Vector3(-_pos.X, -_pos.Y , 0)) *
                Matrix.CreateRotationZ(Rotation) *
-               Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
+               Matrix.CreateScale(_zoom) *
                Matrix.CreateTranslation(new Vector3(_viewportWidth * 0.5f,
                    _viewportHeight * 0.5f, 0));
 
+            Offset = Vector2.Zero;
             return _transform;
         }
     }

@@ -53,7 +53,7 @@ namespace Lemonade
 
         public static KeyboardState currentKBState, oldKBState;
         public static GameMouse mouse;
-        //public MouseState currentMouseState;
+        public static Random random;
         float Fps = 0f;
         private const int NumberSamples = 50; //Update fps timer based on this number of samples
         int[] Samples = new int[NumberSamples];
@@ -76,7 +76,7 @@ namespace Lemonade
         public int displayWidth, displayHeight;
         double frameRate = 0.0;
 
-        //public static Vector2 cameraPos { get { return worl} }
+        public static Vector2 cameraPosition;
 
         public Game1()
         {
@@ -89,6 +89,7 @@ namespace Lemonade
             graphics.PreferredBackBufferHeight = displayHeight;
             graphics.ApplyChanges();
 
+            random = new Random();
             timeSinceStart = Stopwatch.StartNew();
         }
 
@@ -161,6 +162,7 @@ namespace Lemonade
                 //pauseMenu.active = false;
                 world.Update();
                 playerPosition = world.player.position;
+                cameraPosition = world.camera.Pos;
             }
             else
             {
@@ -226,6 +228,12 @@ namespace Lemonade
             return RetVal;
         }
 
+        public enum DrawType
+        {
+            OnCamera,
+            OnWorld
+        }
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -270,6 +278,7 @@ namespace Lemonade
 
             base.Draw(gameTime);
         }
+
 
         public static ItemStack createItemStack(Item item, int stackSize)
         {

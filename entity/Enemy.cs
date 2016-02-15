@@ -65,10 +65,10 @@ namespace Lemonade.entity
 
         public override void Draw(SpriteBatch batch)
         {
-            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
+            //batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
             batch.Draw(texture, position, null, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
             PrimiviteDrawing.DrawRectangle(null, batch, hitbox, 1, Color.Red);
-            batch.End();
+            //batch.End();
         }
     }
 }

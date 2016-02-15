@@ -70,7 +70,7 @@ namespace Lemonade.gui.guiwidget
         public State GetState()
         {
             State finalState;
-            if (bounds.Contains(Game1.mouse.position))
+            if (bounds.Contains(Game1.mouse.cameraPosition))
             {
                 finalState = State.Hot;
             }

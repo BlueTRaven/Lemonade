@@ -107,6 +107,7 @@ namespace Lemonade.entity
     public abstract class EntityLiving : Entity
     {
         public int health, maxHealth;
+        public int timeSinceCombat, healTickTime;   //May not use, may make player heal manually
         public int defensePhys, defenseIce, defenseFire, defenseElec;
 
         protected int hitTimerMax = 200;

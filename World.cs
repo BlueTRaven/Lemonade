@@ -106,6 +106,10 @@ namespace Lemonade
 
         public void Update()
         {
+            //camera.Offset = Vector2.Zero;
+
+            camera.MoveTo(player.center, new Vector2(0, 0), true);
+
             worldCountSecond++;
 
             if (!player.falling)
@@ -139,7 +143,6 @@ namespace Lemonade
                 tilesDynamic[t].Update(this);
             }
 
-            camera.MoveTo(player.center, new Vector2(0, 0), true);
             //cameraRect = new Rectangle((int)camera.Pos.X, (int)camera.Pos.Y, cameraRect.Width, cameraRect.Height);
 
             CheckCollision();
@@ -444,10 +447,12 @@ namespace Lemonade
             if (!drawnTileRenderTarget)
                 DrawTileRenderTarget(graphics, batch);
 
+            //camera.Pos += camera.Offset;
+
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
             //PrimiviteDrawing.DrawRectangle(null, batch, finalRect, 1, Color.Red);
+
             batch.Draw((Texture2D)tileRenderTarget, Vector2.Zero, null, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
-            batch.End();
 
             Rectangle finalRect = new Rectangle((int)camera.Pos.X - cameraRect.Width / 2, (int)camera.Pos.Y - cameraRect.Height / 2, 1280, 720);
             foreach (TileDynamic tile in tilesDynamic)
@@ -481,6 +486,7 @@ namespace Lemonade
                 if (iEnt.hitbox.Intersects(finalRect))
                     iEnt.Draw(batch);
             }
+            batch.End();
 
             batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, null, null, null, null);
             player.guiHUD.Draw(batch);

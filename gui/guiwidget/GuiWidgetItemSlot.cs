@@ -119,11 +119,11 @@ namespace Lemonade.gui.guiwidget
             {
                 if (currentState == State.Hot)
                 {
-                    batch.DrawString(Assets.GetFont(Assets.munro12), item.item.name, Game1.mouse.position, Color.White);
+                    batch.DrawString(Assets.GetFont(Assets.munro12), item.item.name, Game1.mouse.cameraPosition, Color.White);
                     for (int i = 0; i < item.item.description.Count(); i++)
                     {
                         if (item.item.description[i] != null)
-                            batch.DrawString(Assets.GetFont(Assets.munro12), item.item.description[i], new Vector2(Game1.mouse.position.X, Game1.mouse.position.Y + 12 * (i + 1)), Color.White);
+                            batch.DrawString(Assets.GetFont(Assets.munro12), item.item.description[i], new Vector2(Game1.mouse.cameraPosition.X, Game1.mouse.cameraPosition.Y + 12 * (i + 1)), Color.White);
                     }
 
                 }

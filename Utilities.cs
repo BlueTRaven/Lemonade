@@ -52,6 +52,12 @@ namespace Lemonade
             return new Tuple<Vector2, Vector2>(new Vector2(rect.X, rect.Y), new Vector2(rect.X + rect.Width, rect.Y + rect.Height));
         }
 
+        /// <summary>
+        /// Reads a file for text contatined in the tag.
+        /// </summary>
+        /// <param name="path">The path of the file to read</param>
+        /// <param name="tag">The tag used to locate text.</param>
+        /// <returns>The whole of the text between the tag.</returns>
         public static string ReadFile(string path, string tag)
         {
             var paneContent = new StringBuilder();

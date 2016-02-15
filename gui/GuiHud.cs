@@ -80,7 +80,7 @@ namespace Lemonade.gui
 
             if (button != null)
             {
-                button.text = player.health.ToString("0000");
+                button.text = (player.health.ToString("0000") + " / " + player.maxHealth.ToString("0000"));
 
                 float playerHealthRatio = ((float)player.health / (float)player.maxHealth);
                 button.interiorBounds.Width = (int)((playerHealthRatio) * (button.bounds.Width - button.outlineWidth));
@@ -121,7 +121,7 @@ namespace Lemonade.gui
                     {
                         if (player.health == player.maxHealth)
                             widget.draw = false;
-                        else widget.draw = true;
+                        else widget.draw = true; 
                         if (widget.GetState() == GuiWidget.State.Hot || widget.GetState() == GuiWidget.State.Active)
                         {
                             button.drawText = true;

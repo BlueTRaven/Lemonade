@@ -13,8 +13,9 @@ namespace Lemonade
 
         public MouseState currentState, previousState;
 
-        public Vector2 position;
-        public Vector2 center { get { return new Vector2(position.X + texture.Width / 2, position.Y + texture.Height / 2); }
+        public Vector2 cameraPosition { get { return currentState.Position.ToVector2(); } set { Mouse.SetPosition((int)value.X, (int)value.Y); } }  //The position of the mouse RELATIVE TO THE CAMERA
+        public Vector2 worldPosition { get { return Vector2.Transform(cameraPosition, game.world.camera.inverseTransform); } }//currentState.Position.ToVector2() - Game1.cameraPosition; } 
+        public Vector2 center { get { return new Vector2(currentState.Position.X + texture.Width / 2, currentState.Position.Y + texture.Height / 2); }
             set { center = new Vector2(value.X - texture.Width / 2, value.Y - texture.Height / 2); } }
 
         public ItemStack heldItem;
@@ -33,8 +34,8 @@ namespace Lemonade
         {
             previousState = currentState;
 
-            position = currentState.Position.ToVector2() - new Vector2(game.world.cameraRect.X, game.world.cameraRect.Y);
             currentState = Mouse.GetState();
+            //position = currentState.Position.ToVector2() - Utilities.GetOriginRectangle(game.world.cameraRect).Item1;
         }
 
         public bool LeftClick()
@@ -49,7 +50,7 @@ namespace Lemonade
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(texture, center, Color.White);
+            batch.Draw(texture, cameraPosition, Color.White);
 
             if (currentState.LeftButton == ButtonState.Pressed)
             {

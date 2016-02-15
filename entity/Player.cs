@@ -162,6 +162,8 @@ namespace Lemonade.entity
 
             guiHUD.Update();
             guiInventory.Update();
+
+            camera.Offset = new Vector2(Game1.random.Next(-16, 16), Game1.random.Next(-16, 16));
         }
 
         public override void DealDamage(EntityLiving dealTo)
@@ -202,7 +204,6 @@ namespace Lemonade.entity
         public override void Draw(SpriteBatch batch)
         {
             rot += 0.01f;
-            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.AnisotropicClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
 
             //double angleDegrees = (angleRadians * 180)/Math.PI;
 
@@ -224,8 +225,6 @@ namespace Lemonade.entity
             }
 
             PrimiviteDrawing.DrawRectangle(null, batch, hitbox, 1, Color.Red);
-
-            batch.End();
         }
     }
 }
