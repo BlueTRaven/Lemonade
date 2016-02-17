@@ -8,9 +8,7 @@ namespace Lemonade
 {
     public class TileDynamic : Tile
     {
-        World world;
-
-        public TileDynamic(Rectangle setSize, int setID, World setWorld)
+        public TileDynamic(Rectangle setSize, int setID)
         {
             rect = setSize;
 
@@ -18,13 +16,11 @@ namespace Lemonade
 
             solid = false;
             draw = true;
-
-            //world = setWorld;
         }
 
-        public override void Initialize(ContentManager content)
+        public override void Initialize()
         {
-            if (id == 0)
+            if (id == 0 || id == 1)
             {
                 solid = false;  //World loader tile
                 texture = Assets.GetTexture(Assets.tile_test);
@@ -41,6 +37,10 @@ namespace Lemonade
                     world.LoadWorld(1);
                 }
             }
+
+            if (id == 1)
+            {
+            }
         }
 
         public override void Draw(SpriteBatch batch, Camera2D camera)
@@ -52,6 +52,22 @@ namespace Lemonade
                 PrimiviteDrawing.DrawRectangle(null, batch, rect, 1, Color.Red);
                 batch.End();
             }
+        }
+
+        /// <summary>
+        /// Create a new dynamic tile.
+        /// Dynamic tiles always run the update function every tick.
+        /// </summary>
+        /// <param name="brush">Rectangle of the position and size.</param>
+        /// <param name="id">id of the dynamic tile to create.</param>
+        /// <returns>instance of the created tile.</returns>
+        public Tile createTileDynamic(Rectangle brush, int id, int layer)
+        {
+            TileDynamic t = new TileDynamic(brush, id);
+            t.Initialize();
+            World.tilesDynamic.Add(t);
+
+            return t;
         }
     }
 }

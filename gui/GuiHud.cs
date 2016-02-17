@@ -94,7 +94,7 @@ namespace Lemonade.gui
             //createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<WidgetType, int>(WidgetType.Dialogue, 0), Color.White, Assets.GetFont(Assets.munro24), new Color[] { Color.White, Color.DarkGray }, 2, "<test>");
         }
 
-        public void OpenDialogue(string key, SpriteFont font)
+        public void OpenDialogue(Vector2 position, string key, SpriteFont font)
         {
             bool hasDialogue = false;
             foreach(GuiWidget widget in widgets)
@@ -107,7 +107,7 @@ namespace Lemonade.gui
             }
 
             if (!hasDialogue)
-                createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<WidgetType, int>(WidgetType.Dialogue, 0), Color.White, font, new Color[] { Color.White, Color.DarkGray }, 2, key);
+                createDialogue(new Rectangle((int)position.X, (int)position.Y/*720 - 128*/, 1280, 128), new Tuple<WidgetType, int>(WidgetType.Dialogue, 0), Color.White, font, new Color[] { Color.White, Color.DarkGray }, 2, key);
         }
 
         public override void Draw(SpriteBatch batch)

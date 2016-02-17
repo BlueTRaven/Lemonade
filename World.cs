@@ -30,13 +30,11 @@ namespace Lemonade
         bool[] tileLayer;
 
         public Player player;
-        //TODO put all entityliving here
-        public List<EntityLiving> entityLivings = new List<EntityLiving>();
-        //public List<EntityLiving> enemies = new List<EntityLiving>();
-        public List<ItemEntity> itemEntities = new List<ItemEntity>();
-        public List<Particle> particles = new List<Particle>();
-        public List<TileStatic> tilesStatic = new List<TileStatic>();
-        public List<TileDynamic> tilesDynamic = new List<TileDynamic>();
+        public static List<EntityLiving> entityLivings = new List<EntityLiving>();
+        public static List<ItemEntity> itemEntities = new List<ItemEntity>();
+        public static List<Particle> particles = new List<Particle>();
+        public static List<TileStatic> tilesStatic = new List<TileStatic>();
+        public static List<TileDynamic> tilesDynamic = new List<TileDynamic>();
 
         public int worldIndex;
         public bool pause, drawnTileRenderTarget = false, drawTileDEBUG = false;
@@ -48,7 +46,7 @@ namespace Lemonade
 
         public Color ambientColor;
 
-        public Camera2D camera;
+        public static Camera2D camera;
         public Game1 game;
     
         public void Initialize(Game1 setGame, ContentManager setContent, Rectangle setWorldRect, Rectangle setCameraRect, GraphicsDevice graphics)
@@ -68,7 +66,7 @@ namespace Lemonade
             drawLayer = new bool[8];
             tileLayer = new bool[8];
 
-            //player = createPlayer(Vector2.Zero, 1);
+            camera = new Camera2D(new Viewport(cameraRect), worldRect);
 
             worldIndex = 0;
 
@@ -143,7 +141,7 @@ namespace Lemonade
                 tilesDynamic[t].Update(this);
             }
 
-            //cameraRect = new Rectangle((int)camera.Pos.X, (int)camera.Pos.Y, cameraRect.Width, cameraRect.Height);
+            cameraRect = new Rectangle((int)camera.PosUnclamped.X, (int)camera.PosUnclamped.Y, cameraRect.Width, cameraRect.Height);
 
             CheckCollision();
 
@@ -274,108 +272,17 @@ namespace Lemonade
             }
         }
 
-        public Player createPlayer(Vector2 position, int layer)
-        {
-            Player p = new Player(Vector2.Zero, 1);
-            camera = new Camera2D(new Viewport(cameraRect), worldRect);
-            p.Initialize(this, camera);
-            //Rectangle finalCamera = new Rectangle((int)position.X - cameraRect.Width / 2, (int)position.Y - cameraRect.Height / 2, cameraRect.Width, cameraRect.Height);
+        #region Entity Creation
 
-            entityLivings.Insert(0, p);
-            //camera.Move(position);
-            p.position = position;
-            return p;
-        }
 
-        /// <summary>
-        /// Creates a new enemy.
-        /// </summary>
-        /// <param name="position">Position where the enemy is created.</param>
-        /// <param name="id">Id of enemy to create.</param>
-        /// <returns>instance of the created enemy.</returns>
-        public Enemy createEnemy(Vector2 position, int layer, int id)
-        {
-            Enemy e = new Enemy(position, layer, id);
-            e.Initialize(this, camera);
-            entityLivings.Add(e);
 
-            return e;
-        }
 
-        public ItemEntity createItemEntity(Vector2 position, Vector2 velocity, ItemStack droppedItem, int layer)
-        {
-            ItemEntity i = new ItemEntity(position, velocity, droppedItem);
-            i.Initialize(this, camera);
-            i.layer = layer;
-            itemEntities.Add(i);
 
-            return i;
-        }
 
-        /// <summary>
-        /// Creates a new particle.
-        /// </summary>
-        /// <param name="position">Position where the particle is created.</param>
-        /// <param name="velocity">Initial velocity of particle.</param>
-        /// <param name="ai">AI type of particle. SEE: Particle.AiType for individual explanations.</param>
-        /// <param name="color">Color of the particle.</param>
-        /// <param name="timeLeft">NULLABLE. How long the particle lasts (60 = 1s)</param>
-        /// <returns>instance of created particle.</returns>
-        public Particle createParticle(Vector2 position, Vector2 velocity, Particle.AiType ai, Color color, int? timeLeft = null)
-        {
-            Particle p;
+        #endregion
+        #region Tile Creation
 
-            if (timeLeft == null)
-            {
-                p = new Particle(position, velocity, ai, color);
-            }
-            else
-            {
-                p = new Particle(position, velocity, ai, (int)timeLeft, color);
-            }
-
-            p.Initialize(this, camera);
-
-            particles.Add(p);
-
-            return p;
-        }
-
-        /// <summary>
-        /// Create a new static tile. 
-        /// Static tiles do NOT UPDATE.
-        /// If you want a tile that spawns projectiles/enemies, or moves, use a tileDynamic.
-        /// </summary>
-        /// <param name="brush">Rectangle of the position and size.</param>
-        /// <param name="textureName">name of the texture to apply to the tile.</param>
-        /// <param name="layer">layer on which to create the tile. 0-8</param>
-        /// <returns>instance of the created tile.</returns>
-        public Tile createTileStatic(Rectangle brush, string textureName, int layer, bool setWall = false, Directions setFacing = Directions.North)
-        {   //Todo add index
-            TileStatic t = new TileStatic(brush, textureName, layer, this);
-            t.Initialize(content);
-            t.wall = setWall;
-            t.facing = setFacing;
-            tilesStatic.Add(t);
-
-            return t;
-        }
-
-        /// <summary>
-        /// Create a new dynamic tile.
-        /// Dynamic tiles always run the update function every tick.
-        /// </summary>
-        /// <param name="brush">Rectangle of the position and size.</param>
-        /// <param name="id">id of the dynamic tile to create.</param>
-        /// <returns>instance of the created tile.</returns>
-        public Tile createTileDynamic(Rectangle brush, int id, int layer)
-        {
-            TileDynamic t = new TileDynamic(brush, id, this);
-            t.Initialize(content);
-            tilesDynamic.Add(t);
-
-            return t;
-        }
+        #endregion
 
         public void LoadWorld(int id)
         {
@@ -388,39 +295,30 @@ namespace Lemonade
 
             if (id == 0)
             {
-                player = createPlayer(new Vector2(1000, 1000), 1);                
-                //createEnemy(new Vector2(500, 300), 0);
-                //createEnemy(new Vector2(300, 500), 1);
+                player = Player.CreatePlayer(new Vector2(0, 0), 1);
 
-                createTileStatic(new Rectangle(0, 0, 512, 512), Assets.tile_grass1, 0);
-                createTileStatic(new Rectangle(512, 0, 64, 512), Assets.tile_grass1, 4, true, Directions.West);
-                createTileStatic(new Rectangle(0, 512, 512, 64), Assets.tile_grass1, 4, true, Directions.North);
-                createTileStatic(new Rectangle(512, 512, 64, 64), Assets.tile_grass1, 4, true, Directions.NorthWest);
+                TileStatic.CreateTileStatic(new Rectangle(0, 0, 512, 512), Assets.tile_grass1, 0);
+                TileStatic.CreateTileStatic(new Rectangle(512, 0, 64, 512), Assets.tile_rockwall, 4, true, Directions.West);
+                TileStatic.CreateTileStatic(new Rectangle(0, 512, 512, 64), Assets.tile_rockwall, 4, true, Directions.North);
+                TileStatic.CreateTileStatic(new Rectangle(512, 512, 64, 64), Assets.tile_rockwall, 4, true, Directions.NorthWest);
 
-                //for (int i = 0; i < 300; i++)
-                {
-                    //createItemEntity(new Vector2(576, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
-                    //createTileStatic(new Rectangle(576, 576, 64, 64), "tile_test", 4);
-                    
-                }
-                createItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
-                createItemEntity(new Vector2(576 + 128, 576 - 36), Vector2.Zero, new ItemStack(game.CreateItemWeapon(1), 58), 1);
+                ItemEntity.CreateItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
+                ItemEntity.CreateItemEntity(new Vector2(576 + 128, 576 - 36), Vector2.Zero, new ItemStack(game.CreateItemWeapon(1), 58), 1);
 
-                createEnemy(new Vector2(576, 0), 2, 0);
+                Enemy.CreateEnemy(new Vector2(576, 0), 2, 0);
 
                 ambientColor = new Color(25, 25, 50, 100);
 
-                //createTileDynamic(new Rectangle(128, 256, 64, 64), 0, 0);
             }  
 
             if (id == 1)
             {
-                player = createPlayer(Vector2.Zero, 1);
-                createEnemy(new Vector2(500, 300), 1, 0);
-                createEnemy(new Vector2(300, 500), 1, 1);
+                player = Player.CreatePlayer(Vector2.Zero, 1);
+                Enemy.CreateEnemy(new Vector2(500, 300), 1, 0);
+                Enemy.CreateEnemy(new Vector2(300, 500), 1, 1);
 
-                createTileStatic(new Rectangle(128, 128, 64, 64), "tile_grass1", 0);
-                createTileStatic(new Rectangle(128, 360, 128, 64), "tile_grass1", 0);
+                TileStatic.CreateTileStatic(new Rectangle(128, 128, 64, 64), "tile_grass1", 0);
+                TileStatic.CreateTileStatic(new Rectangle(128, 360, 128, 64), "tile_grass1", 0);
             }
             drawnTileRenderTarget = false;
         }
@@ -530,7 +428,7 @@ namespace Lemonade
 
         public void loadContent()
         {
-            player.Initialize(this, camera);
+            player.Initialize();
 
             layerTextures[0] = Assets.GetTexture(Assets.bg_sky1);
         }
@@ -567,7 +465,7 @@ namespace Lemonade
             Player data = JsonConvert.DeserializeObject<Player>(File.ReadAllText("player.json"));
 
             player = data;
-            player.Initialize(this, camera);
+            player.Initialize();
             //LoadWorldFromFile(player.location, false);
         }
 

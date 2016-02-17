@@ -27,7 +27,7 @@ namespace Lemonade.entity
 
         public World world;
 
-        public List<Entity> recentCollision = new List<Entity>(); //list of entities that the player has recently been hit by.
+        //public List<Entity> recentCollision = new List<Entity>(); //list of entities that the entity has recently been hit by.
         public List<HurtBox> hurtboxes = new List<HurtBox>(); //extra hitboxes outside player area, used for damaging
 
         public float maxSpeed = 5;
@@ -40,7 +40,6 @@ namespace Lemonade.entity
         
         public int damage;
 
-        public float mass, inv_mass, restitution;
         [DataMember]
         public int layer;   //NOTE entities will never be on layer 0
 
@@ -58,7 +57,7 @@ namespace Lemonade.entity
         public bool directionEast { get { facing = DirectionCardinal.East; return velocity.X < 0; } }
         public bool directionWest { get { facing = DirectionCardinal.West; return velocity.X > 0; } }
 
-        public abstract void Initialize(World setWorld, Camera2D setCamera);
+        public abstract void Initialize();
 
         public abstract void Update();
 
@@ -93,9 +92,9 @@ namespace Lemonade.entity
         /// <param name="bounds">The size of the rectangle to be created.</param>
         /// <param name="duration">how long the hurtbox persists.</param>
         /// <returns></returns>
-        public HurtBox createHurtBox(Rectangle bounds, int damage, int duration, float rotation = 0f)
+        public HurtBox createHurtBox(Entity creator, Rectangle bounds, Vector2 origin, int damage, int duration, float rotation = 0f)
         {
-            HurtBox h = new HurtBox(bounds, damage, duration, rotation);
+            HurtBox h = new HurtBox(creator, bounds, origin, damage, duration, rotation);
 
             hurtboxes.Add(h);
             return h;
@@ -137,7 +136,7 @@ namespace Lemonade.entity
         /// <param name="dropItem">the item to drop.</param>
         public void dropItem(ItemStack dropItem)
         {
-            world.createItemEntity(center, velocity, dropItem, layer);
+            ItemEntity.CreateItemEntity(center, velocity, dropItem, layer);
         }
 
         public void takeDamage(EntityLiving dealtBy, Element damageType = Element.PHYSICAL)

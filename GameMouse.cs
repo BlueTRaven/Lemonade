@@ -13,8 +13,8 @@ namespace Lemonade
 
         public MouseState currentState, previousState;
 
-        public Vector2 cameraPosition { get { return currentState.Position.ToVector2(); } set { Mouse.SetPosition((int)value.X, (int)value.Y); } }  //The position of the mouse RELATIVE TO THE CAMERA
-        public Vector2 worldPosition { get { return Vector2.Transform(cameraPosition, game.world.camera.inverseTransform); } }//currentState.Position.ToVector2() - Game1.cameraPosition; } 
+        public Vector2 positionRelativeCamera { get { return currentState.Position.ToVector2(); } set { Mouse.SetPosition((int)value.X, (int)value.Y); } }  //The position of the mouse RELATIVE TO THE CAMERA
+        public Vector2 positionRelativeWorld { get { return Vector2.Transform(positionRelativeCamera, World.camera.inverseTransform); } }//currentState.Position.ToVector2() - Game1.cameraPosition; } 
         public Vector2 center { get { return new Vector2(currentState.Position.X + texture.Width / 2, currentState.Position.Y + texture.Height / 2); }
             set { center = new Vector2(value.X - texture.Width / 2, value.Y - texture.Height / 2); } }
 
@@ -38,6 +38,16 @@ namespace Lemonade
             //position = currentState.Position.ToVector2() - Utilities.GetOriginRectangle(game.world.cameraRect).Item1;
         }
 
+        /// <summary>
+        /// Gets the angle to the mouse, in radians.
+        /// </summary>
+        /// <returns></returns>
+        public float GetAngleToMouse(Vector2 testPosition)
+        {
+            Vector2 dPos = (positionRelativeWorld - testPosition);
+            return (float)Math.Atan2(dPos.X, dPos.Y);
+        }
+
         public bool LeftClick()
         {
             return (currentState.LeftButton == ButtonState.Pressed && previousState.LeftButton == ButtonState.Released);
@@ -50,11 +60,11 @@ namespace Lemonade
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(texture, cameraPosition, Color.White);
+            batch.Draw(texture, positionRelativeCamera, Color.White);
 
             if (currentState.LeftButton == ButtonState.Pressed)
             {
-                PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle(center.ToPoint(), new Point(texture.Bounds.Width, texture.Bounds.Height)), Color.Red * 0.5f);
+                PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle(positionRelativeCamera.ToPoint(), new Point(texture.Bounds.Width, texture.Bounds.Height)), Color.Red * 0.5f);
             }
 
             if (heldItem != null)

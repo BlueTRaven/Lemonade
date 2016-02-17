@@ -17,10 +17,8 @@ namespace Lemonade.entity
         {
         }
 
-        public override void Initialize(World setWorld, Camera2D setCamera)
+        public override void Initialize()
         {
-            //world = setWorld;
-            camera = setCamera;
         }
 
         public override void Update()

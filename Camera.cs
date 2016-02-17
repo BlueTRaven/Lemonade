@@ -33,6 +33,8 @@ namespace Lemonade
 
         #region Properties
 
+        public Vector2 PosUnclamped { get; set; }
+
         public Matrix inverseTransform { get { return Matrix.Invert(GetTransformation()); } }
 
         public Vector2 center { get { return new Vector2(_pos.X + _viewportWidth / 2, _pos.Y + _viewportHeight / 2); } }
@@ -94,23 +96,6 @@ namespace Lemonade
             {
                 Pos += value;
                 ClampCameraToWorldBounds();
-                /*float leftBarrier = (float)_viewportWidth *
-                       .5f / _zoom;
-                float rightBarrier = _worldWidth -
-                       (float)_viewportWidth * .5f / _zoom;
-                float topBarrier = _worldHeight -
-                           (float)_viewportHeight * .5f / _zoom;
-                float bottomBarrier = (float)_viewportHeight *
-                   .5f / _zoom;
-                _offset = value;
-                if (_offset.X < leftBarrier)
-                    _offset.X = leftBarrier;
-                if (_offset.X > rightBarrier)
-                    _offset.X = rightBarrier;
-                if (_offset.Y > topBarrier)
-                    _offset.Y = topBarrier;
-                if (_offset.Y < bottomBarrier)
-                    _offset.Y = bottomBarrier;*/
             }
         }
 
@@ -131,6 +116,7 @@ namespace Lemonade
             if (instant)
                 _pos = toLocation;
 
+            PosUnclamped = _pos;
             ClampCameraToWorldBounds();
         }
 

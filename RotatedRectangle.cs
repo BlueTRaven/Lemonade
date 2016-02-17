@@ -13,14 +13,15 @@ namespace Lemonade
         public float Rotation;
         public Vector2 Origin;
         
-        public RotatedRectangle(Rectangle theRectangle, float theInitialRotation)
+        public RotatedRectangle(Rectangle theRectangle, Vector2 origin, float theInitialRotation)
         {
             CollisionRectangle = theRectangle;
             Rotation = theInitialRotation;
         
             //Calculate the Rectangles origin. We assume the center of the Rectangle will
             //be the point that we will be rotating around and we use that for the origin
-            Origin = new Vector2((int)theRectangle.Width / 2, (int)theRectangle.Height / 2);
+            Origin = origin;
+            //Origin = new Vector2((int)theRectangle.Width / 2, (int)theRectangle.Height / 2);
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Lemonade
         /// <returns></returns>
         public bool Intersects(Rectangle theRectangle)
         {
-            return Intersects(new RotatedRectangle(theRectangle, 0.0f));
+            return Intersects(new RotatedRectangle(theRectangle, Vector2.Zero, 0.0f));
         }
 
         /// <summary>

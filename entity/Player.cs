@@ -27,6 +27,8 @@ namespace Lemonade.entity
         public GuiHud guiHUD;
         public GuiInventory guiInventory;
 
+        public float angleToMouse { get { return Game1.mouse.GetAngleToMouse(center); } }
+
         public Player(Vector2 setPosition, int setLayer)
         {
             position = setPosition;
@@ -34,11 +36,10 @@ namespace Lemonade.entity
             layer = setLayer;
         }
 
-        public override void Initialize(World setWorld, Camera2D setCamera)
+        public override void Initialize()
         {
-            camera = setCamera;
 
-            world = setWorld;
+            //world = setWorld;
 
             texture = Assets.GetTexture(Assets.entity_player);
             //texture = world.game.
@@ -102,11 +103,12 @@ namespace Lemonade.entity
             }
             if (Game1.keyPress(Keys.F))//Keyboard.GetState().IsKeyDown(Keys.F))
             {
-                world.createItemEntity(center, Vector2.Zero, new ItemStack(world.game.CreateItemWeapon(1), 1), 1);
+                ItemEntity.CreateItemEntity(center, Vector2.Zero, new ItemStack(world.game.CreateItemWeapon(1), 1), 1);
             }
             if (Game1.keyPress(Keys.G))
             {
-                guiHUD.OpenDialogue("<default>", Assets.GetFont(Assets.munro24));
+                //guiHUD.OpenDialogue("<default>", Assets.GetFont(Assets.munro24));
+                OpenDialogue(Vector2.Zero);
             }
             if (Game1.keyPress(Keys.OemTilde))
             {
@@ -115,13 +117,13 @@ namespace Lemonade.entity
 
             if (Game1.mouse.LeftClick())
             {
-                Vector2 dPos = (Game1.mouse.center - center);
+                //Vector2 dPos = (Game1.mouse.positionRelativeWorld - position);
 
-                float angleToMouse = (float)Math.Atan2(dPos.X, dPos.Y);
+                //float angleToMouse = (float)Math.Atan2(dPos.X, dPos.Y);
 
                 Vector2 positionToRotation = Vector2.Transform(new Vector2(center.X, center.Y + 32) - center, Matrix.CreateRotationZ(-angleToMouse)) + center;
 
-                createHurtBox(new Rectangle((int)positionToRotation.X, (int)positionToRotation.Y, 64, 32), 10, 5, -angleToMouse);
+                createHurtBox(this, new Rectangle((int)positionToRotation.X, (int)positionToRotation.Y, 64, 32), new Vector2(center.X, center.Y + 32) - center, 10, 5, -angleToMouse);
             }
 
             if ((keyW && keyS && keyA && keyD) == false)
@@ -140,15 +142,14 @@ namespace Lemonade.entity
                 isHit = false;
             if (fallingTime <= 0)
                 falling = false;
-            for (int h = 0; h < hurtboxes.Count; h++)
+            for (int h = hurtboxes.Count - 1; h >= 0; h--)
             {
                 if (hurtboxes[h].active)
                 {
-                    //hurtboxes[h].rect.Origin = center;
                     hurtboxes[h].Update();
                 }
                 else
-                    hurtboxes.RemoveAt(h);
+                    hurtboxes.RemoveAt(h--);
             }
 
             //Console.WriteLine(layer);
@@ -163,7 +164,7 @@ namespace Lemonade.entity
             guiHUD.Update();
             guiInventory.Update();
 
-            camera.Offset = new Vector2(Game1.random.Next(-16, 16), Game1.random.Next(-16, 16));
+            //camera.Offset = new Vector2(Game1.random.Next(-16, 16), Game1.random.Next(-16, 16));
         }
 
         public override void DealDamage(EntityLiving dealTo)
@@ -195,22 +196,20 @@ namespace Lemonade.entity
             return false;
         }
 
-        public void CreateItem(int type)
+        public void OpenDialogue(Vector2 position, string key = "<default>")
         {
-            //inventory.Add();
+            guiHUD.OpenDialogue(position, key, Assets.GetFont(Assets.munro24));
         }
 
-        float rot = 0;
         public override void Draw(SpriteBatch batch)
         {
-            rot += 0.01f;
 
             //double angleDegrees = (angleRadians * 180)/Math.PI;
 
             foreach (HurtBox box in hurtboxes)
             {
                 //batch.Draw(texture, new Vector2(box.rect.CollisionRectangle.X, box.rect.CollisionRectangle.Y), box.rect.CollisionRectangle, Color.White, box.rotation, Vector2.Zero, 1f, SpriteEffects.None, 0f);
-                PrimiviteDrawing.DrawRectangle(null, batch, box.rect.CollisionRectangle, Color.Red, box.rotation, box.rect.center - box.rect.UpperLeftCorner());
+                PrimiviteDrawing.DrawRectangle(null, batch, box.rect.CollisionRectangle, Color.Red, box.rect.Rotation, box.rect.center - Utilities.GetOriginRectangle(box.rect.CollisionRectangle).Item1);
             }
 
 
@@ -225,6 +224,18 @@ namespace Lemonade.entity
             }
 
             PrimiviteDrawing.DrawRectangle(null, batch, hitbox, 1, Color.Red);
+        }
+
+        public static Player CreatePlayer(Vector2 position, int layer)
+        {
+            Player p = new Player(Vector2.Zero, 1);
+            p.Initialize();
+            //Rectangle finalCamera = new Rectangle((int)position.X - cameraRect.Width / 2, (int)position.Y - cameraRect.Height / 2, cameraRect.Width, cameraRect.Height);
+
+            World.entityLivings.Insert(0, p);
+            //camera.Move(position);
+            p.position = position;
+            return p;
         }
     }
 }

@@ -61,12 +61,14 @@ namespace Lemonade
         public static string ReadFile(string path, string tag)
         {
             var paneContent = new StringBuilder();
+            bool everFound = false;
             bool lineFound = false;
             foreach (string line in File.ReadLines(path))
             {
                 if (line.Contains(tag))
                 {
                     lineFound = !lineFound;
+                    everFound = true;
                 }
                 else
                 {
@@ -76,6 +78,13 @@ namespace Lemonade
                     }
                 }
             }
+
+            if (!everFound)
+            {
+                Logger.Log("Could not find specified tag '" + tag + "' in file '" + path + "'", true);
+                return "";
+            }
+
             return paneContent.ToString();
         }
 

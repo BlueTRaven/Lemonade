@@ -13,9 +13,7 @@ namespace Lemonade
         [DataMember]
         string textureName;
 
-        World world;
-
-        public TileStatic(Rectangle setSize, string setTexture, int setLayer, World setWorld)
+        public TileStatic(Rectangle setSize, string setTexture, int setLayer)
         {
             rect = setSize;
 
@@ -23,17 +21,11 @@ namespace Lemonade
 
             layer = setLayer;
 
-            //world = setWorld;
-
             solid = false;
             draw = true;
-
-            mass = 1;
-            inv_mass = 1 / mass;
-            restitution = 1;
         }
 
-        public override void Initialize(ContentManager content)
+        public override void Initialize()
         {
             Logger.Log(String.Format("Created tile.\nIndex: {0}\nLayer: {1}\nFacing Direction: {2}", index, layer, facing), true);
 
@@ -112,11 +104,31 @@ namespace Lemonade
 
         public void DrawDEBUG(SpriteBatch batch, Camera2D camera)
         {
-            batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
+            //batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
             PrimiviteDrawing.DrawRectangle(null, batch, rect, 1, Color.Red);
             PrimiviteDrawing.DrawLineSegment(null, batch, new Vector2(rect.X, rect.Y), new Vector2(rect.X + rect.Width, rect.Y + rect.Height), Color.Blue, 1);
             batch.DrawString(Assets.GetFont(Assets.munro12), "layer:" + layer, new Vector2(position.X + 32, position.Y + 32), Color.Black);
-            batch.End();
+            //batch.End();
+        }
+
+        /// <summary>
+        /// Create a new static tile. 
+        /// Static tiles do NOT UPDATE.
+        /// If you want a tile that spawns projectiles/enemies, or moves, use a tileDynamic.
+        /// </summary>
+        /// <param name="brush">Rectangle of the position and size.</param>
+        /// <param name="textureName">name of the texture to apply to the tile.</param>
+        /// <param name="layer">layer on which to create the tile. 0-8</param>
+        /// <returns>instance of the created tile.</returns>
+        public static Tile CreateTileStatic(Rectangle brush, string textureName, int layer, bool setWall = false, Directions setFacing = Directions.North)
+        {   //Todo add index
+            TileStatic t = new TileStatic(brush, textureName, layer);
+            t.Initialize();
+            t.wall = setWall;
+            t.facing = setFacing;
+            World.tilesStatic.Add(t);
+
+            return t;
         }
     }
 }

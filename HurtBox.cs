@@ -4,10 +4,14 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using Lemonade.entity;
+
 namespace Lemonade
 {
     public class HurtBox
     {
+        Entity owner;
+
         public RotatedRectangle rect;
 
         private int duration, damage;
@@ -16,9 +20,10 @@ namespace Lemonade
 
         public bool active = true;
 
-        public HurtBox(Rectangle setBounds, int setDamage, int setDuration, float setRotation)
+        public HurtBox(Entity owner, Rectangle setBounds, Vector2 origin, int setDamage, int setDuration, float setRotation)
         {
-            rect = new RotatedRectangle(setBounds, 0);
+            this.owner = owner;
+            rect = new RotatedRectangle(setBounds, origin, setRotation);
             damage = setDamage;
             duration = setDuration;
 
@@ -31,6 +36,9 @@ namespace Lemonade
 
             if (duration <= 0)
                 active = false;
+
+            //Vector2 positionToRotation = Vector2.Transform(new Vector2(owner.center.X, owner.center.Y + 32) - owner.center, Matrix.CreateRotationZ(-rotation)) + owner.center;
+
         }
 
         public Vector2 RotatePoint(Vector2 p)

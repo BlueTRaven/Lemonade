@@ -35,14 +35,12 @@ namespace Lemonade
         public int id, layer;
         public int index = 0;
         public bool solid, draw, wall;
-        public float mass, inv_mass, restitution;
 
-        public abstract void Initialize(ContentManager content);
+        public abstract void Initialize();
 
         public abstract void Update(World world);
 
         public abstract void Draw(SpriteBatch batch, Camera2D camera);
-        //public abstract void DrawShadow(SpriteBatch batch, Camera2d camera);
     }
 
 }

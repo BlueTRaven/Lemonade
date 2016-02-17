@@ -18,11 +18,8 @@ namespace Lemonade.entity
             Name = "Enemy";
         }
 
-        public override void Initialize(World setWorld, Camera2D setCamera)
+        public override void Initialize()
         {
-            camera = setCamera;
-            //world = setWorld;
-
             if (aiType == 0 || aiType == 1)
             {
                 texture = Assets.GetTexture(Assets.entity_enemy1);
@@ -69,6 +66,21 @@ namespace Lemonade.entity
             batch.Draw(texture, position, null, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
             PrimiviteDrawing.DrawRectangle(null, batch, hitbox, 1, Color.Red);
             //batch.End();
+        }
+
+        /// <summary>
+        /// Creates a new enemy.
+        /// </summary>
+        /// <param name="position">Position where the enemy is created.</param>
+        /// <param name="id">Id of enemy to create.</param>
+        /// <returns>instance of the created enemy.</returns>
+        public static Enemy CreateEnemy(Vector2 position, int layer, int id)
+        {
+            Enemy e = new Enemy(position, layer, id);
+            e.Initialize();
+            World.entityLivings.Add(e);
+
+            return e;
         }
     }
 }

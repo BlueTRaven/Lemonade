@@ -49,11 +49,8 @@ namespace Lemonade.entity
             color = setColor;
         }
 
-        public override void Initialize(World setWorld, Camera2D setCamera)
+        public override void Initialize()
         {
-            //world = setWorld;
-            camera = setCamera;
-
             Name = "Particle";
         }
 
@@ -95,6 +92,35 @@ namespace Lemonade.entity
                 PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle((int)position.X, (int)position.Y, 2, 2), new Color(1, 0, 0, fadeAlpha));
             }
             batch.End();
+        }
+
+        /// <summary>
+        /// Creates a new particle.
+        /// </summary>
+        /// <param name="position">Position where the particle is created.</param>
+        /// <param name="velocity">Initial velocity of particle.</param>
+        /// <param name="ai">AI type of particle. SEE: Particle.AiType for individual explanations.</param>
+        /// <param name="color">Color of the particle.</param>
+        /// <param name="timeLeft">NULLABLE. How long the particle lasts (60 = 1s)</param>
+        /// <returns>instance of created particle.</returns>
+        public static Particle createParticle(Vector2 position, Vector2 velocity, Particle.AiType ai, Color color, int? timeLeft = null)
+        {
+            Particle p;
+
+            if (timeLeft == null)
+            {
+                p = new Particle(position, velocity, ai, color);
+            }
+            else
+            {
+                p = new Particle(position, velocity, ai, (int)timeLeft, color);
+            }
+
+            p.Initialize();
+
+            World.particles.Add(p);
+
+            return p;
         }
     }
 }

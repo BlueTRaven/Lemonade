@@ -32,7 +32,7 @@ namespace Lemonade.gui.guiwidget
             bounds = setBounds;
 
             outlineWidth = 4;
-            //interiorBounds = new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2));
+            interiorBounds = new Rectangle(bounds.X + outlineWidth, bounds.Y + outlineWidth, bounds.Width - (int)(outlineWidth * 2), bounds.Height - (int)(outlineWidth * 2));
 
             font = setFont;
 

@@ -19,11 +19,8 @@ namespace Lemonade.entity
             item = itemStack.item;
         }
 
-        public override void Initialize(World setWorld, Camera2D setCamera)
+        public override void Initialize()
         {
-            //world = setWorld;
-            camera = setCamera;
-
             texture = item.texture;
 
             position = center;
@@ -40,6 +37,17 @@ namespace Lemonade.entity
         public override void Update()
         {
             position += velocity;
+        }
+
+
+        public static ItemEntity CreateItemEntity(Vector2 position, Vector2 velocity, ItemStack droppedItem, int layer)
+        {
+            ItemEntity i = new ItemEntity(position, velocity, droppedItem);
+            i.Initialize();
+            i.layer = layer;
+            World.itemEntities.Add(i);
+
+            return i;
         }
     }
 }

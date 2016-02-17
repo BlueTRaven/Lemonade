@@ -78,6 +78,8 @@ namespace Lemonade
 
         public static Vector2 cameraPosition;
 
+        public static bool isActiveWindow { get; set; }
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -151,6 +153,11 @@ namespace Lemonade
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            isActiveWindow = IsActive;
+
+            //if (!isActiveWindow)
+                //pauseMenu.Open();
+
             currentKBState = Keyboard.GetState();
             mouse.Update();
 
@@ -162,7 +169,7 @@ namespace Lemonade
                 //pauseMenu.active = false;
                 world.Update();
                 playerPosition = world.player.position;
-                cameraPosition = world.camera.Pos;
+                cameraPosition = World.camera.Pos;
             }
             else
             {
@@ -271,10 +278,14 @@ namespace Lemonade
                 PrimiviteDrawing.DrawRectangle(null, spriteBatch, spriteBatch.GraphicsDevice.Viewport.Bounds, fadeColor);
             } */
             pauseMenu.Draw(spriteBatch);
+
             mouse.Draw(spriteBatch);
+            spriteBatch.End();
+
+            //spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, null, null, world.camera.GetTransformation());
+            //spriteBatch.End();
             //PrimiviteDrawing.DrawLineSegment(null, spriteBatch, Vector2.Zero, world.cameraRect.Center.ToVector2(), Color.Orange, 1);
 
-            spriteBatch.End();
 
             base.Draw(gameTime);
         }

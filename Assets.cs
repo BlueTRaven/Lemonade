@@ -21,6 +21,7 @@ namespace Lemonade
         public static readonly string tilePrefix = "tile_";
         public static readonly string tile_grass1 = "tile_grass1";
         public static readonly string tile_test = "tile_test";
+        public static readonly string tile_rockwall = "tile_rockwall";
 
         public static readonly string bgPrefix = "bg_";
         public static readonly string bg_sky1 = "bg_sky1";
@@ -77,6 +78,7 @@ namespace Lemonade
             //-- Tile textures --//
             textures.Add("tile_grass1", content.Load<Texture2D>("textures/tiles/tile_grass1"));
             textures.Add("tile_test", content.Load<Texture2D>("textures/tiles/tile_test"));
+            textures.Add("tile_rockwall", content.Load<Texture2D>("textures/tiles/tile_rockwall"));
 
             //-- BG textures --//
             textures.Add("bg_sky1", content.Load<Texture2D>("textures/bgSky"));
