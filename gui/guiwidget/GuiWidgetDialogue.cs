@@ -75,8 +75,8 @@ namespace Lemonade.gui.guiwidget
 
                 for (int i = 0; i < wrappedChars.Length; i++)
                 {
-                    if (Regex.IsMatch(wrappedChars[i].ToString(), @"^\d+$"))
-                    {
+                    if (i == 0 && Regex.IsMatch(wrappedChars[i].ToString(), @"^\d+$"))
+                    {   //if the first char (and only first) is a number - sets the text speed to that.
                         textSpeed = (int)char.GetNumericValue(wrappedChars[i]);
                         continue;
                     }

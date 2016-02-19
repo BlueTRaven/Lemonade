@@ -7,17 +7,56 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Lemonade.tile
 {
-    class TileTrigger : Tile
+    /// <summary>
+    /// Triggers various functions upon being touched. To have it only activate once, set triggerOnce to true.
+    /// </summary>
+    public class TileTrigger : TileDynamic
     {
+        public enum TriggerAction
+        {
+            OpenDialogue,
+            DamageBox,
+            KillBox
+        }
+
+        //--OpenDialogue--//
         string dialogueKey = "<default>";
         int dialogueSpeed = 2;
-        public TileTrigger(Rectangle bounds, string dialogueKey, int dialogueSpeed)
+
+        //--DamageBox--//
+        public int damage;
+
+        bool triggerOnce;
+
+        TriggerAction runFunction;
+
+        public TileTrigger(Rectangle bounds, bool triggerOnce)
         {
             this.rect = bounds;
+
+            this.triggerOnce = triggerOnce;
+
+            this.solid = false;
+        }
+
+        public void SetType(string dialogueKey, int dialogueSpeed)
+        {
             this.dialogueKey = dialogueKey;
             this.dialogueSpeed = dialogueSpeed;
 
-            this.solid = false;
+            this.runFunction = TriggerAction.OpenDialogue;
+        }
+
+        public void SetType(int damage)
+        {
+            this.damage = damage;
+
+            this.runFunction = TriggerAction.DamageBox;
+        }
+
+        public void SetType()
+        {
+            this.runFunction = TriggerAction.KillBox;
         }
 
         public override void Initialize()
@@ -30,9 +69,29 @@ namespace Lemonade.tile
             
         }
 
-        public void OnCollision(World world)
+        public override void OnCollision(World world)
         {
-            world.player.OpenDialogue(new Vector2(0, 720 - 128), dialogueSpeed, dialogueKey);
+            if (runFunction == TriggerAction.OpenDialogue)
+            {
+                world.player.OpenDialogue(new Vector2(0, 720 - 128), dialogueSpeed, dialogueKey);
+            }
+            else if (runFunction == TriggerAction.DamageBox)
+            {
+                world.player.DealtDamage(this);
+            }
+            else if (runFunction == TriggerAction.KillBox)
+            {
+                world.player.dead = true;
+            }
+
+            if (triggerOnce)
+            {
+                this.dead = true;
+            }
+        }
+
+        public void OpenDialogue(World world)
+        {
         }
 
         public override void Draw(SpriteBatch batch)
@@ -42,9 +101,30 @@ namespace Lemonade.tile
         }
 
 
-        public static Tile CreateTileTrigger(Rectangle bounds, int speed, string dialogueKey)
+        public static Tile CreateTileTriggerDialogue(Rectangle bounds, bool triggerOnce, int speed, string dialogueKey)
         {
-            TileTrigger t = new TileTrigger(bounds, dialogueKey, speed);
+            TileTrigger t = new TileTrigger(bounds, triggerOnce);
+            t.SetType(dialogueKey, speed);
+            t.Initialize();
+            World.tiles.Add(t);
+
+            return t;
+        }
+
+        public static Tile CreateTileTriggerDamageBox(Rectangle bounds, bool triggerOnce, int damage)
+        {
+            TileTrigger t = new TileTrigger(bounds, triggerOnce);
+            t.SetType(damage);
+            t.Initialize();
+            World.tiles.Add(t);
+
+            return t;
+        }
+
+        public static Tile CreateTileTriggerKillBox(Rectangle bounds, bool triggerOnce)
+        {
+            TileTrigger t = new TileTrigger(bounds, triggerOnce);
+            t.SetType();
             t.Initialize();
             World.tiles.Add(t);
 

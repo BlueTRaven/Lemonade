@@ -5,7 +5,10 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+
 using Lemonade.gui;
+using Lemonade.gui.guiwidget;
+using Lemonade.tile;
 
 namespace Lemonade.entity
 {
@@ -107,8 +110,7 @@ namespace Lemonade.entity
             }
             if (Game1.keyPress(Keys.G))
             {
-                //guiHUD.OpenDialogue("<default>", Assets.GetFont(Assets.munro24));
-                //OpenDialogue(Vector2.Zero);
+                CloseDialogue();
             }
             if (Game1.keyPress(Keys.OemTilde))
             {
@@ -178,6 +180,12 @@ namespace Lemonade.entity
             guiHUD.UpdateHealthBar();
         }
 
+        public void DealtDamage(TileTrigger tileTrigger)
+        {
+            takeDamage(tileTrigger);
+            guiHUD.UpdateHealthBar();
+        }
+
         public bool PickupItem(ItemEntity item)
         {
             for (int i = 0; i < inventory.GetLength(0); i++)
@@ -199,6 +207,11 @@ namespace Lemonade.entity
         public void OpenDialogue(Vector2 position, int speed, string key = "<default>")
         {
             guiHUD.OpenDialogue(position, speed, key, Assets.GetFont(Assets.munro24));
+        }
+
+        public void CloseDialogue()
+        {
+            guiHUD.RemoveWidgetType(WidgetType.Dialogue);
         }
 
         public override void Draw(SpriteBatch batch)

@@ -35,8 +35,8 @@ namespace Lemonade
         public static List<ItemEntity> itemEntities = new List<ItemEntity>();
         public static List<Particle> particles = new List<Particle>();
         public static List<Tile> tiles = new List<Tile>();
-        public static List<TileStatic> tilesStatic = new List<TileStatic>();
-        public static List<TileDynamic> tilesDynamic = new List<TileDynamic>();
+
+        private List<Tile> collidedTiles = new List<Tile>();
 
         public int worldIndex;
         public bool pause, drawnTileRenderTarget = false, drawTileDEBUG = false;
@@ -138,11 +138,6 @@ namespace Lemonade
                     itemEntities.RemoveAt(ie--);
             }
 
-            for (int t = tilesDynamic.Count - 1; t >= 0; t--)
-            {
-                tilesDynamic[t].Update(this);
-            }
-
             cameraRect = new Rectangle((int)camera.PosUnclamped.X, (int)camera.PosUnclamped.Y, cameraRect.Width, cameraRect.Height);
 
             CheckCollision();
@@ -173,36 +168,36 @@ namespace Lemonade
 
         public void CheckCollision()
         {
-            //List<Tile> collidedTiles = new List<Tile>();      //Disabled layer falling for the moment...
+            collidedTiles.Clear();
 
             //Check collisions with enemies
             //Handles damage dealing with player
             foreach (EntityLiving living in entityLivings)
             {
                 //---- handle tile collisions ----//
-                foreach (Tile tile in tiles)
+                for (int t = tiles.Count - 1; t >= 0; t-- )
                 {
-                    if (living.hitbox.Intersects(tile.rect))
+                    if (living.hitbox.Intersects(tiles[t].rect))
                     {
-                        if (tile is TileTrigger)
+                        if (tiles[t] is TileDynamic)
                         {
                             if (living is Player)
                             {
-                                TileTrigger tileTrigger = (TileTrigger)tile;
+                                TileDynamic tileTrigger = (TileDynamic)tiles[t];
 
                                 tileTrigger.OnCollision(this);
 
-                                if (!tileTrigger.solid)
-                                    continue;   //This is redundant but continues are fun
+                                if (tileTrigger.dead)
+                                    tiles.RemoveAt(t--);
                             }
                         }
 
-                        if (tile.solid)
+                        if (tiles[t].solid)
                         {
-                            Vector2 centerDistance = tile.center - living.center;
+                            Vector2 centerDistance = tiles[t].center - living.center;
 
-                            Rectangle overlap = Rectangle.Intersect(tile.rect, living.hitbox);
-                            if (tile.layer >= living.layer || tile.wall)
+                            Rectangle overlap = Rectangle.Intersect(tiles[t].rect, living.hitbox);
+                            if (tiles[t].layer >= living.layer || tiles[t].wall)
                             {
                                 if (overlap.Width > overlap.Height)
                                 {
@@ -227,10 +222,12 @@ namespace Lemonade
                                     }
                                 }
                             }
-                            //collidedTiles.Add(tile);    
+                            collidedTiles.Add(tiles[t]);    
                         }
                     }
                 }
+
+                //Tile biggestIntersection = collidedTiles.Find(x => { return x.layer < player.layer; });   //No idea how to do this, really
 
                 /*List<Tile> Sorted = collidedTiles.OrderByDescending(o =>
                 {   //Sort by intersection area (larger = higher) - MAY BE REDUNDANT. REMOVE?
@@ -296,8 +293,7 @@ namespace Lemonade
 
             //Clear ALL enemies/projectiles/tiles/etc
             entityLivings.Clear();
-            tilesStatic.Clear();
-            tilesDynamic.Clear();
+            tiles.Clear();
 
             if (id == 0)
             {
@@ -307,7 +303,9 @@ namespace Lemonade
                 TileStatic.CreateTileStatic(new Rectangle(512, 0, 64, 512), Assets.tile_rockwall, 4, true, Directions.West);
                 TileStatic.CreateTileStatic(new Rectangle(0, 512, 512, 64), Assets.tile_rockwall, 4, true, Directions.North);
                 TileStatic.CreateTileStatic(new Rectangle(512, 512, 64, 64), Assets.tile_rockwall, 4, true, Directions.NorthWest);
-                TileTrigger.CreateTileTrigger(new Rectangle(64, 0, 64, 64), 5, "<intro_1>");
+                //TileTrigger.CreateTileTrigger(new Rectangle(64, 0, 64, 64), true, 5, "<intro_3>");
+                TileTrigger.CreateTileTriggerDamageBox(new Rectangle(64, 0, 64, 64), false, 10);
+                TileTrigger.CreateTileTriggerKillBox(new Rectangle(128, 0, 64, 64), false);
 
                 ItemEntity.CreateItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
                 ItemEntity.CreateItemEntity(new Vector2(576 + 128, 576 - 36), Vector2.Zero, new ItemStack(game.CreateItemWeapon(1), 58), 1);
@@ -368,13 +366,14 @@ namespace Lemonade
             {
                 if (tile.rect.Intersects(finalRect))
                     tile.Draw(batch);
-            }
 
-            foreach (TileStatic tile in tilesStatic)
-            {
-                if (drawTileDEBUG)
+                if (tile is TileStatic)
                 {
-                    tile.DrawDEBUG(batch, camera);
+                    TileStatic staticTile = (TileStatic) tile;
+                    if (drawTileDEBUG)
+                    {
+                        staticTile.DrawDEBUG(batch, camera);
+                    }
                 }
             }
 
@@ -461,10 +460,8 @@ namespace Lemonade
 
             dynamic collectionWrapper = new
             {   //tells what all to serialize
-                TileStatic = tilesStatic,
-                TileDynamic = tilesDynamic,
+                Tiles = tiles,
                 EntityLiving = entityLivings
-
             };
             string output = JsonConvert.SerializeObject(collectionWrapper, Formatting.Indented);    //serialize and turn to string
 

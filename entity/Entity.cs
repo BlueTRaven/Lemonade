@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
+using Lemonade.tile;
+
 namespace Lemonade.entity
 {
     [DataContract]
@@ -113,16 +115,16 @@ namespace Lemonade.entity
         protected int hitTimer = 200;
         protected bool isHit = false;
 
-        public Entity prevHit;
+        //public Entity prevHit;
 
         public abstract void DealDamage(EntityLiving dealTo);
         public abstract void DealtDamage(EntityLiving dealtBy);
 
-        public void SetHit(EntityLiving hitBy)
+        public void SetHit()
         {
             if (!isHit)
             {
-                Console.WriteLine("Hit by " + hitBy.GetType());
+                //Console.WriteLine("Hit by " + hitBy.GetType());
                 isHit = true;
                 hitTimer = hitTimerMax;
             }
@@ -153,7 +155,24 @@ namespace Lemonade.entity
                     health -= calculateDefenseDamage(dealtBy.damage, damageType);
                 }
             }
-            SetHit(dealtBy);
+            SetHit();
+        }
+
+        public void takeDamage(TileTrigger tileTrigger, Element damageType = Element.PHYSICAL)
+        {
+            if (!isHit)
+            {
+                if (health - calculateDefenseDamage(tileTrigger.damage, damageType) <= 0)
+                {
+                    health = 0;
+                    dead = true;
+                }
+                else
+                {
+                    health -= calculateDefenseDamage(tileTrigger.damage, damageType);
+                }
+            }
+            SetHit();
         }
 
         public int calculateDefenseDamage(int amount, Element damageType)
