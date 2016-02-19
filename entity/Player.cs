@@ -108,7 +108,7 @@ namespace Lemonade.entity
             if (Game1.keyPress(Keys.G))
             {
                 //guiHUD.OpenDialogue("<default>", Assets.GetFont(Assets.munro24));
-                OpenDialogue(Vector2.Zero);
+                //OpenDialogue(Vector2.Zero);
             }
             if (Game1.keyPress(Keys.OemTilde))
             {
@@ -196,9 +196,9 @@ namespace Lemonade.entity
             return false;
         }
 
-        public void OpenDialogue(Vector2 position, string key = "<default>")
+        public void OpenDialogue(Vector2 position, int speed, string key = "<default>")
         {
-            guiHUD.OpenDialogue(position, key, Assets.GetFont(Assets.munro24));
+            guiHUD.OpenDialogue(position, speed, key, Assets.GetFont(Assets.munro24));
         }
 
         public override void Draw(SpriteBatch batch)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -58,23 +59,28 @@ namespace Lemonade
         /// <param name="path">The path of the file to read</param>
         /// <param name="tag">The tag used to locate text.</param>
         /// <returns>The whole of the text between the tag.</returns>
-        public static string ReadFile(string path, string tag)
+        public static string[] ReadFile(string path, string tag)
         {
-            var paneContent = new StringBuilder();
+            List<string> taggedLines = new List<string>();
             bool everFound = false;
             bool lineFound = false;
+            //int index = 0;
             foreach (string line in File.ReadLines(path))
             {
                 if (line.Contains(tag))
                 {
                     lineFound = !lineFound;
                     everFound = true;
+                    continue;
                 }
                 else
                 {
                     if (lineFound)
                     {
-                        paneContent.Append(line);
+                        taggedLines.Add(line);
+                        //taggedLines[index] = line;
+                        //taggedLines.Append(line);
+                        //++index;
                     }
                 }
             }
@@ -82,10 +88,9 @@ namespace Lemonade
             if (!everFound)
             {
                 Logger.Log("Could not find specified tag '" + tag + "' in file '" + path + "'", true);
-                return "";
+                return new string[] {""};
             }
-
-            return paneContent.ToString();
+            return taggedLines.ToArray();//taggedLines.ToString().Split(new char[] {':'});
         }
 
         public static string WrapText(SpriteFont font, string text, float maxLineWidth)

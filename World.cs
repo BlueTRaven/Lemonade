@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 using Lemonade.entity;
+using Lemonade.tile;
 
 namespace Lemonade
 {
@@ -33,6 +34,7 @@ namespace Lemonade
         public static List<EntityLiving> entityLivings = new List<EntityLiving>();
         public static List<ItemEntity> itemEntities = new List<ItemEntity>();
         public static List<Particle> particles = new List<Particle>();
+        public static List<Tile> tiles = new List<Tile>();
         public static List<TileStatic> tilesStatic = new List<TileStatic>();
         public static List<TileDynamic> tilesDynamic = new List<TileDynamic>();
 
@@ -178,39 +180,55 @@ namespace Lemonade
             foreach (EntityLiving living in entityLivings)
             {
                 //---- handle tile collisions ----//
-                foreach (Tile tile in tilesStatic)
+                foreach (Tile tile in tiles)
                 {
                     if (living.hitbox.Intersects(tile.rect))
                     {
-                        Vector2 centerDistance = tile.center - living.center;
-
-                        Rectangle overlap = Rectangle.Intersect(tile.rect, living.hitbox);
-                        if (tile.layer >= living.layer || tile.wall)
+                        if (tile is TileTrigger)
                         {
-                            if (overlap.Width > overlap.Height)
+                            if (living is Player)
                             {
-                                if (centerDistance.Y > 0)
-                                {
-                                    living.position.Y = living.hitbox.Y - overlap.Height;
-                                }
-                                if (centerDistance.Y < 0)
-                                {
-                                    living.position.Y = living.hitbox.Y + overlap.Height;
-                                }
-                            }
-                            else
-                            {
-                                if (centerDistance.X > 0)
-                                {
-                                    living.position.X = living.hitbox.X - overlap.Width;
-                                }
-                                if (centerDistance.X < 0)
-                                {
-                                    living.position.X = living.hitbox.X + overlap.Width;
-                                }
+                                TileTrigger tileTrigger = (TileTrigger)tile;
+
+                                tileTrigger.OnCollision(this);
+
+                                if (!tileTrigger.solid)
+                                    continue;   //This is redundant but continues are fun
                             }
                         }
-                        //collidedTiles.Add(tile);    
+
+                        if (tile.solid)
+                        {
+                            Vector2 centerDistance = tile.center - living.center;
+
+                            Rectangle overlap = Rectangle.Intersect(tile.rect, living.hitbox);
+                            if (tile.layer >= living.layer || tile.wall)
+                            {
+                                if (overlap.Width > overlap.Height)
+                                {
+                                    if (centerDistance.Y > 0)
+                                    {
+                                        living.position.Y = living.hitbox.Y - overlap.Height;
+                                    }
+                                    if (centerDistance.Y < 0)
+                                    {
+                                        living.position.Y = living.hitbox.Y + overlap.Height;
+                                    }
+                                }
+                                else
+                                {
+                                    if (centerDistance.X > 0)
+                                    {
+                                        living.position.X = living.hitbox.X - overlap.Width;
+                                    }
+                                    if (centerDistance.X < 0)
+                                    {
+                                        living.position.X = living.hitbox.X + overlap.Width;
+                                    }
+                                }
+                            }
+                            //collidedTiles.Add(tile);    
+                        }
                     }
                 }
 
@@ -272,18 +290,6 @@ namespace Lemonade
             }
         }
 
-        #region Entity Creation
-
-
-
-
-
-
-        #endregion
-        #region Tile Creation
-
-        #endregion
-
         public void LoadWorld(int id)
         {
             Logger.Log("Loading world id " + id, true);
@@ -301,6 +307,7 @@ namespace Lemonade
                 TileStatic.CreateTileStatic(new Rectangle(512, 0, 64, 512), Assets.tile_rockwall, 4, true, Directions.West);
                 TileStatic.CreateTileStatic(new Rectangle(0, 512, 512, 64), Assets.tile_rockwall, 4, true, Directions.North);
                 TileStatic.CreateTileStatic(new Rectangle(512, 512, 64, 64), Assets.tile_rockwall, 4, true, Directions.NorthWest);
+                TileTrigger.CreateTileTrigger(new Rectangle(64, 0, 64, 64), 5, "<intro_1>");
 
                 ItemEntity.CreateItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
                 ItemEntity.CreateItemEntity(new Vector2(576 + 128, 576 - 36), Vector2.Zero, new ItemStack(game.CreateItemWeapon(1), 58), 1);
@@ -323,40 +330,44 @@ namespace Lemonade
             drawnTileRenderTarget = false;
         }
         
-        public void DrawTileRenderTarget(GraphicsDeviceManager graphics, SpriteBatch batch)
+        /*public void DrawTileRenderTarget(GraphicsDeviceManager graphics, SpriteBatch batch)
         {   //More efficent to do this way, as static tiles never move and so never need to be redrawn
             graphics.GraphicsDevice.SetRenderTarget(tileRenderTarget);
             graphics.GraphicsDevice.Clear(new Color(0, 0, 0, 0));
             
-            foreach (TileStatic tile in tilesStatic)
+            foreach (Tile tile in tiles)
             {
-                tile.Draw(batch, camera);
+                tile.Draw(batch);
             }
 
             graphics.GraphicsDevice.SetRenderTarget(null);
 
             drawnTileRenderTarget = true;
-        }
+        }*/
 
         public void Draw(GraphicsDeviceManager graphics, GraphicsDevice device, SpriteBatch batch)
         {
             drawBGLayers(batch);
 
-            if (!drawnTileRenderTarget)
-                DrawTileRenderTarget(graphics, batch);
+            //batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null);
+
+            //if (!drawnTileRenderTarget)
+                //DrawTileRenderTarget(graphics, batch);
+
+            //batch.End();
 
             //camera.Pos += camera.Offset;
 
-            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
+            batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
             //PrimiviteDrawing.DrawRectangle(null, batch, finalRect, 1, Color.Red);
 
             batch.Draw((Texture2D)tileRenderTarget, Vector2.Zero, null, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
 
             Rectangle finalRect = new Rectangle((int)camera.Pos.X - cameraRect.Width / 2, (int)camera.Pos.Y - cameraRect.Height / 2, 1280, 720);
-            foreach (TileDynamic tile in tilesDynamic)
+            foreach (Tile tile in tiles)
             {
                 if (tile.rect.Intersects(finalRect))
-                    tile.Draw(batch, camera);
+                    tile.Draw(batch);
             }
 
             foreach (TileStatic tile in tilesStatic)

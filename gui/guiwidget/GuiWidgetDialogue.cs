@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -15,7 +16,7 @@ namespace Lemonade.gui.guiwidget
         string[] text;
         string wrappedText;
         char[] wrappedChars;
-        string finalText;
+        StringBuilder finalText;
 
         public int currentLine = 0;
 
@@ -40,10 +41,12 @@ namespace Lemonade.gui.guiwidget
 
             this.colors = colors;
 
-            text = Utilities.ReadFile("Content\\strings\\dialogue.txt", forKey).Split(':');
+            text = Utilities.ReadFile("Content\\strings\\dialogue.txt", forKey);//.Split(':');
 
             wrappedText = Utilities.WrapText(font, text[0], interiorBounds.Width);
             wrappedChars = wrappedText.ToCharArray();
+
+            finalText = new StringBuilder();
         }
 
         public void Update()
@@ -66,28 +69,30 @@ namespace Lemonade.gui.guiwidget
             PrimiviteDrawing.DrawRectangle(null, batch, bounds, colors[1]);
             PrimiviteDrawing.DrawRectangle(null, batch, interiorBounds, colors[0]);
 
-            //string wrappedText = Utilities.WrapText(font, text[currentLine], interiorBounds.Width);
-            //char[] s = wrappedText.ToCharArray();
-
-            finalText = null;
-
             if (count <= wrappedChars.Length && !finished)
             {
+                finalText.Clear();
+
                 for (int i = 0; i < wrappedChars.Length; i++)
                 {
+                    if (Regex.IsMatch(wrappedChars[i].ToString(), @"^\d+$"))
+                    {
+                        textSpeed = (int)char.GetNumericValue(wrappedChars[i]);
+                        continue;
+                    }
                     if (i <= count)
                     {
-                        finalText = finalText + wrappedChars[i];
+                        finalText.Append(wrappedChars[i].ToString());
                     }
                 }
             }
             else
             {
-                finalText = wrappedText;
                 finished = true;
                 count = 0;
             }
-            batch.DrawString(font, finalText, new Vector2(interiorBounds.X, interiorBounds.Y), Color.Black);
+
+            batch.DrawString(font, finalText.ToString(), new Vector2(interiorBounds.X, interiorBounds.Y), Color.Black);
         }
 
         /// <summary>
@@ -96,7 +101,7 @@ namespace Lemonade.gui.guiwidget
         /// <param name="newSpeed">Rate at which a character appears.</param>
         /// <param name="newLine">line of "text" array to set to. if left at default, it will simply increase the text array index.</param>
         /// <returns>Whether or not there is any more text in the array. if there isn't, it's done.</returns>
-        public bool ChangeText(int newSpeed, int newLine = -1)
+        public bool ChangeText(int newSpeed = -1, int newLine = -1)
         {
             finished = false;
 
@@ -110,7 +115,9 @@ namespace Lemonade.gui.guiwidget
                 currentLine++;
             }
             else return true;
-            textSpeed = newSpeed;
+
+            if (newSpeed != -1)
+                textSpeed = newSpeed;
             return false;
         }
     }

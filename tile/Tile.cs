@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Lemonade
+namespace Lemonade.tile
 {
     [DataContract(Name = "TileStatic")]
     public abstract class Tile
@@ -34,13 +34,14 @@ namespace Lemonade
         [DataMember]
         public int id, layer;
         public int index = 0;
-        public bool solid, draw, wall;
+        public bool solid = true;
+        public bool draw, wall;
 
         public abstract void Initialize();
 
         public abstract void Update(World world);
 
-        public abstract void Draw(SpriteBatch batch, Camera2D camera);
+        public abstract void Draw(SpriteBatch batch);
     }
 
 }

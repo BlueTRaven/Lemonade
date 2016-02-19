@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Lemonade
+using Lemonade.tile;
+
+namespace Lemonade.tile
 {
     [DataContract(Name="TileStatic")]
     public class TileStatic : Tile
@@ -21,7 +23,7 @@ namespace Lemonade
 
             layer = setLayer;
 
-            solid = false;
+            solid = true;
             draw = true;
         }
 
@@ -29,18 +31,18 @@ namespace Lemonade
         {
             Logger.Log(String.Format("Created tile.\nIndex: {0}\nLayer: {1}\nFacing Direction: {2}", index, layer, facing), true);
 
-            solid = false;//This is grass bgtile
+            //solid = false;//This is grass bgtile
             texture = Assets.GetTexture(textureName);//content.Load<Texture2D>("textures/tiles/" + textureName);
             //blend = content.Load<Texture2D>("textures/blend");
         }
 
         public override void Update(World world) { return; }   //Static tiles never update
 
-        public override void Draw(SpriteBatch batch, Camera2D camera)
+        public override void Draw(SpriteBatch batch)
         {
             if (draw)
             {
-                batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null);
+                //batch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.Default, RasterizerState.CullCounterClockwise, null);
                 batch.Draw(texture, new Vector2(rect.X, rect.Y), new Rectangle(0, 0, rect.Width, rect.Height), Color.White);
                 float layerAlpha = 1f / 10f * (float)layer;
                 PrimiviteDrawing.DrawRectangle(null, batch, rect, new Color(0, 0, 0, layerAlpha));
@@ -98,7 +100,7 @@ namespace Lemonade
                     }
                 }
                 
-                batch.End();
+                //batch.End();
             }
         }
 
@@ -126,7 +128,7 @@ namespace Lemonade
             t.Initialize();
             t.wall = setWall;
             t.facing = setFacing;
-            World.tilesStatic.Add(t);
+            World.tiles.Add(t);
 
             return t;
         }

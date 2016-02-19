@@ -4,10 +4,13 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace Lemonade
+using Lemonade.tile;
+
+namespace Lemonade.tile
 {
     public class TileDynamic : Tile
     {
+        private bool triggered = false;
         public TileDynamic(Rectangle setSize, int setID)
         {
             rect = setSize;
@@ -29,7 +32,20 @@ namespace Lemonade
 
         public override void Update(World world)
         {
-            if (id == 0)
+            if (rect.Intersects(world.player.hitbox))
+            {
+                if (!triggered)
+                {
+                    triggered = true;
+                    Trigger(world);
+                }
+            }
+            else
+            {
+                triggered = false;
+            }
+
+            /*if (id == 0)
             {
                 rect.X += 1;
                 if (rect.Intersects(world.player.hitbox))
@@ -40,17 +56,30 @@ namespace Lemonade
 
             if (id == 1)
             {
+            }*/
+        }
+
+        public void Trigger(World world)
+        {
+            if (id == 0)
+            {
+                world.LoadWorld(1);
+            }
+
+            if (id == 1)
+            {
+                //world.player.OpenDialogue(new Vector2(0, 720-128), "<intro_1>");
             }
         }
 
-        public override void Draw(SpriteBatch batch, Camera2D camera)
+        public override void Draw(SpriteBatch batch)
         {
             if (draw)
             {
-                batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
-                batch.Draw(texture, new Vector2(rect.X, rect.Y), new Rectangle(0, 0, rect.Width, rect.Height), Color.White);
+                //batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointWrap, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
+                //batch.Draw(texture, new Vector2(rect.X, rect.Y), new Rectangle(0, 0, rect.Width, rect.Height), Color.White);
                 PrimiviteDrawing.DrawRectangle(null, batch, rect, 1, Color.Red);
-                batch.End();
+                //batch.End();
             }
         }
 
@@ -61,12 +90,11 @@ namespace Lemonade
         /// <param name="brush">Rectangle of the position and size.</param>
         /// <param name="id">id of the dynamic tile to create.</param>
         /// <returns>instance of the created tile.</returns>
-        public Tile createTileDynamic(Rectangle brush, int id, int layer)
+        public static Tile CreateTileDynamic(Rectangle brush, int id, int layer)
         {
             TileDynamic t = new TileDynamic(brush, id);
             t.Initialize();
-            World.tilesDynamic.Add(t);
-
+            World.tiles.Add(t);
             return t;
         }
     }
