@@ -42,12 +42,8 @@ namespace Lemonade.entity
 
         public override void Initialize()
         {
-
-            //world = setWorld;
-
+            damage = 5;
             texture = Assets.GetTexture(Assets.entity_player);
-            //texture = world.game.
-            //Texture2D>("textures/player");
 
             maxHealth = 100;
             health = maxHealth;
@@ -126,7 +122,7 @@ namespace Lemonade.entity
 
                 Vector2 positionToRotation = Vector2.Transform(new Vector2(center.X, center.Y + 32) - center, Matrix.CreateRotationZ(-angleToMouse)) + center;
 
-                createHurtBox(this, new Rectangle((int)positionToRotation.X, (int)positionToRotation.Y, 64, 32), new Vector2(center.X, center.Y + 32) - center, 10, 5, -angleToMouse);
+                createHurtBox(this, new Rectangle((int)positionToRotation.X, (int)positionToRotation.Y, 64, 32), new Vector2(center.X, center.Y + 32) - center, damage, 5, -angleToMouse);
             }
 
             if ((keyW && keyS && keyA && keyD) == false)
@@ -139,6 +135,12 @@ namespace Lemonade.entity
 
         public override void Update()
         {
+            if (dying)
+            {
+                Dying();
+                return;//PAUSE. EVERYTHING.
+            }
+
             fallingTime--;
             hitTimer--;
             if (hitTimer <= 0)
@@ -177,14 +179,22 @@ namespace Lemonade.entity
 
         public override void DealtDamage(EntityLiving dealtBy)
         {
-            takeDamage(dealtBy);
-            guiHUD.UpdateHealthBar();
+            if (!isHit)
+            {
+                takeDamage(dealtBy);
+                guiHUD.UpdateHealthBar();
+            }
         }
 
         public void DealtDamage(TileTrigger tileTrigger)
         {
             takeDamage(tileTrigger);
             guiHUD.UpdateHealthBar();
+        }
+
+        public override void Dying()
+        {
+            dead = true;
         }
 
         public bool PickupItem(ItemEntity item)

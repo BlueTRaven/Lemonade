@@ -114,23 +114,23 @@ namespace Lemonade.entity
 
         protected int hitTimerMax = 200;
         protected int hitTimer = 200;
-        protected bool isHit = false;
+        public bool isHit = false;
+
+        public bool dying = false;
+        public int deadTime;
+        protected int deadTimer;
 
         //public Entity prevHit;
 
         public abstract void DealDamage(EntityLiving dealTo);
         public abstract void DealtDamage(EntityLiving dealtBy);
+        public abstract void Dying();
 
         public void SetHit()
         {
-            if (!isHit)
-            {
-                //Console.WriteLine("Hit by " + hitBy.GetType());
-                isHit = true;
-                hitTimer = hitTimerMax;
-            }
-
-            int[] test = new int[300];
+            isHit = true;
+            hitTimer = hitTimerMax;
+            //int[] test = new int[300];
         }
 
         /// <summary>
@@ -144,34 +144,28 @@ namespace Lemonade.entity
 
         public void takeDamage(EntityLiving dealtBy, Element damageType = Element.PHYSICAL)
         {
-            if (!isHit)
+            if (health - calculateDefenseDamage(dealtBy.damage, damageType) <= 0)
             {
-                if (health - calculateDefenseDamage(dealtBy.damage, damageType) <= 0)
-                {
-                    health = 0;
-                    dead = true;
-                }
-                else
-                {
-                    health -= calculateDefenseDamage(dealtBy.damage, damageType);
-                }
+                health = 0;
+                dying = true;
+            }
+            else
+            {
+                health -= calculateDefenseDamage(dealtBy.damage, damageType);
             }
             SetHit();
         }
 
         public void takeDamage(TileTrigger tileTrigger, Element damageType = Element.PHYSICAL)
         {
-            if (!isHit)
+            if (health - calculateDefenseDamage(tileTrigger.damage, damageType) <= 0)
             {
-                if (health - calculateDefenseDamage(tileTrigger.damage, damageType) <= 0)
-                {
-                    health = 0;
-                    dead = true;
-                }
-                else
-                {
-                    health -= calculateDefenseDamage(tileTrigger.damage, damageType);
-                }
+                health = 0;
+                dying = true;
+            }
+            else
+            {
+                health -= calculateDefenseDamage(tileTrigger.damage, damageType);
             }
             SetHit();
         }

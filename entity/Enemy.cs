@@ -10,6 +10,8 @@ namespace Lemonade.entity
 {
     public class Enemy : EntityLiving
     {
+        float healthRatio = 0;
+        int healthBarWidth = 0;
         public Enemy(Vector2 setPosition, int setLayer, int type)
         {
             position = setPosition;
@@ -27,17 +29,25 @@ namespace Lemonade.entity
                 texture = Assets.GetTexture(Assets.entity_enemy1);
                 damage = 12;
                 maxSpeed = 3;
+
+                deadTime = 60;
             }
 
             maxHealth = 20;
 
             health = maxHealth;
+            healthBarWidth = health;
 
             initialized = true;
         }
 
         public override void Update()
         {
+            if (dying)
+            {
+                Dying();
+                return;//PAUSE. EVERYTHING.
+            }
             hitTimer--;
             if (hitTimer <= 0)
                 isHit = false;
@@ -45,8 +55,6 @@ namespace Lemonade.entity
             {
                 MoveTo(Game1.playerPosition);
             }
-
-            //position += velocity;
 
             capVelocity();
         }
@@ -58,8 +66,20 @@ namespace Lemonade.entity
 
         public override void DealtDamage(EntityLiving dealtBy)
         {
-            takeDamage(dealtBy);
-            //SetHit(dealtBy);
+            if (!isHit)
+            {
+                takeDamage(dealtBy);
+
+                healthRatio = ((float)health / (float)maxHealth);
+                healthBarWidth = (int)((healthRatio) * 32);
+            }
+        }
+
+        public override void Dying()
+        {
+            deadTimer++;
+            if (deadTimer >= deadTime)
+                dead = true;
         }
 
         public override void Draw(SpriteBatch batch)
@@ -67,6 +87,13 @@ namespace Lemonade.entity
             //batch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.None, RasterizerState.CullCounterClockwise, null, camera.GetTransformation());
             batch.Draw(texture, position, null, Color.White, 0f, new Vector2(0, 0), 1f, SpriteEffects.None, 0f);
             PrimiviteDrawing.DrawRectangle(null, batch, hitbox, 1, Color.Red);
+
+            if (health < maxHealth)
+            {
+                PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle((int)position.X, (int)position.Y - 16, 32, 8), Color.Gray);
+                PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle((int)position.X, (int)position.Y - 16, healthBarWidth, 8), Color.Red);
+                batch.DrawString(Assets.GetFont(Assets.munro12), health + "/" + maxHealth, new Vector2(position.X, position.Y - 16), Color.White);
+            }
             //batch.End();
         }
 

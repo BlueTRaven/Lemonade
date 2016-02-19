@@ -79,7 +79,10 @@ namespace Lemonade.tile
             }
             else if (runFunction == TriggerAction.DamageBox)
             {
-                world.player.DealtDamage(this);
+                if (!world.player.isHit)
+                {
+                    world.player.DealtDamage(this);
+                }
             }
             else if (runFunction == TriggerAction.KillBox)
             {

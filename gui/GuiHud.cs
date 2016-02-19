@@ -90,7 +90,7 @@ namespace Lemonade.gui
 
         public void CreateWidgets()
         {
-            GuiWidgetButton b = createButton(new Rectangle(0, 0, 448, 64), new Tuple<WidgetType, int>(WidgetType.Button, 0), player.health.ToString(), GuiWidget.Alignment.Center, Color.White, Assets.GetFont(Assets.munro12), new Color[] { Color.Red, Color.DarkRed, Color.Orange });
+            GuiWidgetButton b = createButton(new Rectangle(0, 0, 448, 64), new Tuple<WidgetType, int>(WidgetType.Button, 0), player.health.ToString(), GuiWidget.Alignment.Center, Color.White, Assets.GetFont(Assets.munro12), new Color[] { Color.Red * 0.8f, Color.DarkRed * 0.8f, Color.Orange * 0.8f });
             b.drawText = false;
             //createDialogue(new Rectangle(0, 720 - 128, 1280, 128), new Tuple<WidgetType, int>(WidgetType.Dialogue, 0), Color.White, Assets.GetFont(Assets.munro24), new Color[] { Color.White, Color.DarkGray }, 2, "<test>");
         }
@@ -132,7 +132,7 @@ namespace Lemonade.gui
                             button.drawText = false; 
                         }
                         if (widget.draw)
-                            PrimiviteDrawing.DrawRectangle(null, batch, button.bounds, Color.LightGray);
+                            PrimiviteDrawing.DrawRectangle(null, batch, button.bounds, Color.LightGray * 0.5f);
                     }
                 }
                 widget.Draw(batch);
