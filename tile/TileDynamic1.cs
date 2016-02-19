@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using Lemonade.tile;
+using Lemonade.utility;
 
 namespace Lemonade.tile
 {

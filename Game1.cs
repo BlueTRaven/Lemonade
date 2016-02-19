@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework.Media;
 
 using Lemonade;
 using Lemonade.gui;
+using Lemonade.utility;
 
 namespace Lemonade
 {

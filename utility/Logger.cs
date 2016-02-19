@@ -12,7 +12,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace Lemonade
+namespace Lemonade.utility
 {
     public static class Logger
     {

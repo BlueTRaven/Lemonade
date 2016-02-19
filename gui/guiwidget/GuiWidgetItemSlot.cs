@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using Lemonade.entity;
+using Lemonade.utility;
 
 namespace Lemonade.gui.guiwidget
 {

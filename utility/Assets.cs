@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace Lemonade
+namespace Lemonade.utility
 {   //not sure if I should use enums...
     public static class Assets
     {

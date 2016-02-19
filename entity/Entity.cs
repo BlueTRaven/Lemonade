@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 using Lemonade.tile;
+using Lemonade.utility;
 
 namespace Lemonade.entity
 {

@@ -14,7 +14,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
-namespace Lemonade
+using Lemonade.utility;
+
+namespace Lemonade.utility
 {
     public static class Utilities
     {
