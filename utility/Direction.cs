@@ -61,5 +61,46 @@ namespace Lemonade.utility
         Left,
         Right
     }
-    
+
+    public static class ParseDirections
+    {
+        public static Directions ParseStringToDirections(string input)
+        {
+            string lowerInput = input.ToLower();
+            if (lowerInput == "north" || input == "0")
+            {
+                return Directions.North;
+            }
+            else if (lowerInput == "south" || input == "1")
+            {
+                return Directions.South;
+            }
+            else if (lowerInput == "east" || input == "2")
+            {
+                return Directions.East;
+            }
+            else if (lowerInput == "west" || input == "3")
+            {
+                return Directions.West;
+            }
+
+            else if (lowerInput == "northeast" || input == "4")
+            {
+                return Directions.NorthEast;
+            }
+            else if (lowerInput == "northwest" || input == "5")
+            {
+                return Directions.NorthWest;
+            }
+            else if (lowerInput == "southeast" || input == "6")
+            {
+                return Directions.SouthEast;
+            }
+            else if (lowerInput == "southwest" || input == "7")
+            {
+                return Directions.SouthWest;
+            }
+            else return Directions.North;
+        }
+    }
 }

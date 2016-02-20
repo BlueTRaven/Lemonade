@@ -59,7 +59,7 @@ namespace Lemonade.entity
         [DataMember]
         public string location = "test_map";
 
-        public void Control()
+        public void Control(World world)
         {   //Handles input
             bool keyW = Keyboard.GetState().IsKeyDown(Keys.W);
             bool keyS = Keyboard.GetState().IsKeyDown(Keys.S);
@@ -99,7 +99,7 @@ namespace Lemonade.entity
             }
             if (Game1.keyPress(Keys.K))
             {
-                world.LoadWorldFromFile("map1_test.json");
+                world.LoadWorldFromFile("strings\\maps\\map1.gff");
             }
             if (Game1.keyPress(Keys.F))//Keyboard.GetState().IsKeyDown(Keys.F))
             {

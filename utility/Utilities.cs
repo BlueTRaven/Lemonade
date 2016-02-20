@@ -67,7 +67,7 @@ namespace Lemonade.utility
             bool everFound = false;
             bool lineFound = false;
             //int index = 0;
-            foreach (string line in File.ReadLines(path))
+            foreach (string line in File.ReadLines("Content\\" + path))
             {
                 if (line.Contains(tag))
                 {
@@ -93,6 +93,30 @@ namespace Lemonade.utility
                 return new string[] {""};
             }
             return taggedLines.ToArray();//taggedLines.ToString().Split(new char[] {':'});
+        }
+
+        /// <summary>
+        /// Creates a rectangle from a string array.
+        /// </summary>
+        /// <param name="parse">Array of the strings to parse.</param>
+        /// <returns></returns>
+        public static Rectangle CreateRectangleFromStrings(string[] parse)
+        {
+            int[] parsedStrings = new int[4];
+
+            try
+            {
+                for (int i = 0; i < 4; i++)
+                {
+                    parsedStrings[i] = Int32.Parse(parse[i]);
+                }
+                return new Rectangle(parsedStrings[0], parsedStrings[1], parsedStrings[2], parsedStrings[3]);
+            }
+            catch (Exception e)
+            {
+                Logger.Log("Couldn't create Rectangle from array.\n" + e, true);
+                return Rectangle.Empty;
+            }
         }
 
         public static string WrapText(SpriteFont font, string text, float maxLineWidth)

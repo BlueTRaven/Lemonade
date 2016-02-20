@@ -114,7 +114,7 @@ namespace Lemonade
             worldCountSecond++;
 
             if (!player.falling)
-                player.Control();
+                player.Control(this);
 
             for (int i = entityLivings.Count - 1; i >= 0; i--)
             {
@@ -478,9 +478,44 @@ namespace Lemonade
             //LoadWorldFromFile(player.location, false);
         }
 
-        public void LoadWorldFromFile(string name, bool playerDefaultPos = true)
+        public void LoadWorldFromFile(string filePathName, bool playerDefaultPos = true)
         {
-            Console.WriteLine("a");
+            tiles.Clear();
+            entityLivings.Clear();
+            itemEntities.Clear();
+
+            player = Player.CreatePlayer(new Vector2(0, 0), 1);
+
+            string[] data = Utilities.ReadFile(filePathName, "<data>");
+            int numberTiles = Int32.Parse(data[0]), 
+                numberEntities = Int32.Parse(data[1]);
+
+            for (int i = 0; i < numberTiles; i++)
+            {
+                string[] tileData = Utilities.ReadFile(filePathName, "<tile" + (i + 1) + ">");
+
+                string type = tileData[0];
+
+                if (type == "static")
+                {
+                    string[] bounds = tileData[1].Split(',');
+                    string texName = tileData[2];
+                    int createLayer = Int32.Parse(tileData[3]);
+                    string rawisWall= tileData[4];
+                    bool isWall;
+                    if (rawisWall == "true")
+                        isWall = true;
+                    else if (rawisWall == "false")
+                        isWall = false;
+                    else isWall = false;
+                    TileStatic.CreateTileStatic(Utilities.CreateRectangleFromStrings(bounds), texName, createLayer, isWall, ParseDirections.ParseStringToDirections(tileData[5]));
+                }
+            }
+
+            for (int i = 0; i < numberEntities; i++ )
+            {
+
+            }
         }
     }
 }
