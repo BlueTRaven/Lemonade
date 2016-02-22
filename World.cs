@@ -107,9 +107,17 @@ namespace Lemonade
 
         public void Update()
         {
-            //camera.Offset = Vector2.Zero;
-
-            camera.MoveTo(player.center, new Vector2(0, 0), true);
+            //So it can focus on a position OR entity.
+            if (camera.FocusTarget is Vector2)
+            {
+                Vector2 castTargetVec2 = (Vector2)camera.FocusTarget;
+                camera.MoveTo(castTargetVec2, new Vector2(0, 0), true);
+            }
+            else if (camera.FocusTarget is Entity)
+            {
+                Entity castTargetEntity = (Entity)camera.FocusTarget;
+                camera.MoveTo(castTargetEntity.center, new Vector2(0, 0), true);
+            }
 
             worldCountSecond++;
 
@@ -305,7 +313,7 @@ namespace Lemonade
                 TileStatic.CreateTileStatic(new Rectangle(0, 512, 512, 64), Assets.tile_rockwall, 4, true, Directions.North);
                 TileStatic.CreateTileStatic(new Rectangle(512, 512, 64, 64), Assets.tile_rockwall, 4, true, Directions.NorthWest);
                 //TileTrigger.CreateTileTrigger(new Rectangle(64, 0, 64, 64), true, 5, "<intro_3>");
-                TileTrigger.CreateTileTriggerDamageBox(new Rectangle(64, 0, 64, 64), false, 10);
+                TileTrigger.CreateTileTriggerDialogue(new Rectangle(64, 0, 64, 64), false, "<default>");
                 TileTrigger.CreateTileTriggerKillBox(new Rectangle(128, 0, 64, 64), false);
 
                 ItemEntity.CreateItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
@@ -478,7 +486,7 @@ namespace Lemonade
             //LoadWorldFromFile(player.location, false);
         }
 
-        public void LoadWorldFromFile(string filePathName, bool playerDefaultPos = true)
+        public void LoadWorldFromFile(string mapFilePath, bool playerDefaultPos = true)
         {
             tiles.Clear();
             entityLivings.Clear();
@@ -486,35 +494,91 @@ namespace Lemonade
 
             player = Player.CreatePlayer(new Vector2(0, 0), 1);
 
-            string[] data = Utilities.ReadFile(filePathName, "<data>");
+            string[] data = Utilities.ReadFile(mapFilePath, "<data>");
             int numberTiles = Int32.Parse(data[0]), 
                 numberEntities = Int32.Parse(data[1]);
 
             for (int i = 0; i < numberTiles; i++)
             {
-                string[] tileData = Utilities.ReadFile(filePathName, "<tile" + (i + 1) + ">");
+                string[] tileData = Utilities.ReadFile(mapFilePath, "<tile" + (i + 1) + ">");
 
                 string type = tileData[0];
 
-                if (type == "static")
+                switch (type)
                 {
-                    string[] bounds = tileData[1].Split(',');
-                    string texName = tileData[2];
-                    int createLayer = Int32.Parse(tileData[3]);
-                    string rawisWall= tileData[4];
-                    bool isWall;
-                    if (rawisWall == "true")
-                        isWall = true;
-                    else if (rawisWall == "false")
-                        isWall = false;
-                    else isWall = false;
-                    TileStatic.CreateTileStatic(Utilities.CreateRectangleFromStrings(bounds), texName, createLayer, isWall, ParseDirections.ParseStringToDirections(tileData[5]));
+                    case "static":
+                        {
+                            Rectangle bounds = Utilities.CreateRectangleFromStrings(tileData[1].Split(','));
+                            string texName = tileData[2];
+                            int createLayer = Int32.Parse(tileData[3]);
+                            string rawisWall = tileData[4];
+                            bool isWall = rawisWall == "true" ? true : false;
+                            /*if (rawisWall == "true")
+                                isWall = true;
+                            else if (rawisWall == "false")
+                                isWall = false;
+                            else isWall = false;*/
+                            TileStatic.CreateTileStatic(bounds, texName, createLayer, isWall, ParseDirections.ParseStringToDirections(tileData[5]));
+
+                            break;
+                        }
+                    case "trigger":
+                        {
+                            string triggerType = tileData[1];
+
+                            string[] bounds = tileData[2].Split(',');
+
+                            switch (triggerType)
+                            {
+                                case "dialogue":
+                                    {
+                                        string rawtriggerOnce = tileData[3];
+                                        bool triggerOnce = rawtriggerOnce == "true" ? true : false;
+
+                                        string dialogueKey = tileData[4];
+
+                                        TileTrigger.CreateTileTriggerDialogue(Utilities.CreateRectangleFromStrings(bounds), triggerOnce, dialogueKey);
+                                        break;
+                                    }
+                                case "damage":
+                                    {
+                                        TileTrigger.CreateTileTriggerDamageBox(Utilities.CreateRectangleFromStrings(bounds), false, 0); //todo implement damage tile trigger
+                                        break;
+                                    }
+                                case "kill":
+                                    {
+                                        TileTrigger.CreateTileTriggerKillBox(Utilities.CreateRectangleFromStrings(bounds), false);
+                                        break;
+                                    }
+                            }
+                            break;
+                        }
                 }
             }
 
             for (int i = 0; i < numberEntities; i++ )
             {
+                string[] entityData = Utilities.ReadFile(mapFilePath, "<entity" + (i + 1) + ">");
 
+                string type = entityData[0];
+
+                int id = Int32.Parse(entityData[1]);
+
+                Vector2 pos = Utilities.CreateVector2FromStrings(entityData[2].Split(','));
+                int layer = Int32.Parse(entityData[3]);
+                switch(type)
+                {
+                    case "enemy":
+                        {
+                            Enemy.CreateEnemy(pos, layer, id);
+                            break;
+                        }
+                    case "item":
+                        {
+                            //ItemEntity.CreateItemEntity(pos, )
+                            break;
+                        }
+                }
             }
         }
     }

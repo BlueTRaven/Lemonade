@@ -23,7 +23,6 @@ namespace Lemonade.tile
 
         //--OpenDialogue--//
         string dialogueKey = "<default>";
-        int dialogueSpeed = 2;
 
         //--DamageBox--//
         public int damage;
@@ -41,10 +40,9 @@ namespace Lemonade.tile
             this.solid = false;
         }
 
-        public void SetType(string dialogueKey, int dialogueSpeed)
+        public void SetType(string dialogueKey)
         {
             this.dialogueKey = dialogueKey;
-            this.dialogueSpeed = dialogueSpeed;
 
             this.runFunction = TriggerAction.OpenDialogue;
         }
@@ -75,7 +73,7 @@ namespace Lemonade.tile
         {
             if (runFunction == TriggerAction.OpenDialogue)
             {
-                world.player.OpenDialogue(new Vector2(0, 720 - 128), dialogueSpeed, dialogueKey);
+                world.player.OpenDialogue(new Vector2(0, 720 - 128), dialogueKey);
             }
             else if (runFunction == TriggerAction.DamageBox)
             {
@@ -106,10 +104,10 @@ namespace Lemonade.tile
         }
 
 
-        public static Tile CreateTileTriggerDialogue(Rectangle bounds, bool triggerOnce, int speed, string dialogueKey)
+        public static Tile CreateTileTriggerDialogue(Rectangle bounds, bool triggerOnce, string dialogueKey)
         {
             TileTrigger t = new TileTrigger(bounds, triggerOnce);
-            t.SetType(dialogueKey, speed);
+            t.SetType(dialogueKey);
             t.Initialize();
             World.tiles.Add(t);
 

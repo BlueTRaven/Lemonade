@@ -35,6 +35,7 @@ namespace Lemonade
 
         #region Properties
 
+        public object FocusTarget { get; set; }
         public Vector2 PosUnclamped { get; set; }
 
         public Matrix inverseTransform { get { return Matrix.Invert(GetTransformation()); } }

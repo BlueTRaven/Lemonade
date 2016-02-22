@@ -44,10 +44,10 @@ namespace Lemonade.gui
         /// <param name="textSpeed"></param>
         /// <param name="colors"></param>
         /// <returns></returns>
-        public GuiWidgetDialogue createDialogue(Rectangle position, Tuple<WidgetType, int> id, Color color, SpriteFont font, Color[] colors, int textSpeed = 2, string text = "<default>")
+        public GuiWidgetDialogue createDialogue(Rectangle position, Tuple<WidgetType, int> id, Color color, SpriteFont font, Color[] colors, string text = "<default>")
         {
             GuiWidgetDialogue widget;
-            widget = new GuiWidgetDialogue(position, id, text, color, font, textSpeed, colors);
+            widget = new GuiWidgetDialogue(position, id, text, color, font, colors);
 
             widgets.Add(widget);
             return widget;

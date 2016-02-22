@@ -119,6 +119,25 @@ namespace Lemonade.utility
             }
         }
 
+        public static Vector2 CreateVector2FromStrings(string[] parse)
+        {
+            int[] parsedStrings = new int[2];
+
+            try
+            {
+                for (int i = 0; i < 2; i++ )
+                {
+                    parsedStrings[i] = Int32.Parse(parse[i]);
+                }
+                return new Vector2(parsedStrings[0], parsedStrings[1]);
+            }
+            catch (Exception e)
+            {
+                Logger.Log("Couldn't create Vector2 from array.\n" + e, true);
+                return Vector2.Zero;
+            }
+        }
+
         public static string WrapText(SpriteFont font, string text, float maxLineWidth)
         {
             string[] words = text.Split(' ');

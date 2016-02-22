@@ -108,6 +108,7 @@ namespace Lemonade.entity
             Enemy e = new Enemy(position, layer, id);
             e.Initialize();
             World.entityLivings.Add(e);
+            //World.camera.FocusTarget = e;
 
             return e;
         }

@@ -215,9 +215,9 @@ namespace Lemonade.entity
             return false;
         }
 
-        public void OpenDialogue(Vector2 position, int speed, string key = "<default>")
+        public void OpenDialogue(Vector2 position, string key = "<default>")
         {
-            guiHUD.OpenDialogue(position, speed, key, Assets.GetFont(Assets.munro24));
+            guiHUD.OpenDialogue(position, key, Assets.GetFont(Assets.munro24));
         }
 
         public void CloseDialogue()
@@ -257,6 +257,7 @@ namespace Lemonade.entity
             //Rectangle finalCamera = new Rectangle((int)position.X - cameraRect.Width / 2, (int)position.Y - cameraRect.Height / 2, cameraRect.Width, cameraRect.Height);
 
             World.entityLivings.Insert(0, p);
+            World.camera.FocusTarget = p;
             //camera.Move(position);
             p.position = position;
             return p;

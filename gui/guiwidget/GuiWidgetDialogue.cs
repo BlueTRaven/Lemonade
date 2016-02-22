@@ -29,7 +29,7 @@ namespace Lemonade.gui.guiwidget
         public bool finished = false;
 
         Color[] colors;
-        public GuiWidgetDialogue(Rectangle setBounds, Tuple<WidgetType, int> id, string forKey, Color textColor, SpriteFont setFont, int textSpeed, Color[] colors)
+        public GuiWidgetDialogue(Rectangle setBounds, Tuple<WidgetType, int> id, string forKey, Color textColor, SpriteFont setFont, Color[] colors)
         {
             this.id = id;
             bounds = setBounds;
@@ -39,11 +39,9 @@ namespace Lemonade.gui.guiwidget
 
             font = setFont;
 
-            this.textSpeed = textSpeed;
-
             this.colors = colors;
 
-            text = Utilities.ReadFile("Content\\strings\\dialogue.txt", forKey);//.Split(':');
+            text = Utilities.ReadFile("strings\\dialogue.txt", forKey);//.Split(':');
 
             wrappedText = Utilities.WrapText(font, text[0], interiorBounds.Width);
             wrappedChars = wrappedText.ToCharArray();
