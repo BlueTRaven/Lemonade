@@ -14,6 +14,8 @@ namespace Lemonade.utility
 {   //not sure if I should use enums...
     public static class Assets
     {
+        public static readonly string whitePixel = "whitePixel";
+
         public static readonly string entityPrefix = "entity_";
         public static readonly string entity_player = "entity_player";
         public static readonly string entity_enemy1 = "entity_enemy1";
@@ -89,6 +91,13 @@ namespace Lemonade.utility
             fonts.Add("munro24", content.Load<SpriteFont>("fonts/munro-24"));
             fonts.Add("munro24italic", content.Load<SpriteFont>("fonts/munro-24-italic"));
             fonts.Add("papyrus12", content.Load<SpriteFont>("fonts/papyrus-12"));
+        }
+
+        public static void CreateWhitePixel(GraphicsDevice device, ContentManager content)
+        {
+            Texture2D whitePixel = new Texture2D(device, 1, 1);
+            //whitePixel.SetData<Color>(new Color[] { color });
+            textures.Add("whitePixel", whitePixel);
         }
 
         internal static void Unload()

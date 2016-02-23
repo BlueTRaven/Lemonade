@@ -129,6 +129,7 @@ namespace Lemonade
             int windowWidth = GraphicsDevice.Viewport.Width;
             int windowHeight = GraphicsDevice.Viewport.Height;
 
+            Assets.CreateWhitePixel(graphics.GraphicsDevice, Content);
             Assets.Load(Content);
 
             world.Initialize(this, Content, new Rectangle(0, 0, 2560, 1440), new Rectangle(0, 0, displayWidth, displayHeight), graphics.GraphicsDevice);

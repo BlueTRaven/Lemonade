@@ -51,10 +51,12 @@ namespace Lemonade
 
         public static Camera2D camera;
         public Game1 game;
+        public static Cutscene cutscene;
     
         public void Initialize(Game1 setGame, ContentManager setContent, Rectangle setWorldRect, Rectangle setCameraRect, GraphicsDevice graphics)
         {
             game = setGame;
+            cutscene = new Cutscene();
             worldRect = setWorldRect;
             cameraRect = setCameraRect;
 
@@ -121,31 +123,37 @@ namespace Lemonade
 
             worldCountSecond++;
 
-            if (!player.falling)
-                player.Control(this);
-
-            for (int i = entityLivings.Count - 1; i >= 0; i--)
+            if (!cutscene.playing)
             {
-                entityLivings[i].Update();
+                if (!player.falling)
+                    player.Control(this);
 
-                if (entityLivings[i].dead)
-                    entityLivings.RemoveAt(i--);
+                for (int i = entityLivings.Count - 1; i >= 0; i--)
+                {
+                    entityLivings[i].Update();
+
+                    if (entityLivings[i].dead)
+                        entityLivings.RemoveAt(i--);
+                }
+
+                for (int p = particles.Count - 1; p >= 0; p--)
+                {
+                    particles[p].Update();
+
+                    if (particles[p].dead)
+                        particles.RemoveAt(p--);
+                }
+
+                for (int ie = itemEntities.Count - 1; ie >= 0; ie--)
+                {
+                    itemEntities[ie].Update();
+                    if (itemEntities[ie].dead)
+                        itemEntities.RemoveAt(ie--);
+                }
             }
+            else { cutscene.Play(this); }
 
-            for (int p = particles.Count - 1; p >= 0; p--)
-            {
-                particles[p].Update();
-
-                if (particles[p].dead)
-                    particles.RemoveAt(p--);
-            }
-
-            for (int ie = itemEntities.Count - 1; ie >= 0; ie--)
-            {
-                itemEntities[ie].Update();
-                if (itemEntities[ie].dead)
-                    itemEntities.RemoveAt(ie--);
-            }
+            player.UpdateGuis();
 
             cameraRect = new Rectangle((int)camera.PosUnclamped.X, (int)camera.PosUnclamped.Y, cameraRect.Width, cameraRect.Height);
 

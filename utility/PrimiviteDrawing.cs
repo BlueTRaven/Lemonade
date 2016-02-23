@@ -12,7 +12,8 @@ namespace Lemonade.utility
         {
             if (whitePixel == null)
             {
-                whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
+                whitePixel = Assets.GetTexture(Assets.whitePixel);
+                //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
                 whitePixel.SetData<Color>(new Color[] { color });
             }
 
@@ -25,7 +26,9 @@ namespace Lemonade.utility
         {
             if (whitePixel == null)
             {
-                whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
+                whitePixel = Assets.GetTexture(Assets.whitePixel);
+
+                //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
                 whitePixel.SetData<Color>(new Color[] { color });
             }
 
@@ -38,8 +41,10 @@ namespace Lemonade.utility
         {
             if (whitePixel == null)
             {
-                whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
-                whitePixel.SetData<Color>(new Color[] { color });
+                whitePixel = Assets.GetTexture(Assets.whitePixel);
+
+                //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
+                //whitePixel.SetData<Color>(new Color[] { color });
             }
 
             batch.Draw(whitePixel, area, area, color, rotation, origin, SpriteEffects.None, 0f);
@@ -52,7 +57,9 @@ namespace Lemonade.utility
 
             if (whitePixel == null)
             {
-                whitePixel = new Texture2D(batch.GraphicsDevice, area.Width, area.Height);
+                whitePixel = Assets.GetTexture(Assets.whitePixel);
+
+                //whitePixel = new Texture2D(batch.GraphicsDevice, area.Width, area.Height);
                 whitePixel.SetData<Color>(GetGradientColors((uint)area.Width, (uint)area.Height));
             }
 
@@ -96,7 +103,9 @@ namespace Lemonade.utility
         {
             if (whitePixel == null)
             {
-                whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
+                whitePixel = Assets.GetTexture(Assets.whitePixel);
+
+                //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
                 whitePixel.SetData<Color>(new Color[] { color });
             }
 
@@ -117,7 +126,9 @@ namespace Lemonade.utility
         {
             if (whitePixel == null)
             {
-                whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
+                whitePixel = Assets.GetTexture(Assets.whitePixel);
+
+                //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
                 whitePixel.SetData<Color>(new Color[] { color });
             }
 
@@ -134,7 +145,9 @@ namespace Lemonade.utility
         {
             if (whitePixel == null)
             {
-                whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
+                whitePixel = Assets.GetTexture(Assets.whitePixel);
+
+                //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
                 whitePixel.SetData<Color>(new Color[] { color });
             }
 

@@ -31,6 +31,7 @@ namespace Lemonade.entity
         public GuiHud guiHUD;
         public GuiInventory guiInventory;
 
+        public bool dialoguePlaying { get { return guiHUD.dialogueOpen; } }
         public float angleToMouse { get { return Game1.mouse.GetAngleToMouse(center); } }
 
         public Player(Vector2 setPosition, int setLayer)
@@ -107,7 +108,8 @@ namespace Lemonade.entity
             }
             if (Game1.keyPress(Keys.G))
             {
-                CloseDialogue();
+                World.cutscene.StartCutscene(0, this);
+                //CloseDialogue();
             }
             if (Game1.keyPress(Keys.OemTilde))
             {
@@ -165,11 +167,13 @@ namespace Lemonade.entity
                 velocity *= friction;
 
             capVelocity();
+            //camera.Offset = new Vector2(Game1.random.Next(-16, 16), Game1.random.Next(-16, 16));
+        }
 
+        public void UpdateGuis()
+        {
             guiHUD.Update();
             guiInventory.Update();
-
-            //camera.Offset = new Vector2(Game1.random.Next(-16, 16), Game1.random.Next(-16, 16));
         }
 
         public override void DealDamage(EntityLiving dealTo)
@@ -215,9 +219,9 @@ namespace Lemonade.entity
             return false;
         }
 
-        public void OpenDialogue(Vector2 position, string key = "<default>")
+        public bool OpenDialogue(Vector2 position, string key = "<default>")
         {
-            guiHUD.OpenDialogue(position, key, Assets.GetFont(Assets.munro24));
+            return guiHUD.OpenDialogue(position, key, Assets.GetFont(Assets.munro24));
         }
 
         public void CloseDialogue()
