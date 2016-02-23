@@ -39,10 +39,6 @@ namespace Lemonade.entity
             position = setPosition;
 
             layer = setLayer;
-        }
-
-        public override void Initialize()
-        {
             damage = 5;
             texture = Assets.GetTexture(Assets.entity_player);
 
@@ -55,6 +51,11 @@ namespace Lemonade.entity
             guiInventory = new GuiInventory(this);
 
             Game1.priorityGui = guiHUD;
+        }
+
+        public override void Initialize()
+        {
+            
         }
         
         [DataMember]

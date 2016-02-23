@@ -73,12 +73,16 @@ namespace Lemonade.gui
 
         public void CreateWidgets()
         {
-            Color[] button1Colors = new Color[] { Color.Salmon, Color.DarkSalmon, Color.Orange };
+            Color[] colors = new Color[] { Color.White, Color.LightGray, Color.Gray };
 
-            for (int x = 0; x < 16; x++)
+            for (int y = 0; y < 4; y++)
             {
-                createInventorySlot(new Rectangle(8 + x * (64 + 16), 256, 64, 64), new Tuple<WidgetType, int>(WidgetType.ItemSlot, x), button1Colors, player);
+                for (int x = 0; x < 16; x++)
+                {
+                    createInventorySlot(new Rectangle(8 + x * 80, 400 + 80 * y, 64, 64), new Tuple<WidgetType, int>(WidgetType.ItemSlot, x + (16 * y)), colors, player);
+                }
             }
+            //Todo: create armor/weapon/etc slots here. Can only hold items of their specific type.
         }
 
         public override void Draw(SpriteBatch batch)
