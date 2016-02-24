@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using Lemonade.utility;
+using Lemonade.item;
 
 namespace Lemonade.entity
 {

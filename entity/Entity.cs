@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 using Lemonade.tile;
 using Lemonade.utility;
+using Lemonade.item;
 
 namespace Lemonade.entity
 {

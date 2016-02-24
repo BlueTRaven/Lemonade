@@ -26,19 +26,18 @@ namespace Lemonade
          *#implement player
          *#Implement camera 
          *#enemy, loop through all
-         * item system
+         *#item system
          * projectiles (probably can just copy enemy code)
          *#particles
-         * handle collision between several entities.
-         * room system
+         *#handle collision between several entities.
+         * room system  - may not do?
          *#create tiles (more like "brushes")
          *#tile collision detection     TODO: fix
          *#player save
          *#player load
-         * save/load system - probably only needed for player items/level/etc, and for what world player is in and player's location. Enemies probably not need to be saved. load through json?
-         * player inventory system
-         *-will not do Dynamic lighting
-         * GUIS
+         *@save/load system - probably only needed for player items/level/etc, and for what world player is in and player's location. Enemies probably not need to be saved. load through json?
+         *@player inventory system
+         *#GUIS
          * LESS IMPORTANT
          *#safe deletion of entities
          */
@@ -109,7 +108,7 @@ namespace Lemonade
             Logger.CreateNewLogFile();
 
             world = new World();
-            mouse = new GameMouse(this);
+            mouse = new GameMouse();
             pauseMenu = new GuiPause(this);
 
             TargetElapsedTime = new TimeSpan(TimeSpan.TicksPerSecond / DesiredFrameRate);
@@ -290,20 +289,6 @@ namespace Lemonade
 
 
             base.Draw(gameTime);
-        }
-
-
-        public static ItemStack createItemStack(Item item, int stackSize)
-        {
-            ItemStack stack = new ItemStack(item, stackSize);
-            return stack;
-        }
-        
-        public ItemWeapon CreateItemWeapon(int id)
-        {
-            ItemWeapon iWep = new ItemWeapon(id);
-            iWep.Initialize();
-            return iWep;
         }
     }
 }

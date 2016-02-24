@@ -15,6 +15,7 @@ using Newtonsoft.Json.Serialization;
 using Lemonade.entity;
 using Lemonade.tile;
 using Lemonade.utility;
+using Lemonade.item;
 
 namespace Lemonade
 {
@@ -324,8 +325,8 @@ namespace Lemonade
                 TileTrigger.CreateTileTriggerDialogue(new Rectangle(64, 0, 64, 64), false, "<default>");
                 TileTrigger.CreateTileTriggerKillBox(new Rectangle(128, 0, 64, 64), false);
 
-                ItemEntity.CreateItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, new ItemStack(game.CreateItemWeapon(0), 1), 1);
-                ItemEntity.CreateItemEntity(new Vector2(576 + 128, 576 - 36), Vector2.Zero, new ItemStack(game.CreateItemWeapon(1), 58), 1);
+                ItemEntity.CreateItemEntity(new Vector2(576 + 64, 576), Vector2.Zero, ItemStack.CreateItemStack(ItemWeapon.CreateItemWeapon(0), 1), 1);
+                ItemEntity.CreateItemEntity(new Vector2(576 + 128, 576 - 36), Vector2.Zero, ItemStack.CreateItemStack(ItemWeapon.CreateItemWeapon(1), 58), 1);
 
                 Enemy.CreateEnemy(new Vector2(576, 0), 2, 0);
 
@@ -503,13 +504,13 @@ namespace Lemonade
             player = Player.CreatePlayer(new Vector2(0, 0), 1);
 
             string[] data = Utilities.ReadFile(mapFilePath, "<data>");
+            
             int numberTiles = Int32.Parse(data[0]), 
                 numberEntities = Int32.Parse(data[1]);
 
             for (int i = 0; i < numberTiles; i++)
             {
                 string[] tileData = Utilities.ReadFile(mapFilePath, "<tile" + (i + 1) + ">");
-
                 string type = tileData[0];
 
                 switch (type)
@@ -521,11 +522,6 @@ namespace Lemonade
                             int createLayer = Int32.Parse(tileData[3]);
                             string rawisWall = tileData[4];
                             bool isWall = rawisWall == "true" ? true : false;
-                            /*if (rawisWall == "true")
-                                isWall = true;
-                            else if (rawisWall == "false")
-                                isWall = false;
-                            else isWall = false;*/
                             TileStatic.CreateTileStatic(bounds, texName, createLayer, isWall, ParseDirections.ParseStringToDirections(tileData[5]));
 
                             break;

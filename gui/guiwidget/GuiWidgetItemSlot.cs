@@ -8,22 +8,37 @@ using Microsoft.Xna.Framework.Input;
 
 using Lemonade.entity;
 using Lemonade.utility;
+using Lemonade.item;
 
 namespace Lemonade.gui.guiwidget
 {
+    public enum ItemRestriction
+    {
+        Arms,
+        Chest,
+        Helm,
+        Legs,
+        Material,
+        Weapon,
+        Any
+    }
     public class GuiWidgetItemSlot : GuiWidget
     {
-        private ItemStack item;
-        bool drawToolTip = false;
+        public ItemStack item;
+        //bool drawToolTip = false;
 
         Color[] colors;
 
         Player player;
 
-        public GuiWidgetItemSlot(Rectangle setBounds, Tuple<WidgetType, int> id, Color[] colors, Player player)
+        ItemRestriction restriction;
+
+        public GuiWidgetItemSlot(Rectangle setBounds, Tuple<WidgetType, int> id, ItemRestriction restriction, Color[] colors, Player player)
         {
             this.id = id;
             bounds = setBounds;
+
+            this.restriction = restriction;
 
             this.colors = colors;
 
@@ -34,7 +49,12 @@ namespace Lemonade.gui.guiwidget
         {
             if (active)
             {
-                item = player.inventory[this.id.Item2];
+                //item = player.inventory[this.id.Item2];
+
+                if (currentState == State.Hot && item != null)
+                {
+                    Game1.mouse.hoveredItem = item.item;
+                }
 
                 if (currentState == State.Done)
                 {
@@ -42,7 +62,14 @@ namespace Lemonade.gui.guiwidget
                     {
                         if (item == null)
                         {
-                            AddItemToEmptySlot();
+                            if ((int)restriction == (int)Game1.mouse.heldItem.item.type)    //Their integer values should correspond to each other, should work...
+                            {   //Makes sure that the "restriction" on the slot allows the item to be placed here.
+                                AddItemToEmptySlot();
+                            }
+                            else if (restriction == ItemRestriction.Any)
+                            {
+                                AddItemToEmptySlot();
+                            }
                         }
                         else if (item.item.GetType() == Game1.mouse.heldItem.item.GetType() && item.item.id == Game1.mouse.heldItem.item.id)
                         {
@@ -65,24 +92,29 @@ namespace Lemonade.gui.guiwidget
 
         public void AddItemToEmptySlot()
         {
-            player.inventory[this.id.Item2] = Game1.mouse.heldItem;
+            item = Game1.mouse.heldItem;
+            //player.inventory[this.id.Item2] = Game1.mouse.heldItem;
             Game1.mouse.heldItem = null;
         }
 
         public void AddItemToFilledSlot()
         {
-            player.inventory[this.id.Item2].stackSize += Game1.mouse.heldItem.stackSize;
+            item.stackSize += Game1.mouse.heldItem.stackSize;
+            //player.inventory[this.id.Item2].stackSize += Game1.mouse.heldItem.stackSize;
             Game1.mouse.heldItem = null;
         }
 
         public void RemoveItemToEmptyMouse()
         {
-            Game1.mouse.heldItem = player.inventory[this.id.Item2];
-            player.inventory[this.id.Item2] = null;
+            Game1.mouse.heldItem = item;
+            item = null;
+            //Game1.mouse.heldItem = player.inventory[this.id.Item2];
+            //player.inventory[this.id.Item2] = null;
         }
         public void RemoveItemToFilledMouse()
         {
-            Game1.mouse.heldItem.stackSize += player.inventory[this.id.Item2].stackSize;
+            Game1.mouse.heldItem.stackSize += item.stackSize;
+            //Game1.mouse.heldItem.stackSize += player.inventory[this.id.Item2].stackSize;
             player.inventory[this.id.Item2] = null;
         }
 
@@ -111,23 +143,6 @@ namespace Lemonade.gui.guiwidget
 
                 if (item.stackSize > 1)
                     batch.DrawString(Assets.GetFont(Assets.munro12), item.stackSize.ToString(), new Vector2(bounds.Right, bounds.Bottom), Color.White);
-            }
-        }
-
-        public void DrawToolTip(SpriteBatch batch)
-        {
-            if (item != null && item.item.texture != null)
-            {
-                if (currentState == State.Hot)
-                {
-                    batch.DrawString(Assets.GetFont(Assets.munro12), item.item.name, Game1.mouse.positionRelativeCamera, Color.White);
-                    for (int i = 0; i < item.item.description.Count(); i++)
-                    {
-                        if (item.item.description[i] != null)
-                            batch.DrawString(Assets.GetFont(Assets.munro12), item.item.description[i], new Vector2(Game1.mouse.positionRelativeCamera.X, Game1.mouse.positionRelativeCamera.Y + 12 * (i + 1)), Color.White);
-                    }
-
-                }
             }
         }
     }

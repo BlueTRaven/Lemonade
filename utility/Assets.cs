@@ -96,7 +96,7 @@ namespace Lemonade.utility
         public static void CreateWhitePixel(GraphicsDevice device, ContentManager content)
         {
             Texture2D whitePixel = new Texture2D(device, 1, 1);
-            //whitePixel.SetData<Color>(new Color[] { color });
+            whitePixel.SetData<Color>(new Color[] { Color.White });
             textures.Add("whitePixel", whitePixel);
         }
 

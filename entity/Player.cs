@@ -10,6 +10,7 @@ using Lemonade.gui;
 using Lemonade.gui.guiwidget;
 using Lemonade.tile;
 using Lemonade.utility;
+using Lemonade.item;
 
 namespace Lemonade.entity
 {
@@ -22,11 +23,11 @@ namespace Lemonade.entity
         public ItemStack[] inventory = new ItemStack[300];
         //public static ItemStack[] inventory = new ItemStack[300];
         
-        public static ItemWeapon equppedWeapon;
-        public static ItemArmorHelm equippedHelmet;
-        public static ItemArmorChest equippedChestPiece;
-        public static ItemArmorLegs equppedLeggings;
-        public static ItemArmorArms equippedArms;
+        public ItemWeapon equppedWeapon;
+        public ItemArmorHelm equippedHelmet;
+        public ItemArmorChest equippedChestPiece;
+        public ItemArmorLegs equppedLeggings;
+        public ItemArmorArms equippedArms;
 
         public GuiHud guiHUD;
         public GuiInventory guiInventory;
@@ -105,7 +106,7 @@ namespace Lemonade.entity
             }
             if (Game1.keyPress(Keys.F))//Keyboard.GetState().IsKeyDown(Keys.F))
             {
-                ItemEntity.CreateItemEntity(center, Vector2.Zero, new ItemStack(world.game.CreateItemWeapon(1), 1), 1);
+                ItemEntity.CreateItemEntity(center, Vector2.Zero, new ItemStack(ItemWeapon.CreateItemWeapon(1), 1), 1);
             }
             if (Game1.keyPress(Keys.G))
             {

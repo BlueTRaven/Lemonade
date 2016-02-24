@@ -14,7 +14,6 @@ namespace Lemonade.utility
             {
                 whitePixel = Assets.GetTexture(Assets.whitePixel);
                 //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
-                whitePixel.SetData<Color>(new Color[] { color });
             }
 
             batch.Draw(whitePixel, new Rectangle(area.X, area.Y, area.Width, width), color);
@@ -29,7 +28,7 @@ namespace Lemonade.utility
                 whitePixel = Assets.GetTexture(Assets.whitePixel);
 
                 //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
-                whitePixel.SetData<Color>(new Color[] { color });
+                //whitePixel.SetData<Color>(new Color[] { color });
             }
 
             batch.Draw(whitePixel, area, color);
@@ -60,7 +59,7 @@ namespace Lemonade.utility
                 whitePixel = Assets.GetTexture(Assets.whitePixel);
 
                 //whitePixel = new Texture2D(batch.GraphicsDevice, area.Width, area.Height);
-                whitePixel.SetData<Color>(GetGradientColors((uint)area.Width, (uint)area.Height));
+                //whitePixel.SetData<Color>(GetGradientColors((uint)area.Width, (uint)area.Height));
             }
 
             batch.Draw(whitePixel, area, color);
@@ -106,7 +105,7 @@ namespace Lemonade.utility
                 whitePixel = Assets.GetTexture(Assets.whitePixel);
 
                 //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
-                whitePixel.SetData<Color>(new Color[] { color });
+                //whitePixel.SetData<Color>(new Color[] { color });
             }
 
             Vector2[] vertex = new Vector2[segments];
@@ -129,7 +128,7 @@ namespace Lemonade.utility
                 whitePixel = Assets.GetTexture(Assets.whitePixel);
 
                 //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
-                whitePixel.SetData<Color>(new Color[] { color });
+                //whitePixel.SetData<Color>(new Color[] { color });
             }
 
             if (count > 0)
@@ -148,7 +147,7 @@ namespace Lemonade.utility
                 whitePixel = Assets.GetTexture(Assets.whitePixel);
 
                 //whitePixel = new Texture2D(batch.GraphicsDevice, 1, 1);
-                whitePixel.SetData<Color>(new Color[] { color });
+                //whitePixel.SetData<Color>(new Color[] { color });
             }
 
             float angle = (float)Math.Atan2(point2.Y - point1.Y, point2.X - point1.X);

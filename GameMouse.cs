@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using Lemonade.utility;
+using Lemonade.item;
 
 namespace Lemonade
 {
@@ -21,10 +22,11 @@ namespace Lemonade
             set { center = new Vector2(value.X - texture.Width / 2, value.Y - texture.Height / 2); } }
 
         public ItemStack heldItem;
-        Game1 game;
-        public GameMouse(Game1 game)
+        public Item hoveredItem;
+
+        private bool drawMouse = true;
+        public GameMouse()
         {
-            this.game = game;
         }
 
         public void Initialize(ContentManager content)
@@ -62,20 +64,35 @@ namespace Lemonade
 
         public void Draw(SpriteBatch batch)
         {
-            batch.Draw(texture, positionRelativeCamera, Color.White);
+            if (drawMouse)
+                batch.Draw(texture, positionRelativeCamera, Color.White);
 
             if (currentState.LeftButton == ButtonState.Pressed)
             {
                 PrimiviteDrawing.DrawRectangle(null, batch, new Rectangle(positionRelativeCamera.ToPoint(), new Point(texture.Bounds.Width, texture.Bounds.Height)), Color.Red * 0.5f);
             }
 
+            drawMouse = true;
             if (heldItem != null)
             {
                 if (heldItem.item.texture != null)
                 {
                     batch.Draw(heldItem.item.texture, center, null, Color.White, 0, Vector2.Zero, 1f, SpriteEffects.None, 0);
+                    drawMouse = false;
                 }
             }
+
+            if (hoveredItem != null)
+            {
+                batch.DrawString(Assets.GetFont(Assets.munro12), hoveredItem.name, Game1.mouse.positionRelativeCamera, Color.Black);
+                for (int i = 0; i < hoveredItem.description.Length; i++)
+                {
+                    if (hoveredItem.description[i] != null)
+                        batch.DrawString(Assets.GetFont(Assets.munro12), hoveredItem.description[i], new Vector2(Game1.mouse.positionRelativeCamera.X, Game1.mouse.positionRelativeCamera.Y + 12 * (i + 1)), Color.Black);
+                }
+                drawMouse = false;
+            }
+            hoveredItem = null;
         }
     }
 }

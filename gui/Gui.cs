@@ -71,10 +71,10 @@ namespace Lemonade.gui
             return widget;
         }
 
-        public GuiWidgetItemSlot createInventorySlot(Rectangle setBounds, Tuple<WidgetType, int> id, Color[] colors, Player player)
+        public GuiWidgetItemSlot createInventorySlot(Rectangle setBounds, Tuple<WidgetType, int> id, ItemRestriction type, Color[] colors, Player player)
         {
             GuiWidgetItemSlot widget;
-            widget = new GuiWidgetItemSlot(setBounds, id, colors, player);
+            widget = new GuiWidgetItemSlot(setBounds, id, type, colors, player);
 
             widgets.Add(widget);
             return widget;
